@@ -1,11 +1,243 @@
 ---
-import PlaceholderPage from '~/layouts/PlaceholderPage.astro';
+import { getCollection } from 'astro:content';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/ui/PageHeader.astro';
+import DemoCard from '~/components/ui/DemoCard.astro';
+import Pending from '~/components/ui/Pending.astro';
+import { getTeams, getUseCases } from '~/lib/content';
+import { url } from '~/lib/url';
+
+const demos = await getCollection('demos');
+const tools = await getCollection('tools');
+const teams = await getTeams();
+const useCases = await getUseCases();
+const teamNames = Object.fromEntries(teams.map((t) => [t.id, t.data.short]));
+const codes = Object.fromEntries(useCases.map((u) => [u.id, u.data.code]));
+const kindLabel = { simulator: 'Simulator', dataset: 'Dataset', software: 'Software' };
+// Featured first, then in file order.
+const ordered = [...demos].sort((a, b) => Number(b.data.featured) - Number(a.data.featured));
 ---
 
-<PlaceholderPage
-  eyebrow="Demos"
-  title="See the research in action"
-  lede="Simulations, testbeds, and flight experiments from across the project."
-  phase={3}
-  what="Inline YouTube demo gallery, plus public simulators, datasets, and tools."
-/>
+<BaseLayout title="Demos" description="Simulations, testbeds, and demonstrations from the NASA ULI Securing High-Density Urban Airspaces project.">
+  <PageHeader
+    eyebrow="Demos"
+    title="See the research in action"
+    lede="Simulations, hardware testbeds, and demonstrations from across the project. Videos play right here on the page."
+  />
+
+  <section class="section" aria-labelledby="videos-title">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">Videos</p>
+        <h2 id="videos-title" class="h2">Demonstrations</h2>
+      </header>
+      {
+        ordered.length > 0 ? (
+          <div class="demo-grid">
+            {ordered.map((d) => (
+              <DemoCard demo={d} teamNames={teamNames} codes={codes} />
+            ))}
+          </div>
+        ) : (
+          <div class="coming">
+            <div class="coming__screen" aria-hidden="true">
+              <svg viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="1.5" />
+                <path d="M26 21 L45 32 L26 43 Z" fill="currentColor" />
+              </svg>
+            </div>
+            <div>
+              <h3>Demo videos are on the way</h3>
+              <p>
+                Year 3 is dedicated to aviation use-case demonstrations in simulation and flight tests. Videos will be
+                published here as each team releases them.
+              </p>
+              <Pending owner="Project team" what="Add videos to src/data/demos.yaml (title, summary, youtubeId, teams, useCase, featured)." hidePublic />
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="demo-day" aria-labelledby="demoday-title">
+    <div class="container demo-day__inner">
+      <div>
+        <p class="eyebrow">Spring 2027</p>
+        <h2 id="demoday-title" class="h1">Demo Day</h2>
+      </div>
+      <div class="demo-day__body">
+        <p>
+          A project-wide showcase of integrated demonstrations across our aviation use cases, for NASA, industry,
+          government, and the research community.
+        </p>
+        <Pending owner="Project PI" what="Demo Day date, location, and registration details." hidePublic />
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="tools-title">
+    <div class="container">
+      <header class="section-head section-head--split">
+        <div>
+          <p class="eyebrow">Tools &amp; datasets</p>
+          <h2 id="tools-title" class="h2" style="margin-top: var(--space-4)">Built in the project</h2>
+        </div>
+        <p class="lede">Simulators, datasets, and software that power our experiments and demonstrations.</p>
+      </header>
+      <ul class="tools" role="list">
+        {
+          tools.map((t) => (
+            <li class="tool" data-reveal>
+              <div class="tool__top mono">
+                <span>{kindLabel[t.data.kind]}</span>
+                <span>{t.data.teams.map((x) => teamNames[x.id]).join(' · ')}</span>
+              </div>
+              <h3>{t.data.name}</h3>
+              <p>{t.data.summary}</p>
+              <div class="tool__foot">
+                <div class="tag-row">
+                  {t.data.useCases.map((u) => (
+                    <a class="tag tag--accent" href={url(`/research/${u.id}`)}>
+                      {codes[u.id]}
+                    </a>
+                  ))}
+                </div>
+                {t.data.url && (
+                  <a class="link-arrow" href={t.data.url} rel="noopener">
+                    View
+                  </a>
+                )}
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .demo-grid {
+    display: grid;
+    gap: var(--space-7) var(--space-6);
+  }
+  @media (min-width: 900px) {
+    .demo-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .coming {
+    display: grid;
+    gap: var(--space-6);
+    align-items: center;
+    padding: var(--space-6);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-3);
+    background:
+      linear-gradient(var(--map-grid) 1px, transparent 1px) 0 0 / 24px 24px,
+      linear-gradient(90deg, var(--map-grid) 1px, transparent 1px) 0 0 / 24px 24px;
+  }
+  @media (min-width: 800px) {
+    .coming {
+      grid-template-columns: 280px minmax(0, 1fr);
+    }
+  }
+  .coming__screen {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-2);
+    background: var(--bg-inverse);
+    color: var(--accent-graphic);
+  }
+  .coming__screen svg {
+    width: 56px;
+    height: 56px;
+  }
+  .coming h3 {
+    font-size: var(--step-2);
+    margin-bottom: var(--space-3);
+  }
+  .coming p {
+    color: var(--ink-2);
+    max-width: 60ch;
+    margin-bottom: var(--space-4);
+  }
+
+  .demo-day {
+    padding-block: var(--space-9);
+    background: var(--bg-inverse);
+    color: var(--ink-inverse);
+  }
+  .demo-day .eyebrow {
+    color: color-mix(in srgb, var(--ink-inverse) 60%, transparent);
+  }
+  .demo-day__inner {
+    display: grid;
+    gap: var(--space-5) var(--space-8);
+    align-items: end;
+  }
+  @media (min-width: 900px) {
+    .demo-day__inner {
+      grid-template-columns: 1fr 1.3fr;
+    }
+  }
+  .demo-day h2 {
+    margin-top: var(--space-4);
+  }
+  .demo-day__body {
+    display: grid;
+    gap: var(--space-4);
+    font-size: var(--step-1);
+    color: color-mix(in srgb, var(--ink-inverse) 80%, transparent);
+  }
+
+  .tools {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-5);
+    padding: 0;
+    list-style: none;
+  }
+  .tool {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-2);
+    background: var(--bg-raised);
+  }
+  .tool__top {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .tool__top span:first-child {
+    color: var(--accent);
+  }
+  .tool h3 {
+    font-size: var(--step-1);
+  }
+  .tool p {
+    color: var(--ink-2);
+    font-size: 0.925rem;
+  }
+  .tool__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--line);
+  }
+  .tool__foot a.tag {
+    text-decoration: none;
+  }
+</style>

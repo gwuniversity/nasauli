@@ -1,0 +1,66 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+
+interface Props {
+  figure: CollectionEntry<'figures'>;
+  /** team id → short name, for the credit line */
+  teamNames: Record<string, string>;
+  sizes?: string;
+}
+
+const { figure, teamNames, sizes = '(min-width: 1000px) 560px, 100vw' } = Astro.props;
+const { src, alt, caption, teams, dark } = figure.data;
+---
+
+<figure class:list={['figure', { 'figure--dark': dark }]}>
+  <a class="figure__frame" href={src.src} target="_blank" rel="noopener" aria-label={`Open full-size image: ${alt}`}>
+    <Image src={src} alt={alt} widths={[480, 800, 1200, 1600].filter((w) => w <= src.width * 1.2)} sizes={sizes} />
+  </a>
+  <figcaption>
+    <span class="figure__credit mono">{teams.map((t) => teamNames[t.id] ?? t.id).join(' · ')}</span>
+    {caption}
+  </figcaption>
+</figure>
+
+<style>
+  .figure {
+    display: grid;
+    gap: var(--space-3);
+    align-content: start;
+  }
+  .figure__frame {
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    padding: var(--space-3);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-2);
+    background: #fff;
+    transition: border-color 0.2s var(--ease);
+  }
+  .figure--dark .figure__frame {
+    background: #000;
+    padding: 0;
+  }
+  .figure__frame:hover {
+    border-color: var(--accent);
+  }
+  .figure__frame img {
+    width: 100%;
+    height: auto;
+  }
+  figcaption {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .figure__credit {
+    display: inline-block;
+    margin-right: var(--space-2);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+</style>

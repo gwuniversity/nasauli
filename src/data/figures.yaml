@@ -1,0 +1,132 @@
+# Figures from the annual reports, shown on use-case and team pages.
+# `src` is relative to this file. Never add images that show people without consent.
+
+- id: gwu-delivery-clear-time
+  src: ../assets/figures/gwu-delivery-clear-time.png
+  alt: Pipeline diagram from onboard video through per-agent hazard curves to a calibrated go or wait decision.
+  caption: Forecasting how long a delivery zone will stay clear. Onboard perception tracks people, pets, and objects; a compositional hazard model and a calibrated guarantee decide whether to lower the package or wait.
+  teams: [gwu]
+  useCases: [vision-landing]
+  dark: true
+
+- id: gwu-vlm-landing-zones
+  src: ../assets/figures/gwu-vlm-landing-zones.png
+  alt: Grid of aerial scenes with green and red overlays marking safe and unsafe landing areas at each pipeline stage.
+  caption: Safe-landing-zone identification for delivery drones, fusing monocular depth with open-vocabulary detection refined by a vision-language model.
+  teams: [gwu]
+  useCases: [vision-landing]
+
+- id: uci-miragemarker-tfa
+  src: ../assets/figures/uci-miragemarker-tfa.png
+  alt: Simulated drone landing on a paved area with an inset downward camera view of a fiducial marker board.
+  caption: MirageMarker evaluated in NVIDIA Isaac Sim against the PX4 autopilot's native precision-landing mode. Subtle geometric changes to the marker board shift the touchdown point far from the pad.
+  teams: [uc-irvine]
+  useCases: [vision-landing]
+
+- id: uci-miragemarker-dma
+  src: ../assets/figures/uci-miragemarker-dma.png
+  alt: Simulated drone above a fiducial marker board with an inset downward camera view.
+  caption: A second MirageMarker attack objective in simulation, inducing a large directional pose error during landing.
+  teams: [uc-irvine]
+  useCases: [vision-landing]
+
+- id: gwu-llm-deconfliction
+  src: ../assets/figures/gwu-llm-deconfliction.png
+  alt: Pipeline from BlueSky scenario generation and prompt engineering to LoRA fine-tuning and closed-loop inference.
+  caption: Simulation-to-language pipeline for fine-tuning a large language model as a tactical deconfliction policy, then deploying it in closed-loop BlueSky simulations.
+  teams: [gwu]
+  useCases: [separation-assurance]
+
+- id: gwu-gps-robust-marl
+  src: ../assets/figures/gwu-gps-robust-marl.png
+  alt: Two line charts comparing robust and nominal policies as observation contamination increases.
+  caption: Separation assurance under increasing GPS corruption. The robust multi-agent policy keeps near mid-air collisions near zero and maintains larger separation than the nominal policy.
+  teams: [gwu, ut-austin]
+  useCases: [separation-assurance]
+
+- id: gwu-purdue-heterogeneous-fleets
+  src: ../assets/figures/gwu-purdue-heterogeneous-fleets.png
+  alt: Training curves showing rewards converging for two companies and collisions falling while successes rise.
+  caption: Two delivery companies, each training its own attention-based policy, converge to co-existing deconfliction strategies in shared airspace.
+  teams: [gwu, purdue]
+  useCases: [separation-assurance]
+
+- id: vu-hardware-testbed
+  src: ../assets/figures/vu-hardware-testbed.png
+  alt: Quadcopter with red arms and an onboard computer next to a handheld radio controller.
+  caption: Vanderbilt's small UAS hardware testbed for validating Remote ID spoofing detection in real radio environments.
+  teams: [vanderbilt]
+  useCases: [remote-id]
+
+- id: tsu-slz-framework
+  src: ../assets/figures/tsu-slz-framework.png
+  alt: Block diagram of the emergency landing framework from perceptual inputs through validation to flight-control handoff.
+  caption: TSU's multimodal emergency safe-landing-zone framework, from sensing and candidate generation through semantic and geometric validation, tracking, and human-in-the-loop review.
+  teams: [tsu]
+  useCases: [emergency-landing]
+  dark: true
+
+- id: tsu-slz-semantic
+  src: ../assets/figures/tsu-slz-semantic.png
+  alt: Aerial neighborhood image beside the same image annotated with detected buildings, roads, trees, and candidate landing circles.
+  caption: Electro-optical semantic landing-zone selection combining classical image processing with a learned model.
+  teams: [tsu]
+  useCases: [emergency-landing]
+
+- id: tsu-slz-lidar
+  src: ../assets/figures/tsu-slz-lidar.png
+  alt: Synthetic aerial view beside a LiDAR-derived occupancy map with ranked landing candidates.
+  caption: Candidate landing zones checked against simulated LiDAR terrain for slope, roughness, and obstacle clearance.
+  teams: [tsu]
+  useCases: [emergency-landing]
+
+- id: tsu-iris-vertiport
+  src: ../assets/figures/tsu-iris-vertiport.png
+  alt: Rendered rooftop vertiport with an eVTOL aircraft on a landing pad.
+  caption: A vertiport modeled in TSU's IRIS physics-based simulation environment.
+  teams: [tsu]
+  useCases: [emergency-landing]
+
+- id: tsu-iris-flight-paths
+  src: ../assets/figures/tsu-iris-flight-paths.png
+  alt: 3D city model with many curved magenta flight paths between buildings.
+  caption: Multi-eVTOL routing between vertiports in a simulated downtown.
+  teams: [tsu]
+  useCases: [emergency-landing]
+
+- id: tsu-iris-lidar-city
+  src: ../assets/figures/tsu-iris-lidar-city.png
+  alt: Point-cloud rendering of city buildings colored by height.
+  caption: Simulated LiDAR imagery of a physics-based downtown model.
+  teams: [tsu]
+  useCases: [emergency-landing]
+  dark: true
+
+- id: ut-waypoint-merging
+  src: ../assets/figures/ut-waypoint-merging.png
+  alt: Diagram of three aircraft converging on a waypoint with several possible arrival orderings.
+  caption: Decentralized coordination at a shared waypoint. Aircraft agree on one safety-feasible arrival sequence without revealing their private delay costs.
+  teams: [ut-austin]
+  useCases: [airspace-coordination]
+
+- id: collins-lean-toolchain
+  src: ../assets/figures/collins-lean-toolchain.png
+  alt: Flow from a system architecture into Lean theorems with LLM assistance, producing a yes or no verdict on attack feasibility.
+  caption: Security assessment as machine-checked proof. An LLM proposes theorems over the architecture and the Lean theorem prover checks them, giving repeatable evidence of whether an attack is possible.
+  teams: [collins, vanderbilt]
+  useCases: [secure-architecture]
+  dark: true
+
+- id: collins-uas-architecture
+  src: ../assets/figures/collins-uas-architecture.png
+  alt: AADL architecture diagram of a ground station, mission computer, and flight controller with their interfaces.
+  caption: Representative small UAS architecture modeled in AADL, used both for attack reasoning and to guide deployment on the seL4 microkernel.
+  teams: [collins, vanderbilt]
+  useCases: [secure-architecture]
+
+- id: collins-pep-aadl
+  src: ../assets/figures/collins-pep-aadl.png
+  alt: AADL block diagram of a policy enforcement point with engine, admin, and policy manager components.
+  caption: A zero-trust policy enforcement point pattern, updated for high-density urban airspace to support dynamic reconfiguration and continuous monitoring.
+  teams: [collins]
+  useCases: [secure-architecture]

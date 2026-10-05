@@ -1,5 +1,6 @@
 # Partner institutions. `order` sets display order (lead institution first).
 # `overview` is PI-owned: leave it out and the team page shows a pending placeholder.
+# `thrusts` are summarized from the Year 1–2 reports; site PIs may revise them.
 
 - id: gwu
   order: 1
@@ -13,6 +14,25 @@
   role: Lead institution. Perception-based drone delivery and landing, AI-based separation assurance, and the security of air traffic control voice communication.
   focus: [Vision-based landing, Separation assurance, LLMs for air traffic, ATC voice security]
   useCases: [vision-landing, separation-assurance, atc-voice, control-link]
+  thrusts:
+    - title: Perception-based drone delivery
+      body: Benchmarked transformer and CNN detectors for safe autonomous landing with conformal uncertainty, used vision-language models to identify and explain safe landing zones, and is forecasting how long a drop zone will stay clear during tethered delivery.
+      useCase: vision-landing
+      partners: [uc-irvine, tsu]
+    - title: Heterogeneous fleets in shared airspace
+      body: Showed that independently trained, attention-based deconfliction policies from different delivery companies can converge to safe co-existence, and analyzed whether the outcome is fair to less capable fleets.
+      useCase: separation-assurance
+      partners: [purdue]
+    - title: Separation assurance under GPS spoofing
+      body: Robust multi-agent reinforcement learning that models GPS corruption as a zero-sum game, plus runtime safety filtering that protects learned policies during deployment.
+      useCase: separation-assurance
+      partners: [ut-austin]
+    - title: Language models for tactical deconfliction
+      body: A simulation-to-language pipeline in BlueSky and a fine-tuned open language model that makes interpretable deconfliction decisions in closed-loop simulation.
+      useCase: separation-assurance
+    - title: ATC voice integrity
+      body: A multidimensional evaluation of AI-synthesized controller speech, providing evidence for assessing the risk of unauthorized voice instructions.
+      useCase: atc-voice
 
 - id: vanderbilt
   order: 2
@@ -26,6 +46,26 @@
   role: Networked multi-UAV simulation, Remote ID spoofing detection, and machine-learning anomaly detection for small unmanned aircraft.
   focus: [Networked UAV simulation, Remote ID security, Anomaly detection, RF sensing]
   useCases: [remote-id, control-link, secure-architecture, airspace-coordination]
+  thrusts:
+    - title: Networked UAV simulation platform
+      body: An open-source distributed simulator integrating ArduPilot SITL, Gazebo, QGroundControl, and OMNeT++ that models multi-operator operations under the FAA UTM concept of operations, with a library of adversarial scenarios for cyberattack research.
+    - title: Remote ID spoofing detection
+      body: Detectors that exploit the physics of the radio signal, from onboard filtering to federated multilateration and learned models, evaluated across 1,920 simulated urban scenarios.
+      useCase: remote-id
+    - title: SDR hardware testbed
+      body: A small UAS testbed with a software-defined radio that adds Doppler shift and angle-of-arrival checks to validate detection in real RF environments.
+      useCase: remote-id
+    - title: Spoofing-aware trajectory planning
+      body: Decentralized planning that treats Remote ID as unverified, localizes a suspected spoofer under uncertainty, and avoids a chance-constrained unsafe region.
+      useCase: remote-id
+      partners: [ut-austin]
+    - title: Learning-based anomaly detection
+      body: Graph learning that detects compromised drones under tight communication budgets, and detectors trained on attack datasets generated with the networked simulator.
+      useCase: control-link
+    - title: Formal security assessment
+      body: Through summer internships at Collins Aerospace, contributes to formalizing attacks in the Lean theorem prover and to explainable assurance cases.
+      useCase: secure-architecture
+      partners: [collins]
 
 - id: purdue
   order: 3
@@ -39,6 +79,23 @@
   role: Game-theoretic and learning-based foundations for secure, fair, and decentralized coordination among airspace users.
   focus: [Stackelberg games, Multi-agent learning, Collusion detection, Fair deconfliction]
   useCases: [separation-assurance, airspace-coordination]
+  thrusts:
+    - title: Decentralized leader-follower learning
+      body: Learning algorithms for Stackelberg games among UAV operators that converge without a trusted, information-rich central coordinator, preserving the privacy of each operator's costs.
+      useCase: airspace-coordination
+    - title: Rational and robust learning
+      body: Quantifying how much an agent can gain by deviating from a prescribed learning algorithm, and designing algorithms that remove that incentive.
+    - title: Collusion detection
+      body: A statistical framework that detects covert coordination among agents from observed actions alone, with sample-complexity guarantees.
+      useCase: airspace-coordination
+    - title: Trustworthy abstractions and digital twins
+      body: A certifiable, convex test of how faithfully a simplified model bounds the behavior of a real nonlinear system under unknown disturbances.
+    - title: Information gathering for intrusion detection
+      body: Game-theoretic sensor placement, scheduling, and target coverage with provable guarantees, and robust selection of information sources.
+    - title: Active communication and fair deconfliction
+      body: Multi-agent learning that decides what information aircraft should share, and fair multi-user dueling bandits for strategic deconfliction among operators.
+      useCase: separation-assurance
+      partners: [gwu]
 
 - id: ut-austin
   order: 4
@@ -52,6 +109,18 @@
   role: Information-shaping control, secure communication, and robust coordination for autonomous aircraft and dense airspace operations.
   focus: [Deception and observability, Directional jamming, Auction-based coordination, Vertiport sequencing]
   useCases: [separation-assurance, remote-id, airspace-coordination]
+  thrusts:
+    - title: Information-shaping control
+      body: Control that shapes what an adversary can learn or observe, including deception against data-driven attackers and controllers that limit adversarial observability, validated on the ADMIRE aircraft model.
+    - title: Directional jamming and nulling
+      body: Jointly optimizing a UAV's motion and antenna phases to jam an eavesdropper while keeping a communication null toward a friendly receiver.
+    - title: Scalable, robust coordination
+      body: Game-theoretic mitigation of airspace-sector overload on real European traffic data, the TACo auction for consensus without disclosing private preferences, and chance-constrained correlated equilibria for vertiports.
+      useCase: airspace-coordination
+    - title: Coordination under untrusted information
+      body: Vertiport sequencing that remains robust to misreported or spoofed arrival times, and joint work on spoofing-aware planning and GPS-robust separation assurance.
+      useCase: remote-id
+      partners: [vanderbilt, gwu]
 
 - id: uc-irvine
   order: 5
@@ -65,6 +134,17 @@
   role: Security analysis of camera- and AI-based drone autonomy, from target tracking and precision landing to vision-language models.
   focus: [Autonomous tracking security, Fiducial-marker landing, Vision-language model defense]
   useCases: [vision-landing]
+  thrusts:
+    - title: FlyTrap
+      body: The first security analysis of camera-based autonomous target tracking in drones, demonstrated against commercial systems and presented at NDSS 2026.
+      useCase: vision-landing
+    - title: MirageMarker
+      body: The first security study of fiducial-marker pose estimation for precision landing, evaluated against the PX4 autopilot's native landing mode in NVIDIA Isaac Sim (IROS 2026).
+      useCase: vision-landing
+    - title: Securing vision-language autonomy
+      body: Ongoing work on defending vision-language models used for drone tracking and landing against visual prompt injection.
+      useCase: vision-landing
+      partners: [gwu]
 
 - id: tsu
   order: 6
@@ -78,13 +158,23 @@
   role: Physics-based simulation of urban air mobility environments and resilient emergency landing for eVTOL aircraft and drones.
   focus: [IRIS simulation, Safe landing zones, Multimodal sensing, Synthetic datasets]
   useCases: [emergency-landing, vision-landing]
+  thrusts:
+    - title: IRIS simulation environment
+      body: Physics-based downtown, suburban, vertiport, and airport scenes with eVTOL and drone models and simulated cameras, LiDAR, GPS, and inertial sensors under degraded weather and lighting.
+      useCase: emergency-landing
+    - title: Emergency safe landing zones
+      body: A multi-hypothesis framework that generates, validates, ranks, and tracks landing candidates using imagery and LiDAR, published at SPIE Defense + Security 2026.
+      useCase: emergency-landing
+    - title: IRIS D³ drone-delivery dataset
+      body: Dozens of delivery scenarios and more than 20,000 synthetic RGB images with matching LiDAR point clouds, from clean pads to intrusions and degraded visibility.
+      useCase: vision-landing
+      partners: [gwu, uc-irvine]
 
 - id: collins
   order: 7
   name: Collins Aerospace
   short: Collins
   kind: industry
-  # TODO(confirm): office location for the Collins team.
   city: Cedar Rapids
   state: IA
   lat: 41.9779
@@ -92,6 +182,16 @@
   role: Industry partner contributing aerospace expertise, zero-trust architecture patterns, and formally verified security assessment.
   focus: [Zero-trust design patterns, Formal methods, Lean theorem proving, Avionics expertise]
   useCases: [secure-architecture, control-link]
+  thrusts:
+    - title: Zero-trust design patterns
+      body: New and updated zero-trust patterns for high-density urban airspace, modeled in AADL as building blocks for secure UAS systems.
+      useCase: secure-architecture
+    - title: LLM-assisted formal security assessment
+      body: A toolchain in which a language model proposes theorems about an architecture and the Lean theorem prover checks them, producing repeatable, machine-checked evidence.
+      useCase: secure-architecture
+      partners: [vanderbilt]
+    - title: Industry partnership
+      body: Avionics subject-matter expertise through invited technical deep dives, and summer research internships for university students.
 
 - id: nvcc
   order: 8
@@ -105,3 +205,13 @@
   role: Community-college research pathway. Student interns investigate drone command-and-control link security alongside GWU researchers.
   focus: [Student research, MAVLink security, UTM monitoring]
   useCases: [control-link]
+  thrusts:
+    - title: Summer research internships
+      body: Each summer, four NVCC students join GWU for a research internship, working side by side with graduate students and presenting at the project's annual meeting.
+      partners: [gwu]
+    - title: Control-link security testbeds
+      body: Software-in-the-loop testbeds that evaluate the MAVLink link between ground stations and drones and the protection offered by message signing and secure tunnels.
+      useCase: control-link
+    - title: GridEye UTM monitor
+      body: A read-only traffic-management dashboard that tracks a simulated delivery fleet and enforces flight boundaries, no-fly zones, and altitude limits.
+      useCase: control-link

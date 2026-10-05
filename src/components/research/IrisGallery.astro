@@ -1,0 +1,70 @@
+---
+import { Image } from 'astro:assets';
+
+// TSU's IRIS D³ drone-delivery scenarios (thumbnails from the Year 2 report).
+const files = import.meta.glob<{ default: ImageMetadata }>('/src/assets/figures/iris-d3/*.{png,jpg}', { eager: true });
+const labels = ['Clean pad', 'Degraded pad', 'Multiple pads', 'Invalid drop zone', 'Patio / balcony', 'Intrusion', 'Shadow / occlusion', 'Degraded visibility'];
+const scenes = Object.keys(files)
+  .sort()
+  .map((key, i) => ({ src: files[key].default, label: labels[i] }));
+---
+
+<figure class="iris">
+  <ul role="list">
+    {
+      scenes.map((s) => (
+        <li>
+          <Image src={s.src} alt={`Simulated drone-delivery scene: ${s.label}`} widths={[220]} sizes="220px" />
+          <span class="mono">{s.label}</span>
+        </li>
+      ))
+    }
+  </ul>
+  <figcaption>
+    <span class="mono">TSU</span> Representative scenarios from the IRIS D³ multimodal drone-delivery dataset, rendered in
+    RGB with matching simulated LiDAR.
+  </figcaption>
+</figure>
+
+<style>
+  .iris ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 700px) {
+    .iris ul {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .iris li {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .iris img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-1);
+    border: 1px solid var(--line);
+  }
+  .iris li .mono {
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  figcaption {
+    margin-top: var(--space-4);
+    font-size: 0.875rem;
+    color: var(--ink-2);
+  }
+  figcaption .mono {
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin-right: var(--space-2);
+  }
+</style>

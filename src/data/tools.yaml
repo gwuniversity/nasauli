@@ -1,0 +1,37 @@
+# Simulators, datasets, and software built in the project. Add `url` only for public releases.
+- id: vu-networked-sim
+  name: Networked UAV Simulation Platform
+  kind: simulator
+  summary: Distributed multi-UAV simulator integrating ArduPilot SITL, Gazebo, QGroundControl, and OMNeT++, modeling multi-operator operations under the FAA UTM concept of operations, with a library of adversarial scenarios and demonstration notebooks.
+  teams: [vanderbilt]
+  useCases: [control-link, remote-id]
+  url: https://github.com/4belito/uav-cyber-sim
+
+- id: vu-spoofing-aware-planner
+  name: Remote ID Spoofing-Aware Trajectory Planner
+  kind: software
+  summary: Decentralized planning that localizes a suspected Remote ID spoofer from signal-strength measurements and avoids a chance-constrained unsafe region.
+  teams: [vanderbilt, ut-austin]
+  useCases: [remote-id]
+  url: https://github.com/brycethebjorkman/uli-net-sim/tree/spoofing-aware-trajectory-planning
+
+- id: tsu-iris
+  name: IRIS Simulation Environment
+  kind: simulator
+  summary: Physics-based urban air mobility simulation with downtown, suburban, vertiport, and airport scenes, eVTOL and drone models, and simulated RGB, infrared, LiDAR, GPS, and inertial sensors under degraded conditions.
+  teams: [tsu]
+  useCases: [emergency-landing, vision-landing]
+
+- id: tsu-iris-d3
+  name: IRIS D³ Drone-Delivery Dataset
+  kind: dataset
+  summary: More than 20,000 synthetic RGB images with matching LiDAR point clouds across delivery scenarios, from clean pads to intrusions, occlusion, and degraded visibility.
+  teams: [tsu]
+  useCases: [vision-landing]
+
+- id: nvcc-grideye
+  name: GridEye UTM Monitor
+  kind: software
+  summary: Read-only traffic-management dashboard that tracks a simulated delivery fleet and enforces flight boundaries, no-fly zones, and altitude limits.
+  teams: [nvcc, gwu]
+  useCases: [control-link]

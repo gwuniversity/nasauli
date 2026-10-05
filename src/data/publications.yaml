@@ -1,2 +1,384 @@
-# Published or accepted work only. Populated in Phase 3.
-[]
+# Published or accepted work only, from the Year 1–2 reports. Under-review work is never listed.
+# `doi` is the bare DOI (10.xxxx/...); `url` is used when no DOI exists.
+
+- id: vu-2025-transformer-cnn
+  title: 'Transformer or CNN? Benchmarking Real-Time Detection Transformer and YOLOv8 for Small UAS Autonomous Landing'
+  authors: [C. Vu, M. Ghazanfari, K. Dong, A. Taye, A. Tabrizian, P. Wei]
+  venue: AIAA Aviation Forum
+  year: 2025
+  status: published
+  kind: conference
+  teams: [gwu]
+  useCases: [vision-landing]
+  doi: 10.2514/6.2025-3521
+
+- id: bajaj-2024-rationality
+  title: Rationality of Learning Algorithms in Repeated Normal-Form Games
+  authors: [S. Bajaj, P. Das, Y. Vorobeychik, V. Gupta]
+  venue: IEEE Control Systems Letters
+  year: 2024
+  status: published
+  kind: journal
+  teams: [purdue]
+  doi: 10.1109/lcsys.2024.3486631
+
+- id: ahmed-2025-laplacian
+  title: Online Laplacian-Based Representation Learning in Reinforcement Learning
+  authors: [M. H. Ahmed, J. Bhargav, M. Ghasemi]
+  venue: International Conference on Machine Learning (ICML)
+  year: 2025
+  status: published
+  kind: conference
+  teams: [purdue]
+  url: https://proceedings.mlr.press/v267/ahmed25a.html
+
+- id: elahi-2025-multilevel-feedback
+  title: Reinforcement Learning from Multi-level and Episodic Human Feedback
+  authors: [M. Q. Elahi, S. Oguchienti, M. H. Ahmed, M. Ghasemi]
+  venue: Learning for Dynamics & Control Conference (L4DC)
+  year: 2025
+  status: published
+  kind: conference
+  teams: [purdue]
+  url: https://proceedings.mlr.press/v283/elahi25a.html
+
+- id: bhargav-2025-sensor-scheduling
+  title: Sensor Scheduling in Intrusion Detection Games with Uncertain Payoffs
+  authors: [J. Bhargav, S. Sundaram, M. Ghasemi]
+  venue: Learning for Dynamics & Control Conference (L4DC)
+  year: 2025
+  status: published
+  kind: conference
+  teams: [purdue]
+  url: https://proceedings.mlr.press/v283/bhargav25a.html
+
+- id: bjorkman-2025-ersa
+  title: Towards Automated Design-Time Explainability of Assurance Cases and Trade Spaces
+  authors: [B. Bjorkman, B. C. Ward, S. Hasan]
+  venue: International Workshop on Explainability of Real-time Systems and their Analysis (ERSA), IEEE RTSS
+  year: 2025
+  status: published
+  kind: workshop
+  teams: [vanderbilt, collins]
+  useCases: [secure-architecture]
+  url: https://www.andrew.cmu.edu/user/banderss/events/workshops/ersa25/ersa25_proceeding.pdf
+
+- id: ibrahim-2025-thesis
+  title: Dynamic Urban Air Mobility Systems Modeling and Simulation
+  authors: [A. M. Ibrahim]
+  venue: MS thesis, Tennessee State University
+  year: 2025
+  status: published
+  kind: thesis
+  teams: [tsu]
+  useCases: [emergency-landing]
+  url: https://digitalscholarship.tnstate.edu/alumni-etd/384/
+
+- id: ghazanfari-2026-aam-survey
+  title: A Survey of Security Challenges and Solutions for Advanced Air Mobility and eVTOL Aircraft
+  authors: [M. Ghazanfari, I. Sharifi, A. Taye, P. Wei, B. C. Ward, X. Koutsoukos, G. Biswas, et al.]
+  venue: AIAA SciTech Forum
+  year: 2026
+  status: published
+  kind: conference
+  teams: [gwu, vanderbilt]
+  doi: 10.2514/6.2026-2891
+
+- id: sharifi-2026-utm-survey
+  title: A Survey of Security Challenges and Solutions for UAS Traffic Management (UTM) and Small Unmanned Aerial Systems (sUAS)
+  authors: [I. Sharifi, M. Ghazanfari, A. Taye, P. Wei, M. Ahmed, H. T. Kim, M. Ghasemi, V. Gupta, B. C. Ward, X. Koutsoukos, G. Biswas, et al.]
+  venue: AIAA SciTech Forum
+  year: 2026
+  status: published
+  kind: conference
+  teams: [gwu, purdue, vanderbilt]
+  doi: 10.2514/6.2026-2892
+
+- id: diaz-gonzalez-2026-networked-sim
+  title: Networked Simulation for Cybersecurity Evaluation of Small Unmanned Aircraft Systems in Dense Urban Environments
+  authors: [A. Diaz-Gonzalez, A. Coursey, B. Bjorkman, D. Shatokhin, C. Lemieux-Mack, N. W. Dahle, A. Taye, R. E. Canady, X. Koutsoukos, G. Biswas, B. C. Ward]
+  venue: AIAA SciTech Forum
+  year: 2026
+  status: published
+  kind: conference
+  teams: [vanderbilt]
+  useCases: [control-link, remote-id]
+  doi: 10.2514/6.2026-1797
+
+- id: bjorkman-2026-remote-id
+  title: Remote ID Spoofing Attacks and Defenses
+  authors: [B. Bjorkman, S. Zheng, A. Coursey, C. Lemieux-Mack, S. Gonzalez, A. Diaz-Gonzalez, N. W. Dahle, N. Koroma, R. E. Canady, X. Koutsoukos, G. Biswas, A. Taye, B. C. Ward]
+  venue: AIAA SciTech Forum
+  year: 2026
+  status: published
+  kind: conference
+  teams: [vanderbilt]
+  useCases: [remote-id]
+  doi: 10.2514/6.2026-2665
+
+- id: dahle-2026-graph-ml
+  title: Detection of Compromised UAVs Using Graph Machine Learning
+  authors: [N. W. Dahle, R. Canady, A. Coursey, A. Diaz-Gonzalez, C. Lemieux-Mack, B. Bjorkman, A. Taye, B. C. Ward, G. Biswas, X. Koutsoukos]
+  venue: AIAA SciTech Forum
+  year: 2026
+  status: published
+  kind: conference
+  teams: [vanderbilt]
+  useCases: [control-link]
+  doi: 10.2514/6.2026-2667
+
+- id: xie-2026-flytrap
+  title: 'FlyTrap: Physical Distance-Pulling Attack Towards Camera-based Autonomous Target Tracking Systems'
+  authors: [S. Xie, M. Fakih, J. Lu, F. Alshammari, N. Wang, T. Sato, H. Bouzidi, M. Al Faruque, Q. A. Chen]
+  venue: Network and Distributed System Security Symposium (NDSS)
+  year: 2026
+  status: published
+  kind: conference
+  teams: [uc-irvine]
+  useCases: [vision-landing]
+  doi: 10.14722/ndss.2026.230904
+
+- id: vu-2026-atc-tts
+  title: Generating Realistic Air Traffic Control Voice Communication using AI-based Text-to-Speech Models
+  authors: [D. Vu, P. Wei]
+  venue: Integrated Communications, Navigation and Surveillance Conference (ICNS)
+  year: 2026
+  status: published
+  kind: conference
+  teams: [gwu]
+  useCases: [atc-voice]
+  doi: 10.1109/icns69853.2026.11570606
+
+- id: fotiadis-2026-beamforming
+  title: Coordinated UAV Beamforming and Control for Directional Jamming and Nulling
+  authors: [F. Fotiadis, B. M. Sadler, U. Topcu]
+  venue: American Control Conference (ACC)
+  year: 2026
+  status: published
+  kind: conference
+  teams: [ut-austin]
+  url: https://arxiv.org/abs/2508.17433
+
+- id: aryal-2026-slz
+  title: Emergency Safe Landing Zone Selection in Unmanned Aerial Systems
+  authors: [N. Aryal, B. Jones, A. Shirkhodaie]
+  venue: 'Proc. SPIE 14047, Unmanned Systems Technology XXVIII'
+  year: 2026
+  status: published
+  kind: conference
+  teams: [tsu]
+  useCases: [emergency-landing]
+  doi: 10.1117/12.3101062
+
+- id: sharifi-2026-llm-deconfliction
+  title: Fine-Tuning Large Language Models for Cooperative Tactical Deconfliction of Small Unmanned Aerial Systems
+  authors: [I. Sharifi, A. Zongo, P. Wei]
+  venue: CVPR Workshop on Multi-Agent Embodied Intelligent Systems Meet Generative-AI Era (MEIS)
+  year: 2026
+  status: published
+  kind: workshop
+  teams: [gwu]
+  useCases: [separation-assurance]
+  url: https://arxiv.org/abs/2603.28561
+
+- id: zongo-2026-runtime-filter
+  title: Runtime Safety Filtering for Learned Small UAS Separation Policies under GNSS Degradation
+  authors: [A. Zongo, P. Wei]
+  venue: AIAA/IEEE Digital Avionics Systems Conference (DASC)
+  year: 2026
+  status: published
+  kind: conference
+  teams: [gwu]
+  useCases: [separation-assurance]
+  url: https://arxiv.org/abs/2607.10014
+
+- id: webb-2026-spoofing-aware
+  title: Remote ID Spoofing-Aware Trajectory Planning for Small Unmanned Aerial Systems
+  authors: [J. Webb, B. Bjorkman, A. Diaz-Gonzalez, A. Coursey, N. W. Dahle, C. Lemieux-Mack, F. Fotiadis, G. Biswas, B. C. Ward, A. Taye]
+  venue: AIAA/IEEE Digital Avionics Systems Conference (DASC)
+  year: 2026
+  status: published
+  kind: conference
+  teams: [vanderbilt, ut-austin]
+  useCases: [remote-id]
+  url: https://arxiv.org/abs/2607.19650
+
+- id: isaacson-2026-sdr-remote-id
+  title: 'Detecting Falsified UAV Telemetry: An SDR Approach to Remote ID Spoofing Detection'
+  authors: [J. Isaacson, B. Bjorkman, S. Zheng, B. C. Ward]
+  venue: GNU Radio Conference
+  year: 2026
+  status: published
+  kind: conference
+  teams: [vanderbilt]
+  useCases: [remote-id]
+  url: https://events.gnuradio.org/event/28/contributions/902/
+
+- id: lu-2026-miragemarker
+  title: 'MirageMarker: A Black-Box Pose Estimation Attack for Autonomous UAV Landing'
+  authors: [J. Lu, F. Alshammari, S. Xie, X. Liang, Q. A. Chen]
+  venue: IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)
+  year: 2026
+  status: published
+  kind: conference
+  teams: [uc-irvine]
+  useCases: [vision-landing]
+
+- id: zongo-2026-robust-marl
+  title: Robust Multi-Agent Reinforcement Learning for Small UAS Separation Assurance under GPS Degradation and Spoofing
+  authors: [A. Zongo, F. Fotiadis, U. Topcu, P. Wei]
+  venue: IEEE Conference on Decision and Control (CDC)
+  year: 2026
+  status: accepted
+  kind: conference
+  teams: [gwu, ut-austin]
+  useCases: [separation-assurance]
+  url: https://arxiv.org/abs/2603.28900
+
+- id: bhargav-2026-target-coverage
+  title: Distributed Equilibrium-Seeking in Target Coverage Games via Self-Configurable Networks under Limited Communication
+  authors: [J. Bhargav, Z. Xu, V. Tzoumas, M. Ghasemi, S. Sundaram]
+  venue: IEEE Conference on Decision and Control (CDC)
+  year: 2026
+  status: accepted
+  kind: conference
+  teams: [purdue]
+  url: https://arxiv.org/abs/2603.17335
+
+- id: nortmann-2026-lq-stackelberg
+  title: Iterative Stackelberg Equilibrium Finding for Linear Quadratic Differential Games
+  authors: [B. Nortmann, P. Das, V. Gupta, T. Mylvaganam]
+  venue: Automatica, vol. 183, 112648
+  year: 2026
+  status: published
+  kind: journal
+  teams: [purdue]
+  doi: 10.1016/j.automatica.2025.112648
+
+- id: das-2026-stackelberg-pg
+  title: Finite Time Convergence Analysis of Policy Gradient Learning in Stochastic Stackelberg Games
+  authors: [P. Das, M. A. Zaman, V. Gupta]
+  venue: IEEE Transactions on Automatic Control
+  year: 2026
+  status: accepted
+  kind: journal
+  teams: [purdue]
+  useCases: [airspace-coordination]
+  doi: 10.1109/tac.2026.3678838
+
+- id: bhargav-2026-robust-info
+  title: Robust Information Selection for Hypothesis Testing with Misclassification Penalties
+  authors: [J. Bhargav, S. Sundaram, M. Ghasemi]
+  venue: IEEE Transactions on Automatic Control
+  year: 2026
+  status: published
+  kind: journal
+  teams: [purdue]
+  doi: 10.1109/tac.2026.3729441
+
+- id: ahmed-2026-dueling-bandits
+  title: 'Multi-User Dueling Bandits: A Fair Approach using Nash Social Welfare'
+  authors: [M. H. Ahmed, M. Ghasemi]
+  venue: Transactions on Machine Learning Research (TMLR)
+  year: 2026
+  status: published
+  kind: journal
+  teams: [purdue]
+  useCases: [airspace-coordination]
+  url: https://openreview.net/forum?id=131jUEYdMT
+
+- id: bhargav-2026-set-utility
+  title: Learning Structured Set Utility Functions with Contrastive Element Representations
+  authors: [J. Bhargav, Y. Chang, M. Ghasemi, S. Sundaram]
+  venue: Transactions on Machine Learning Research (TMLR)
+  year: 2026
+  status: published
+  kind: journal
+  teams: [purdue]
+  url: https://openreview.net/forum?id=SZ8mOziJBx
+
+- id: im-2026-sector-overload
+  title: Game-Theoretic Regulated Decentralized Coordination for Airspace Sector Overload Mitigation
+  authors: [J. Im, D. Delahaye, D. Fridovich-Keil, U. Topcu]
+  venue: 'Transportation Research Part B: Methodological'
+  year: 2026
+  status: accepted
+  kind: journal
+  teams: [ut-austin]
+  useCases: [airspace-coordination]
+  url: https://arxiv.org/abs/2511.13770
+
+- id: im-2026-taco
+  title: Noncooperative Coordination via a Trading-Based Auction
+  authors: [J. Im, F. Fotiadis, D. Delahaye, U. Topcu, D. Fridovich-Keil]
+  venue: IEEE Transactions on Automatic Control
+  year: 2026
+  status: published
+  kind: journal
+  teams: [ut-austin]
+  useCases: [airspace-coordination]
+  doi: 10.1109/tac.2026.3725625
+
+- id: im-2026-chance-ce
+  title: Chance-Constrained Correlated Equilibria for Robust Noncooperative Coordination
+  authors: [J. Im, D. Fridovich-Keil, U. Topcu]
+  venue: IEEE Control Systems Letters
+  year: 2026
+  status: published
+  kind: journal
+  teams: [ut-austin]
+  useCases: [airspace-coordination]
+  doi: 10.1109/lcsys.2026.3705300
+
+- id: im-2027-vertiport
+  title: Secure Coordination for Vertiport Sequencing in Advanced Air Mobility
+  authors: [J. Im, F. Fotiadis, U. Topcu, D. Fridovich-Keil]
+  venue: AIAA SciTech Forum
+  year: 2027
+  status: accepted
+  kind: conference
+  teams: [ut-austin]
+  useCases: [airspace-coordination]
+  url: https://arxiv.org/abs/2605.21771
+
+- id: sharifi-2026-heterogeneous-fleets
+  title: Separation Assurance between Heterogeneous Fleets of Small Unmanned Aerial Systems via Multi-Agent Reinforcement Learning
+  authors: [I. Sharifi, H. T. Kim, M. H. Ahmed, M. Ghasemi, P. Wei]
+  venue: IEEE International Conference on Intelligent Transportation Systems (ITSC)
+  year: 2026
+  status: published
+  kind: conference
+  teams: [gwu, purdue]
+  useCases: [separation-assurance]
+  url: https://arxiv.org/abs/2605.01041
+
+- id: darrell-2026-llm-safety-assessment
+  title: Towards Automated Air Traffic Safety Assessment Around Non-Towered Airports Using Large Language Models
+  authors: [T. Darrell, M. Ghazanfari, J. Kam, A. Bayen, A. Tabrizian, P. Wei]
+  venue: AIAA Aviation Forum
+  year: 2026
+  status: published
+  kind: conference
+  teams: [gwu]
+  doi: 10.2514/6.2026-4220
+
+- id: ghazanfari-2026-see-and-say
+  title: 'See&Say: Vision Language Guided Safe Zone Detection for Autonomous Package Delivery Drones'
+  authors: [M. Ghazanfari, P. Wei]
+  venue: AIAA/IEEE Digital Avionics Systems Conference (DASC), Orlando, FL
+  year: 2026
+  status: published
+  kind: conference
+  teams: [gwu]
+  useCases: [vision-landing]
+  url: https://arxiv.org/abs/2604.13292
+
+- id: fotiadis-2026-deception
+  title: Deception Against Data-Driven Linear-Quadratic Control
+  authors: [F. Fotiadis, A. Kanellopoulos, K. G. Vamvoudakis, U. Topcu]
+  venue: IEEE Transactions on Automatic Control
+  year: 2026
+  status: conditionally-accepted
+  kind: journal
+  teams: [ut-austin]
+  url: https://arxiv.org/abs/2506.11373

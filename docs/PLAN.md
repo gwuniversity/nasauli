@@ -21,7 +21,7 @@ Year 2 annual reports (kept locally in `reports/`, never committed).
 
 ## Phases
 
-### Phase 1 — Foundation & homepage
+### Phase 1 — Foundation & homepage ✅
 - Astro project, build config, GitHub Pages deploy workflow
 - Design system: color tokens (light/dark), type scale, spacing, grid, theme toggle
 - Site shell: header/nav, mobile menu, footer with NASA acknowledgment + disclaimer
@@ -30,24 +30,24 @@ Year 2 annual reports (kept locally in `reports/`, never committed).
 - Homepage: animated airspace hero, mission, three technical challenges, key numbers, use-case strips, team map, latest news
 - Placeholder pages for every nav item so links resolve
 
-### Phase 2 — Research, use cases, teams, people
+### Phase 2 — Research, use cases, teams, people ✅
 - Research page (TCs, tasks, redrawn framework diagram)
 - Eight use-case pages with figures from the reports
 - Eight team pages (focus, highlights, PI cards, student lists)
 - People page (PIs with photos, students/postdocs by name, alumni, advisory-board placeholder)
 
-### Phase 3 — Publications, demos, media
+### Phase 3 — Publications, demos, media ✅
 - Publications data (published/accepted only) with year/team/use-case filters
 - Demos page with inline YouTube player; public tools and datasets
 - Media pipeline: figure optimization, face-blur script for outreach photos
 
-### Phase 4 — News, outreach, about, PI handoff
+### Phase 4 — News, outreach, about, PI handoff ✅
 - News & events, invited talks, annual meetings, Demo Day
 - Outreach page
 - About page (project facts, timeline, acknowledgment, contact)
 - `CONTRIBUTING.md` guide so PIs can fill their sections
 
-### Phase 5 — QA & launch
+### Phase 5 — QA & launch (QA ✅ · launch pending approvals and domain; see LAUNCH.md)
 - Accessibility (WCAG AA), mobile, performance, link checking
 - PI review and sign-off by the project PI
 - Custom domain

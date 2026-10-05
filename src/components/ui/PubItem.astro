@@ -1,0 +1,108 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { publicationHref } from '~/lib/content';
+import { url } from '~/lib/url';
+
+interface Props {
+  pub: CollectionEntry<'publications'>;
+  teamNames: Record<string, string>;
+  codes: Record<string, string>;
+  compact?: boolean;
+}
+
+const { pub, teamNames, codes, compact = false } = Astro.props;
+const { title, authors, venue, year, status, kind, teams, useCases } = pub.data;
+const href = publicationHref(pub);
+const kindLabel = { journal: 'Journal', conference: 'Conference', workshop: 'Workshop', thesis: 'Thesis' };
+---
+
+<li
+  class="pub"
+  data-pub
+  data-year={year}
+  data-teams={teams.map((t) => t.id).join(' ')}
+  data-uc={useCases.map((u) => u.id).join(' ')}
+  data-text={`${title} ${authors.join(' ')} ${venue}`.toLowerCase()}
+>
+  <h3 class="pub__title">
+    {href ? <a href={href} rel="noopener">{title}</a> : title}
+  </h3>
+  <p class="pub__authors">{authors.join(', ')}</p>
+  <p class="pub__venue">
+    <span><em>{venue}</em>, {year}</span>
+    {status === 'accepted' && <span class="tag tag--signal">Accepted</span>}
+    {status === 'conditionally-accepted' && <span class="tag tag--signal">Conditionally accepted</span>}
+  </p>
+  {
+    !compact && (
+      <p class="pub__tags">
+        <span class="tag">{kindLabel[kind]}</span>
+        {teams.map((t) => (
+          <a class="tag" href={url(`/teams/${t.id}`)}>
+            {teamNames[t.id]}
+          </a>
+        ))}
+        {useCases.map((u) => (
+          <a class="tag tag--accent" href={url(`/research/${u.id}`)}>
+            {codes[u.id]}
+          </a>
+        ))}
+      </p>
+    )
+  }
+</li>
+
+<style>
+  .pub {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .pub__title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+  .pub__title a {
+    text-decoration: none;
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-size: 0 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition:
+      background-size 0.25s var(--ease),
+      color 0.2s var(--ease);
+  }
+  .pub__title a:hover {
+    color: var(--accent);
+    background-size: 100% 1px;
+  }
+  .pub__title a::after {
+    content: ' ↗';
+    font-size: 0.8em;
+    color: var(--ink-3);
+  }
+  .pub__authors {
+    font-size: 0.9rem;
+    color: var(--ink-2);
+  }
+  .pub__venue {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.9rem;
+    color: var(--ink-3);
+  }
+  .pub__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+  .pub__tags a {
+    text-decoration: none;
+  }
+</style>

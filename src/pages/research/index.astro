@@ -1,0 +1,147 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/ui/PageHeader.astro';
+import FlightStrip from '~/components/ui/FlightStrip.astro';
+import Framework from '~/components/research/Framework.astro';
+import TaskMatrix from '~/components/research/TaskMatrix.astro';
+import { getTeams, getUseCases } from '~/lib/content';
+
+const useCases = await getUseCases();
+const teamNames = Object.fromEntries((await getTeams()).map((t) => [t.id, t.data.short]));
+
+const questions = [
+  {
+    id: 'TC1',
+    q: 'How can we identify and detect potential cyberattacks on aircraft autonomy and AAM/UTM software architecture?',
+    a: 'Raising industry awareness of the vulnerable links and components, and quantifying attack risk to individual aircraft and to the airspace.',
+  },
+  {
+    id: 'TC2',
+    q: 'How can we defend individual aircraft and airspace systems against cyberattacks?',
+    a: 'Informing investment in technologies and mechanisms that mitigate attack hazards and manage attack risk.',
+  },
+  {
+    id: 'TC3',
+    q: 'How can we harden AAM/UTM architectures and the aircraft autonomy software stack with security properties?',
+    a: 'Recommending security updates for system architectures, avionics software standards, and CNS infrastructure design.',
+  },
+];
+---
+
+<BaseLayout
+  title="Research"
+  description="Three technical challenges and eight aviation use cases for securing drones and air taxis in high-density urban airspace."
+>
+  <PageHeader
+    eyebrow="Research"
+    title="Securing autonomy, aircraft, and the airspace"
+    lede="We focus on cyberattacks against heterogeneous aircraft and airspace operations: eVTOL air taxis in Advanced Air Mobility (AAM) and small drones in UAS Traffic Management (UTM)."
+  />
+
+  <section class="section" aria-labelledby="questions-title">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">Research questions</p>
+        <h2 id="questions-title" class="h2">What we set out to answer</h2>
+      </header>
+      <ol class="questions" role="list">
+        {
+          questions.map((item) => (
+            <li data-reveal>
+              <p class="mono questions__id">{item.id}</p>
+              <h3>{item.q}</h3>
+              <p>{item.a}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--sunken" aria-labelledby="framework-title">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">Technical approach</p>
+        <h2 id="framework-title" class="h2">Three integrated technical challenges</h2>
+        <p class="lede">
+          Addressing these interdependent challenges together delivers resilience and safety assurance for automated
+          flight operations, even in the presence of malicious activity.
+        </p>
+      </header>
+      <Framework />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="cases-title">
+    <div class="container">
+      <header class="section-head section-head--split">
+        <div>
+          <p class="eyebrow">Aviation use cases</p>
+          <h2 id="cases-title" class="h2" style="margin-top: var(--space-4)">Eight use cases, cross-team by design</h2>
+        </div>
+        <p class="lede">
+          Each use case pairs a credible threat with defenses and brings together teams with complementary expertise.
+        </p>
+      </header>
+      <ul class="strips" role="list">
+        {
+          useCases.map((uc) => (
+            <li>
+              <FlightStrip useCase={uc} teamNames={teamNames} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--sunken" aria-labelledby="matrix-title">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">Integration</p>
+        <h2 id="matrix-title" class="h2">How the use cases cover the research tasks</h2>
+        <p class="lede">Each use case advances several of the nine proposal tasks, tying the three challenges together.</p>
+      </header>
+      <TaskMatrix />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .questions {
+    display: grid;
+    gap: var(--space-6);
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 900px) {
+    .questions {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .questions li {
+    display: grid;
+    gap: var(--space-3);
+    align-content: start;
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--ink);
+  }
+  .questions__id {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+  .questions h3 {
+    font-size: var(--step-1);
+    line-height: 1.3;
+  }
+  .questions li > p:last-child {
+    color: var(--ink-2);
+  }
+  .strips {
+    display: grid;
+    gap: var(--space-3);
+    padding: 0;
+    list-style: none;
+  }
+</style>

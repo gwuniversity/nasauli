@@ -1,18 +1,314 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
-import PlaceholderPage from '~/layouts/PlaceholderPage.astro';
+import { render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/ui/PageHeader.astro';
+import Highlights from '~/components/ui/Highlights.astro';
+import Figure from '~/components/ui/Figure.astro';
+import Pending from '~/components/ui/Pending.astro';
+import PubItem from '~/components/ui/PubItem.astro';
+import DemoCard from '~/components/ui/DemoCard.astro';
+import { getCollection } from 'astro:content';
+import { getFigures, getPublications, getTeams, getUseCases } from '~/lib/content';
+import { challenges } from '~/lib/site';
+import { url } from '~/lib/url';
 
 export async function getStaticPaths() {
-  return (await getCollection('useCases')).map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+  const all = await getUseCases();
+  return all.map((entry, i) => ({
+    params: { id: entry.id },
+    props: { entry, prev: all[i - 1], next: all[i + 1] },
+  }));
 }
 
-const { entry } = Astro.props as { entry: CollectionEntry<'useCases'> };
+interface Props {
+  entry: CollectionEntry<'useCases'>;
+  prev?: CollectionEntry<'useCases'>;
+  next?: CollectionEntry<'useCases'>;
+}
+
+const { entry, prev, next } = Astro.props;
+const { Content } = await render(entry);
+const teams = await getTeams();
+const teamById = Object.fromEntries(teams.map((t) => [t.id, t]));
+const teamNames = Object.fromEntries(teams.map((t) => [t.id, t.data.short]));
+const involved = entry.data.teams.map((t) => teamById[t.id]).filter(Boolean);
+const figures = await getFigures({ useCase: entry.id });
+const pubs = await getPublications({ useCase: entry.id });
+const demos = (await getCollection('demos')).filter((d) => d.data.useCase?.id === entry.id);
+const codes = Object.fromEntries((await getUseCases()).map((u) => [u.id, u.data.code]));
+const taskText = Object.fromEntries(
+  challenges.flatMap((tc, i) => tc.tasks.map((task, j) => [`${i + 1}.${j + 1}`, task])),
+);
+const highlights = entry.data.highlights.map((h) => ({ ...h, team: teamNames[h.team.id] }));
+const teamList = involved.map((t) => t.data.short).join(', ');
 ---
 
-<PlaceholderPage
-  eyebrow={`${entry.data.code} · Use case`}
-  title={entry.data.title}
-  lede={entry.data.summary}
-  phase={2}
-  what="Use-case page: problem, threat, approach, participating teams, highlight result, demo, and related papers."
-/>
+<BaseLayout title={entry.data.title} description={entry.data.summary}>
+  <PageHeader eyebrow={`${entry.data.code} · Aviation use case`} title={entry.data.title} lede={entry.data.summary}>
+    <div class="tag-row">
+      {entry.data.challenges.map((tc) => <span class="tag tag--accent">{tc}</span>)}
+      {
+        involved.map((t) => (
+          <a class="tag" href={url(`/teams/${t.id}`)}>
+            {t.data.short}
+          </a>
+        ))
+      }
+    </div>
+  </PageHeader>
+
+  {
+    highlights.length > 0 && (
+      <section class="uc-highlights" aria-label="Highlights">
+        <div class="container">
+          <Highlights items={highlights} />
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section">
+    <div class="container uc">
+      <article class="prose uc__body">
+        <Content />
+      </article>
+
+      <aside class="uc__aside" aria-label="At a glance">
+        <div class="glance">
+          <p class="eyebrow eyebrow--bare">At a glance</p>
+          <div>
+            <h2 class="glance__label glance__label--signal mono">Threat</h2>
+            <p>{entry.data.threat}</p>
+          </div>
+          {
+            entry.data.tasks.length > 0 && (
+              <div>
+                <h2 class="glance__label mono">Proposal tasks</h2>
+                <ul role="list" class="glance__tasks">
+                  {entry.data.tasks.map((t) => (
+                    <li>
+                      <span class="mono">{t}</span>
+                      {taskText[t]}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+          <div>
+            <h2 class="glance__label mono">Teams</h2>
+            <ul role="list" class="glance__teams">
+              {
+                involved.map((t) => (
+                  <li>
+                    <a href={url(`/teams/${t.id}`)}>{t.data.name}</a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  {
+    figures.length > 0 && (
+      <section class="section section--sunken" aria-labelledby="figures-title">
+        <div class="container">
+          <header class="section-head">
+            <p class="eyebrow">Figures</p>
+            <h2 id="figures-title" class="h2">From the research</h2>
+          </header>
+          <div class="figures">
+            {figures.map((f) => (
+              <Figure figure={f} teamNames={teamNames} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="uc-footer">
+    <div class="container uc-more">
+      {
+        demos.length > 0 ? (
+          <div class="uc-demos">
+            {demos.map((d) => (
+              <DemoCard demo={d} teamNames={teamNames} codes={codes} />
+            ))}
+          </div>
+        ) : (
+          <Pending owner={teamList} what="Demo video for this use case (demos.yaml entry with this useCase)." hidePublic />
+        )
+      }
+      {
+        pubs.length > 0 && (
+          <div class="uc-pubs">
+            <p class="eyebrow">Publications</p>
+            <ol role="list">
+              {pubs.map((p) => (
+                <PubItem pub={p} teamNames={teamNames} codes={codes} compact />
+              ))}
+            </ol>
+          </div>
+        )
+      }
+
+      <nav class="pager" aria-label="Other use cases">
+        {
+          prev ? (
+            <a href={url(`/research/${prev.id}`)} class="pager__link">
+              <span class="mono">← {prev.data.code}</span>
+              {prev.data.title}
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        <a class="pager__all link-arrow" href={url('/research')}>All use cases</a>
+        {
+          next && (
+            <a href={url(`/research/${next.id}`)} class="pager__link pager__link--next">
+              <span class="mono">{next.data.code} →</span>
+              {next.data.title}
+            </a>
+          )
+        }
+      </nav>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .uc-highlights {
+    padding-top: var(--space-8);
+  }
+  .uc {
+    display: grid;
+    gap: var(--space-7);
+  }
+  @media (min-width: 1000px) {
+    .uc {
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: var(--space-8);
+      align-items: start;
+    }
+    .uc__aside {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-5));
+    }
+  }
+  .glance {
+    display: grid;
+    gap: var(--space-5);
+    padding: var(--space-5);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-2);
+    background: var(--bg-raised);
+    font-size: 0.925rem;
+    color: var(--ink-2);
+  }
+  .glance__label {
+    margin-bottom: var(--space-2);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .glance__label--signal {
+    color: var(--signal);
+  }
+  .glance ul {
+    display: grid;
+    gap: var(--space-2);
+    padding: 0;
+    list-style: none;
+  }
+  .glance__tasks li {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+  }
+  .glance__tasks .mono {
+    font-size: 0.75rem;
+    color: var(--accent);
+    padding-top: 0.1rem;
+  }
+  .glance__teams a {
+    color: var(--ink);
+    text-decoration-color: var(--line-strong);
+  }
+  .glance__teams a:hover {
+    color: var(--accent);
+  }
+
+  .figures {
+    display: grid;
+    gap: var(--space-7) var(--space-6);
+  }
+  @media (min-width: 900px) {
+    .figures {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .uc-footer {
+    padding-block: var(--space-6) var(--space-8);
+  }
+  .uc-demos {
+    display: grid;
+    gap: var(--space-6);
+    margin-bottom: var(--space-6);
+  }
+  @media (min-width: 900px) {
+    .uc-demos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .uc-pubs ol {
+    margin-top: var(--space-4);
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--ink);
+  }
+  .uc-more {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+  .pager__link {
+    display: grid;
+    gap: var(--space-1);
+    font-weight: 550;
+    text-decoration: none;
+  }
+  .pager__link .mono {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  .pager__link:hover {
+    color: var(--accent);
+  }
+  .pager__link--next {
+    text-align: right;
+  }
+  @media (max-width: 700px) {
+    .pager {
+      grid-template-columns: 1fr 1fr;
+    }
+    .pager__all {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+  }
+</style>

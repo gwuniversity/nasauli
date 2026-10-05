@@ -1,0 +1,45 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { url } from '~/lib/url';
+---
+
+<BaseLayout title="Page not found">
+  <section class="notfound">
+    <div class="container notfound__inner">
+      <p class="eyebrow">Error 404 · Track lost</p>
+      <h1 class="display">This page is off the radar.</h1>
+      <p class="lede">The page you're looking for has moved or doesn't exist. Try one of these instead.</p>
+      <div class="notfound__actions">
+        <a class="btn" href={url('/')}>Home</a>
+        <a class="btn btn--ghost" href={url('/research')}>Research</a>
+        <a class="btn btn--ghost" href={url('/publications')}>Publications</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    padding-block: var(--space-9);
+    min-height: 60vh;
+    display: grid;
+    align-items: center;
+    background:
+      radial-gradient(circle at 80% 50%, transparent 0 18%, var(--line) 18.2% 18.4%, transparent 18.6% 30%, var(--line) 30.2% 30.4%, transparent 30.6%),
+      linear-gradient(var(--map-grid) 1px, transparent 1px) 0 0 / 24px 24px,
+      linear-gradient(90deg, var(--map-grid) 1px, transparent 1px) 0 0 / 24px 24px;
+  }
+  .notfound__inner {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+  }
+  .notfound .display {
+    max-width: 14ch;
+  }
+  .notfound__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+</style>

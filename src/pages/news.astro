@@ -1,21 +1,229 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import PageHeader from '~/components/ui/PageHeader.astro';
-import NewsList from '~/components/ui/NewsList.astro';
-import { getNews } from '~/lib/content';
+import { getNews, getTeams } from '~/lib/content';
+import { url } from '~/lib/url';
 
 const items = await getNews();
+const teamNames = Object.fromEntries((await getTeams()).map((t) => [t.id, t.data.short]));
+const kinds = [
+  { id: 'milestone', label: 'Milestones' },
+  { id: 'event', label: 'Events' },
+  { id: 'publication', label: 'Publications' },
+  { id: 'talk', label: 'Invited talks' },
+  { id: 'outreach', label: 'Outreach' },
+] as const;
+const kindLabel = Object.fromEntries(kinds.map((k) => [k.id, k.label.replace(/s$/, '')]));
+const years = [...new Set(items.map((i) => i.data.date.getUTCFullYear()))].sort((a, b) => b - a);
+const month = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
 ---
 
-<BaseLayout title="News & events" description="Milestones, meetings, publications, and talks from the project.">
+<BaseLayout title="News & events" description="Milestones, meetings, publications, invited talks, and outreach from the project.">
   <PageHeader
     eyebrow="News & events"
     title="News & events"
-    lede="Milestones, annual meetings, publications, and invited talks."
+    lede="Milestones, annual meetings, publications, invited talks from industry and government, and outreach."
   />
+
   <section class="section">
-    <div class="container">
-      <NewsList items={items} />
+    <div class="container" data-news>
+      <div class="kinds" role="group" aria-label="Filter by type">
+        <button type="button" data-kind="" aria-pressed="true">All</button>
+        {
+          kinds.map((k) => (
+            <button type="button" data-kind={k.id} aria-pressed="false">
+              <span class={`dot dot--${k.id}`} aria-hidden="true" />
+              {k.label}
+            </button>
+          ))
+        }
+      </div>
+
+      {
+        years.map((year) => (
+          <section class="nyear" data-year-group>
+            <h2 class="nyear__label mono">{year}</h2>
+            <ol class="timeline" role="list">
+              {items
+                .filter((i) => i.data.date.getUTCFullYear() === year)
+                .map((i) => (
+                  <li class="entry" data-entry data-kind={i.data.kind}>
+                    <time class="entry__date mono" datetime={i.data.date.toISOString().slice(0, 7)}>
+                      {month(i.data.date)}
+                    </time>
+                    <span class={`entry__marker dot dot--${i.data.kind}`} aria-hidden="true" />
+                    <div class="entry__body">
+                      <p class="entry__kind mono">{kindLabel[i.data.kind]}</p>
+                      <h3>{i.data.title}</h3>
+                      <p>{i.data.summary}</p>
+                      {i.data.teams.length > 0 && (
+                        <p class="entry__teams">
+                          {i.data.teams.map((t) => (
+                            <a class="tag" href={url(`/teams/${t.id}`)}>
+                              {teamNames[t.id]}
+                            </a>
+                          ))}
+                        </p>
+                      )}
+                    </div>
+                  </li>
+                ))}
+            </ol>
+          </section>
+        ))
+      }
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .kinds {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-7);
+  }
+  .kinds button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--bg-raised);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+  .kinds button[aria-pressed='true'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+
+  .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ink-3);
+  }
+  .dot--milestone {
+    background: var(--ink);
+  }
+  .dot--event {
+    background: var(--accent-graphic);
+  }
+  .dot--publication {
+    background: #5b6cff;
+  }
+  .dot--talk {
+    background: var(--signal-graphic);
+  }
+  .dot--outreach {
+    background: #c04ba3;
+  }
+  .kinds button[aria-pressed='true'] .dot--milestone {
+    background: var(--bg);
+  }
+
+  .nyear {
+    display: grid;
+    gap: var(--space-3) var(--space-6);
+    padding-top: var(--space-5);
+    margin-bottom: var(--space-7);
+    border-top: 1px solid var(--ink);
+  }
+  @media (min-width: 900px) {
+    .nyear {
+      grid-template-columns: 120px minmax(0, 1fr);
+    }
+    .nyear__label {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-5));
+      align-self: start;
+    }
+  }
+  .nyear__label {
+    font-size: var(--step-2);
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .timeline {
+    position: relative;
+    padding: 0;
+    list-style: none;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: calc(3.25rem + 3px);
+    top: 0.6rem;
+    bottom: 0.6rem;
+    border-left: 1.5px dashed var(--line-strong);
+  }
+  .entry {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3.25rem 8px minmax(0, 1fr);
+    gap: 0 var(--space-4);
+    padding-bottom: var(--space-6);
+  }
+  .entry__date {
+    padding-top: 0.15rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .entry__marker {
+    position: relative;
+    margin-top: 0.4rem;
+    box-shadow: 0 0 0 4px var(--bg);
+  }
+  .entry__body {
+    display: grid;
+    gap: var(--space-2);
+    max-width: 72ch;
+  }
+  .entry__kind {
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .entry h3 {
+    font-size: var(--step-1);
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+  }
+  .entry__body > p:not(.entry__kind):not(.entry__teams) {
+    color: var(--ink-2);
+  }
+  .entry__teams {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .entry__teams a {
+    text-decoration: none;
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-news]');
+  if (root) {
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-kind]')].filter((b) => b.tagName === 'BUTTON');
+    const entries = [...root.querySelectorAll<HTMLElement>('[data-entry]')];
+    const groups = [...root.querySelectorAll<HTMLElement>('[data-year-group]')];
+    buttons.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        const kind = btn.dataset.kind;
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        entries.forEach((e) => (e.hidden = Boolean(kind) && e.dataset.kind !== kind));
+        groups.forEach((g) => (g.hidden = !g.querySelector('[data-entry]:not([hidden])')));
+      }),
+    );
+  }
+</script>

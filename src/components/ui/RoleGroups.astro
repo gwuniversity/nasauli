@@ -1,0 +1,94 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { roleGroupLabels } from '~/lib/site';
+
+interface Props {
+  people: CollectionEntry<'people'>[];
+  /** Heading level for group labels, to fit the surrounding outline. */
+  level?: 3 | 4;
+}
+
+const { people, level = 4 } = Astro.props;
+const Heading = `h${level}` as 'h3' | 'h4';
+const groups = (Object.keys(roleGroupLabels) as (keyof typeof roleGroupLabels)[])
+  .map((role) => ({ role, label: roleGroupLabels[role], members: people.filter((p) => p.data.role === role) }))
+  .filter((g) => g.members.length > 0);
+---
+
+<div class="role-groups">
+  {
+    groups.map((g) => (
+      <section class="role-group">
+        <Heading class="role-group__label mono">
+          {g.label}
+          <span>{g.members.length}</span>
+        </Heading>
+        <ul role="list" class="role-group__names">
+          {g.members.map((p) => (
+            <li>
+              <span class="name">{p.data.name}</span>
+              {(p.data.cohort || (p.data.title && p.data.role === 'staff')) && (
+                <span class="detail">{p.data.role === 'staff' ? p.data.title : p.data.cohort}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .role-groups {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .role-group__label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .role-group__label span {
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.4rem;
+    height: 1.15rem;
+    padding: 0 0.3rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    letter-spacing: 0;
+  }
+  .role-group__names {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: var(--space-2);
+    padding: 0;
+    list-style: none;
+  }
+  .role-group__names li {
+    display: grid;
+    align-content: center;
+    min-height: 2.75rem;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--accent-graphic);
+    border-radius: var(--radius-1);
+    background: var(--bg-raised);
+    line-height: 1.3;
+  }
+  .name {
+    font-weight: 550;
+    font-size: 0.925rem;
+  }
+  .detail {
+    font-size: 0.78rem;
+    color: var(--ink-3);
+  }
+</style>

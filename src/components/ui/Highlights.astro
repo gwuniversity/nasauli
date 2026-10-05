@@ -1,0 +1,58 @@
+---
+interface Props {
+  items: { value: string; label: string; team?: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <dl class="highlights">
+      {items.map((h) => (
+        <div class="highlight">
+          <dt>
+            {h.label}
+            {h.team && <span class="mono">{h.team}</span>}
+          </dt>
+          <dd>{h.value}</dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
+
+<style>
+  .highlights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    border-top: 1px solid var(--ink);
+  }
+  .highlight {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    padding: var(--space-5) var(--space-5) var(--space-5) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .highlight dd {
+    font-size: var(--step-4);
+    font-weight: 550;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+  .highlight dt {
+    display: grid;
+    gap: var(--space-2);
+    font-size: 0.9rem;
+    color: var(--ink-2);
+    max-width: 32ch;
+  }
+  .highlight dt .mono {
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+</style>

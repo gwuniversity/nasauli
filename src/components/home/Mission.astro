@@ -1,5 +1,18 @@
 ---
-import { stats } from '~/lib/site';
+import { getCollection } from 'astro:content';
+
+// Headline numbers are derived from the content collections so they never drift.
+const [teams, pubs, people] = await Promise.all([
+  getCollection('teams'),
+  getCollection('publications'),
+  getCollection('people'),
+]);
+const stats = [
+  { value: String(teams.length), label: 'Partner institutions' },
+  { value: String(pubs.length), label: 'Peer-reviewed publications' },
+  { value: String(people.filter((p) => !p.data.alumni).length), label: 'Researchers and students' },
+  { value: '3', label: 'Technical challenges' },
+];
 ---
 
 <section class="section mission" aria-labelledby="mission-title">

@@ -1,11 +1,181 @@
 ---
-import PlaceholderPage from '~/layouts/PlaceholderPage.astro';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/ui/PageHeader.astro';
+import { getTeams } from '~/lib/content';
+import { url } from '~/lib/url';
+
+const programs = (await getCollection('outreach')).sort((a, b) => a.data.order - b.data.order);
+const teamNames = Object.fromEntries((await getTeams()).map((t) => [t.id, t.data.short]));
+const audienceLabel = {
+  'community-college': 'Community college',
+  undergraduate: 'Undergraduate',
+  'high-school': 'High school',
+  'k-12': 'K–12',
+};
+const audiences = Object.keys(audienceLabel) as (keyof typeof audienceLabel)[];
+const counts = audiences.map((a) => ({ a, n: programs.filter((p) => p.data.audience === a).length }));
 ---
 
-<PlaceholderPage
-  eyebrow="Outreach"
-  title="Building the next generation of aerospace talent"
-  lede="Community-college research internships, K–12 programs, and hands-on STEM engagement across our institutions."
-  phase={4}
-  what="Outreach programs by institution, with blurred photos until consent is confirmed."
-/>
+<BaseLayout title="Outreach" description="Education and outreach from the NASA ULI Securing High-Density Urban Airspaces project.">
+  <PageHeader
+    eyebrow="Outreach & education"
+    title="Building the next generation of aerospace talent"
+    lede="From community-college internships to K–12 robotics, our teams open research labs to students at every stage."
+  >
+    <dl class="aud mono">
+      {
+        counts.map(({ a, n }) => (
+          <div>
+            <dt>{audienceLabel[a]}</dt>
+            <dd>
+              {n} {n === 1 ? 'program' : 'programs'}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </PageHeader>
+
+  <section class="section">
+    <div class="container">
+      <ol class="programs" role="list">
+        {
+          programs.map((p, i) => (
+            <li class:list={['program', { 'program--photos': p.data.photos.length > 0 }]} data-reveal>
+              <div class="program__text">
+                <p class="program__meta mono">
+                  <span>{String(i + 1).padStart(2, '0')}</span>
+                  <span>{audienceLabel[p.data.audience]}</span>
+                  <span>{p.data.when}</span>
+                </p>
+                <h2>{p.data.title}</h2>
+                <p>{p.data.summary}</p>
+                <p class="program__teams">
+                  {p.data.teams.map((t) => (
+                    <a class="tag" href={url(`/teams/${t.id}`)}>
+                      {teamNames[t.id]}
+                    </a>
+                  ))}
+                </p>
+              </div>
+              {p.data.photos.length > 0 && (
+                <div class:list={['program__photos', `n${Math.min(p.data.photos.length, 2)}`]}>
+                  {p.data.photos.slice(0, 2).map((ph) => (
+                    <figure>
+                      <Image src={ph.src} alt={ph.alt} widths={[400, 800]} sizes="(min-width: 1000px) 360px, 90vw" />
+                    </figure>
+                  ))}
+                  <p class="program__note mono">Photos blurred pending consent</p>
+                </div>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .aud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+  }
+  .aud div {
+    display: grid;
+    gap: 0.1rem;
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-2);
+    background: var(--bg-raised);
+  }
+  .aud dt {
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .aud dd {
+    font-family: var(--font-sans);
+    font-weight: 600;
+  }
+
+  .programs {
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--ink);
+  }
+  .program {
+    display: grid;
+    gap: var(--space-5) var(--space-8);
+    padding-block: var(--space-7);
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 1000px) {
+    .program--photos {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+  .program__text {
+    display: grid;
+    gap: var(--space-3);
+    max-width: 68ch;
+  }
+  .program__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .program__meta span:first-child {
+    color: var(--accent);
+  }
+  .program h2 {
+    font-size: var(--step-2);
+  }
+  .program__text > p:not(.program__meta):not(.program__teams) {
+    color: var(--ink-2);
+  }
+  .program__teams {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .program__teams a {
+    text-decoration: none;
+  }
+
+  .program__photos {
+    display: grid;
+    gap: var(--space-3);
+  }
+  .program__photos.n2 {
+    grid-template-columns: 1fr 1fr;
+  }
+  .program__photos figure {
+    overflow: hidden;
+    border-radius: var(--radius-2);
+    border: 1px solid var(--line);
+    aspect-ratio: 4 / 3;
+  }
+  .program__photos img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .program__note {
+    grid-column: 1 / -1;
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+</style>

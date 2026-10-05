@@ -27,6 +27,17 @@ const teams = defineCollection({
     website: z.url().optional(),
     /** Longer team overview, written by the site PI. */
     overview: z.string().optional(),
+    /** Research thrusts, summarized from the annual reports. */
+    thrusts: z
+      .array(
+        z.object({
+          title: z.string(),
+          body: z.string(),
+          useCase: reference('useCases').optional(),
+          partners: z.array(reference('teams')).default([]),
+        }),
+      )
+      .default([]),
   }),
 });
 
@@ -40,8 +51,28 @@ const useCases = defineCollection({
     threat: z.string(),
     teams: z.array(reference('teams')),
     challenges: z.array(techChallenge),
+    /** Proposal task numbers this use case advances, e.g. "1.1". */
+    tasks: z.array(z.string().regex(/^[1-3]\.[1-3]$/)).default([]),
     order: z.number(),
+    /** Headline results from published or accepted work only. */
+    highlights: z
+      .array(z.object({ value: z.string(), label: z.string(), team: reference('teams') }))
+      .default([]),
   }),
+});
+
+const figures = defineCollection({
+  loader: file('src/data/figures.yaml'),
+  schema: ({ image }) =>
+    z.object({
+      src: image(),
+      alt: z.string(),
+      caption: z.string(),
+      teams: z.array(reference('teams')),
+      useCases: z.array(reference('useCases')).default([]),
+      /** Diagrams drawn on black keep their own background in both themes. */
+      dark: z.boolean().default(false),
+    }),
 });
 
 const people = defineCollection({
@@ -56,6 +87,10 @@ const people = defineCollection({
       photo: image().optional(),
       website: z.url().optional(),
       alumni: z.boolean().default(false),
+      /** Optional position within a role group; otherwise sorted by last name. */
+      order: z.number().optional(),
+      /** e.g. "Summer 2026 intern" for community-college interns. */
+      cohort: z.string().optional(),
     }),
 });
 
@@ -67,7 +102,8 @@ const publications = defineCollection({
     venue: z.string(),
     year: z.number().int(),
     // In-review work is intentionally not representable here.
-    status: z.enum(['published', 'accepted']),
+    status: z.enum(['published', 'accepted', 'conditionally-accepted']),
+    kind: z.enum(['journal', 'conference', 'workshop', 'thesis']),
     teams: z.array(reference('teams')),
     useCases: z.array(reference('useCases')).default([]),
     doi: z.string().optional(),
@@ -87,6 +123,34 @@ const demos = defineCollection({
   }),
 });
 
+const tools = defineCollection({
+  loader: file('src/data/tools.yaml'),
+  schema: z.object({
+    name: z.string(),
+    kind: z.enum(['simulator', 'dataset', 'software']),
+    summary: z.string(),
+    teams: z.array(reference('teams')),
+    useCases: z.array(reference('useCases')).default([]),
+    /** Public link. Omit when the resource is not publicly released. */
+    url: z.url().optional(),
+  }),
+});
+
+const outreach = defineCollection({
+  loader: file('src/data/outreach.yaml'),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      audience: z.enum(['community-college', 'undergraduate', 'high-school', 'k-12']),
+      when: z.string(),
+      summary: z.string(),
+      teams: z.array(reference('teams')),
+      /** Blurred copies only (see scripts/blur-photos.mjs) until consent is confirmed. */
+      photos: z.array(z.object({ src: image(), alt: z.string() })).default([]),
+      order: z.number(),
+    }),
+});
+
 const news = defineCollection({
   loader: glob({ pattern: '*.md', base: 'src/content/news' }),
   schema: z.object({
@@ -98,4 +162,4 @@ const news = defineCollection({
   }),
 });
 
-export const collections = { teams, useCases, people, publications, demos, news };
+export const collections = { teams, useCases, figures, people, publications, demos, tools, outreach, news };

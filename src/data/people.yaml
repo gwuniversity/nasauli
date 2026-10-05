@@ -1,15 +1,79 @@
-# Principal investigators and co-investigators. Students, postdocs, and staff are added in Phase 2.
-# Photos (PIs and co-Is only) go in src/assets/people/ and are referenced as ../assets/people/<file>.
-- { id: peng-wei, name: Peng Wei, team: gwu, role: pi, title: Professor }
-- { id: bryan-ward, name: Bryan C. Ward, team: vanderbilt, role: site-pi }
-- { id: gautam-biswas, name: Gautam Biswas, team: vanderbilt, role: co-i }
-- { id: xenofon-koutsoukos, name: Xenofon Koutsoukos, team: vanderbilt, role: co-i, alumni: true }
-- { id: vijay-gupta, name: Vijay Gupta, team: purdue, role: site-pi }
-- { id: mahsa-ghasemi, name: Mahsa Ghasemi, team: purdue, role: co-i }
-- { id: ufuk-topcu, name: Ufuk Topcu, team: ut-austin, role: site-pi }
-- { id: alfred-chen, name: Alfred Chen, team: uc-irvine, role: site-pi }
-- { id: amir-shirkhodaie, name: Amir Shirkhodaie, team: tsu, role: site-pi }
-- { id: isaac-amundson, name: Isaac Amundson, team: collins, role: site-pi }
+# Project personnel, from the Year 1–2 reports. Within a role, people sort by `order` (if set), then last name.
+# Photos only for PIs and co-Is: src/assets/people/<id>.jpg referenced as ../assets/people/<id>.jpg.
+# Roles: pi | site-pi | co-i | postdoc | phd | ms | undergrad | intern | staff
+
+# --- GWU ---
+- { id: peng-wei, name: Peng Wei, team: gwu, role: pi, title: 'Professor of Mechanical and Aerospace Engineering', website: 'https://mae.engineering.gwu.edu/peng-wei', photo: ../assets/people/peng-wei.jpg }
+- { id: iman-sharifi, name: Iman Sharifi, team: gwu, role: phd, order: 1 }
+- { id: mahyar-ghazanfari, name: Mahyar Ghazanfari, team: gwu, role: phd }
+- { id: dao-vu, name: Dao Vu, team: gwu, role: phd }
+- { id: aarifah-ullah, name: Aarifah Ullah, team: gwu, role: phd }
+
+# --- Vanderbilt ---
+- { id: bryan-ward, name: Bryan C. Ward, team: vanderbilt, role: site-pi, title: 'Assistant Professor of Computer Science', website: 'https://computing.vanderbilt.edu/person/bryan-ward/', photo: ../assets/people/bryan-ward.jpg }
+- { id: gautam-biswas, name: Gautam Biswas, team: vanderbilt, role: co-i, title: 'Cornelius Vanderbilt Professor of Engineering', website: 'https://computing.vanderbilt.edu/person/gautam-biswas/', photo: ../assets/people/gautam-biswas.jpg }
+- { id: abenezer-taye, name: Abenezer Taye, team: vanderbilt, role: postdoc }
+- { id: abel-diaz-gonzalez, name: Abel Diaz-Gonzalez, team: vanderbilt, role: phd }
+- { id: bryce-bjorkman, name: Bryce Bjorkman, team: vanderbilt, role: phd }
+- { id: cai-lemieux-mack, name: Cai Lemieux-Mack, team: vanderbilt, role: phd }
+- { id: noah-dahle, name: Noah Dahle, team: vanderbilt, role: phd }
+- { id: joel-isaacson, name: Joel Isaacson, team: vanderbilt, role: phd }
+# TODO(confirm): Year 2 roster spells "Stanley Zhang"; papers and the outreach list use "Zheng".
+- { id: stanley-zheng, name: Stanley Zheng, team: vanderbilt, role: undergrad }
+- { id: jeremiah-webb, name: Jeremiah Webb, team: vanderbilt, role: undergrad }
+- { id: bennett-davis, name: Bennett Davis, team: vanderbilt, role: undergrad }
+- { id: samuel-gonzalez, name: Samuel Gonzalez, team: vanderbilt, role: undergrad }
+- { id: daniil-shatokhin, name: Daniil Shatokhin, team: vanderbilt, role: undergrad }
+- { id: xenofon-koutsoukos, name: Xenofon Koutsoukos, team: vanderbilt, role: co-i, alumni: true, title: 'Professor of Computer Science; now a DARPA program manager', website: 'https://computing.vanderbilt.edu/person/xenofon-koutsoukos/', photo: ../assets/people/xenofon-koutsoukos.jpg }
+- { id: robert-canady, name: Robert Canady, team: vanderbilt, role: postdoc, alumni: true }
+- { id: austin-coursey, name: Austin Coursey, team: vanderbilt, role: phd, alumni: true }
+- { id: patryk-dobranowski, name: Patryk Dobranowski, team: vanderbilt, role: undergrad, alumni: true }
+
+# --- Purdue ---
+- { id: vijay-gupta, name: Vijay Gupta, team: purdue, role: site-pi, title: 'Elmore Professor of Electrical and Computer Engineering', website: 'https://engineering.purdue.edu/ECE/People/ptProfile?resource_id=267567', photo: ../assets/people/vijay-gupta.jpg }
+- { id: mahsa-ghasemi, name: Mahsa Ghasemi, team: purdue, role: co-i, title: 'Assistant Professor of Electrical and Computer Engineering', website: 'https://engineering.purdue.edu/ECE/People/ptProfile?resource_id=256126', photo: ../assets/people/mahsa-ghasemi.jpg }
+- { id: shivam-bajaj, name: Shivam Bajaj, team: purdue, role: postdoc }
+- { id: ashwin-verma, name: Ashwin Verma, team: purdue, role: postdoc }
+- { id: hyeong-tae-kim, name: Hyeong-Tae Kim, team: purdue, role: phd }
+# TODO(confirm): name as listed in the reports.
+- { id: maheed-ahmed, name: Maheed Hatem Most Ahmed, team: purdue, role: phd }
+- { id: pranoy-das, name: Pranoy Das, team: purdue, role: phd }
+
+# --- UT Austin ---
+- { id: ufuk-topcu, name: Ufuk Topcu, team: ut-austin, role: site-pi, title: 'Professor of Aerospace Engineering and Engineering Mechanics', website: 'https://ae.utexas.edu/person/ufuk-topcu/', photo: ../assets/people/ufuk-topcu.jpg }
+- { id: filippos-fotiadis, name: Filippos Fotiadis, team: ut-austin, role: postdoc }
+- { id: scott-yue-guan, name: Scott Yue Guan, team: ut-austin, role: postdoc }
+- { id: jaehan-im, name: Jaehan Im, team: ut-austin, role: phd }
+- { id: quentin-rommel, name: Quentin Rommel, team: ut-austin, role: phd }
+- { id: jennifer-rozenblit, name: Jennifer Rozenblit, team: ut-austin, role: phd }
+- { id: meredith-albers, name: Meredith Albers, team: ut-austin, role: staff, title: Technical Project Manager }
+
+# --- UC Irvine ---
+- { id: alfred-chen, name: Alfred Chen, team: uc-irvine, role: site-pi, title: 'Associate Professor of Computer Science', website: 'https://ics.uci.edu/people/alfred-chen/', photo: ../assets/people/alfred-chen.jpg }
+- { id: junchi-lu, name: Junchi Lu, team: uc-irvine, role: phd }
+
+# --- TSU ---
+- { id: amir-shirkhodaie, name: Amir Shirkhodaie, team: tsu, role: site-pi, title: 'Professor of Mechanical and Manufacturing Engineering', website: 'https://www.tnstate.edu/academics/engineering/faculty/', photo: ../assets/people/amir-shirkhodaie.jpg }
+- { id: branndon-jones, name: Branndon Jones, team: tsu, role: postdoc }
+- { id: mohammad-amin-hodaei, name: Mohammad Amin Hodaei, team: tsu, role: phd }
+- { id: nischal-aryal, name: Nischal Aryal, team: tsu, role: ms }
+- { id: abdul-kareem-ras, name: Abdul Kareem Ras, team: tsu, role: ms }
+- { id: kane-miller, name: Kane Miller, team: tsu, role: ms }
+- { id: james-mcwilliams, name: James McWilliams, team: tsu, role: undergrad }
+- { id: amer-ibrahim, name: Amer Ibrahim, team: tsu, role: ms, alumni: true }
+
+# --- Collins Aerospace ---
+- { id: isaac-amundson, name: Isaac Amundson, team: collins, role: site-pi, title: 'Senior Principal Trusted Systems Engineer', website: 'https://sites.google.com/site/isaacamundson/home' }
 - { id: heber-herencia-zapana, name: Heber Herencia-Zapana, team: collins, role: co-i }
 - { id: saqib-hasan, name: Saqib Hasan, team: collins, role: co-i, alumni: true }
-- { id: kwabena-konadu, name: Kwabena Konadu, team: nvcc, role: site-pi }
+
+# --- NVCC ---
+- { id: kwabena-konadu, name: Kwabena Konadu, team: nvcc, role: site-pi, title: 'Discipline Chair, Cybersecurity', website: 'https://www.nvcc.edu/academics/programs/cybersecurity/faculty.html', photo: ../assets/people/kwabena-konadu.jpg }
+- { id: vincenzo-de-raco, name: Vincenzo De Raco, team: nvcc, role: intern, cohort: Summer 2026 }
+- { id: winston-harvey, name: Winston Harvey, team: nvcc, role: intern, cohort: Summer 2026 }
+- { id: subaita-sajjad, name: Subaita Sajjad, team: nvcc, role: intern, cohort: Summer 2026 }
+- { id: brendan-luna, name: Brendan Luna, team: nvcc, role: intern, cohort: Summer 2026 }
+- { id: habibullah-husain, name: Habibullah Husain, team: nvcc, role: intern, cohort: Summer 2025, alumni: true }
+- { id: mehreen-khan, name: Mehreen Khan, team: nvcc, role: intern, cohort: Summer 2025, alumni: true }
+- { id: austin-holmes, name: Austin Holmes, team: nvcc, role: intern, cohort: Summer 2025, alumni: true }
+- { id: mohamed-taha, name: Mohamed Taha, team: nvcc, role: intern, cohort: Summer 2025, alumni: true }

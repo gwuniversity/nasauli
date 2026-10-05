@@ -2,11 +2,14 @@
 import { getCollection } from 'astro:content';
 import NewsList from '~/components/ui/NewsList.astro';
 import Pending from '~/components/ui/Pending.astro';
-import { getNews } from '~/lib/content';
+import DemoCard from '~/components/ui/DemoCard.astro';
+import { getNews, getTeams, getUseCases } from '~/lib/content';
 import { url } from '~/lib/url';
 
 const featuredDemos = (await getCollection('demos')).filter((d) => d.data.featured);
 const latest = (await getNews()).slice(0, 3);
+const teamNames = Object.fromEntries((await getTeams()).map((t) => [t.id, t.data.short]));
+const codes = Object.fromEntries((await getUseCases()).map((u) => [u.id, u.data.code]));
 
 const years = [
   { year: 'Year 1', span: '2024–25', title: 'Foundations', body: 'Threat surveys, simulation platforms, and the first attacks and defenses.', state: 'done' },
@@ -45,6 +48,15 @@ const years = [
   </div>
 
   <div class="container">
+    {
+      featuredDemos.length > 0 && (
+        <div class="featured-demos">
+          {featuredDemos.slice(0, 2).map((d) => (
+            <DemoCard demo={d} teamNames={teamNames} codes={codes} />
+          ))}
+        </div>
+      )
+    }
     {
       featuredDemos.length === 0 && (
         <div style="margin-top: var(--space-7)">
@@ -87,6 +99,16 @@ const years = [
     display: grid;
     gap: var(--space-4);
     justify-items: start;
+  }
+  .featured-demos {
+    display: grid;
+    gap: var(--space-6);
+    margin-top: var(--space-8);
+  }
+  @media (min-width: 900px) {
+    .featured-demos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
   .outlook__all {
     justify-self: end;

@@ -1,18 +1,357 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
-import PlaceholderPage from '~/layouts/PlaceholderPage.astro';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/ui/PageHeader.astro';
+import PersonCard from '~/components/ui/PersonCard.astro';
+import MemberList from '~/components/ui/MemberList.astro';
+import RoleGroups from '~/components/ui/RoleGroups.astro';
+import FlightStrip from '~/components/ui/FlightStrip.astro';
+import Figure from '~/components/ui/Figure.astro';
+import Pending from '~/components/ui/Pending.astro';
+import IrisGallery from '~/components/research/IrisGallery.astro';
+import PubItem from '~/components/ui/PubItem.astro';
+import { getFigures, getPeople, getPublications, getTeams, getUseCases, isInvestigator } from '~/lib/content';
+import { url } from '~/lib/url';
 
 export async function getStaticPaths() {
-  return (await getCollection('teams')).map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+  const all = await getTeams();
+  return all.map((entry, i) => ({ params: { id: entry.id }, props: { entry, prev: all[i - 1], next: all[i + 1] } }));
 }
 
-const { entry } = Astro.props as { entry: CollectionEntry<'teams'> };
+interface Props {
+  entry: CollectionEntry<'teams'>;
+  prev?: CollectionEntry<'teams'>;
+  next?: CollectionEntry<'teams'>;
+}
+
+const { entry, prev, next } = Astro.props;
+const { short, name, city, state, role, focus, overview, thrusts, website } = entry.data;
+
+const teams = await getTeams();
+const teamNames = Object.fromEntries(teams.map((t) => [t.id, t.data.short]));
+const useCases = (await getUseCases()).filter((u) => u.data.teams.some((t) => t.id === entry.id));
+const codes = Object.fromEntries((await getUseCases()).map((u) => [u.id, u.data.code]));
+const figures = await getFigures({ team: entry.id });
+const pubs = await getPublications({ team: entry.id });
+
+const people = (await getPeople()).filter((p) => p.data.team.id === entry.id);
+const investigators = people.filter((p) => isInvestigator(p.data.role) && !p.data.alumni);
+const members = people.filter((p) => !isInvestigator(p.data.role) && !p.data.alumni);
+const alumni = people.filter((p) => p.data.alumni);
+
+// Partners: teams that share a use case with this one.
+const partnerIds = new Set(useCases.flatMap((u) => u.data.teams.map((t) => t.id)));
+partnerIds.delete(entry.id);
+const partners = teams.filter((t) => partnerIds.has(t.id));
 ---
 
-<PlaceholderPage
-  eyebrow={`${entry.data.short} · ${entry.data.city}, ${entry.data.state}`}
-  title={entry.data.name}
-  lede={entry.data.role}
-  phase={2}
-  what="Team page: overview (site PI), focus areas, highlights, PI cards, student list, and publications."
-/>
+<BaseLayout title={name} description={role}>
+  <PageHeader eyebrow={`${short} · ${city}, ${state}`} title={name} lede={role}>
+    <div class="tag-row">{focus.map((f) => <span class="tag">{f}</span>)}</div>
+    {website && <p><a class="link-arrow" href={website} rel="noopener">Team website</a></p>}
+  </PageHeader>
+
+  <section class="section">
+    <div class="container team">
+      <div class="team__main">
+        <div class="team__overview">
+          {
+            overview ? (
+              <p class="lede">{overview}</p>
+            ) : (
+              <Pending owner={`${short} site PI`} what="Team overview (teams.yaml → overview): a short paragraph in your own words." hidePublic />
+            )
+          }
+        </div>
+
+        <header class="sub-head">
+          <p class="eyebrow">Research thrusts</p>
+        </header>
+        <ol class="thrusts" role="list">
+          {
+            thrusts.map((t, i) => (
+              <li class="thrust" data-reveal>
+                <span class="thrust__n mono">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  <h2>{t.title}</h2>
+                  <p>{t.body}</p>
+                  {(t.useCase || t.partners.length > 0) && (
+                    <p class="thrust__meta">
+                      {t.useCase && (
+                        <a class="tag tag--accent" href={url(`/research/${t.useCase.id}`)}>
+                          {codes[t.useCase.id]}
+                        </a>
+                      )}
+                      {t.partners.map((p) => (
+                        <a class="tag" href={url(`/teams/${p.id}`)}>
+                          with {teamNames[p.id]}
+                        </a>
+                      ))}
+                    </p>
+                  )}
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <aside class="team__aside" aria-label="Team">
+        <p class="eyebrow eyebrow--bare">Investigators</p>
+        <div class="team__pis">
+          {investigators.map((p) => <PersonCard person={p} team={entry} showTeam={false} />)}
+        </div>
+        {
+          partners.length > 0 && (
+            <div class="team__partners">
+              <p class="eyebrow eyebrow--bare">Collaborates with</p>
+              <ul role="list">
+                {partners.map((t) => (
+                  <li>
+                    <a href={url(`/teams/${t.id}`)}>{t.data.name}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </aside>
+    </div>
+  </section>
+
+  {
+    (figures.length > 0 || entry.id === 'tsu') && (
+      <section class="section section--sunken" aria-labelledby="team-figures">
+        <div class="container">
+          <header class="section-head">
+            <p class="eyebrow">Figures</p>
+            <h2 id="team-figures" class="h2">From the research</h2>
+          </header>
+          {entry.id === 'tsu' && (
+            <div style="margin-bottom: var(--space-7)">
+              <IrisGallery />
+            </div>
+          )}
+          <div class="figures">
+            {figures.map((f) => (
+              <Figure figure={f} teamNames={teamNames} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    useCases.length > 0 && (
+      <section class="section" aria-labelledby="team-cases">
+        <div class="container">
+          <header class="section-head">
+            <p class="eyebrow">Use cases</p>
+            <h2 id="team-cases" class="h2">Where {short} contributes</h2>
+          </header>
+          <ul class="strips" role="list">
+            {useCases.map((u) => (
+              <li>
+                <FlightStrip useCase={u} teamNames={teamNames} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section section--sunken" aria-labelledby="team-people">
+    <div class="container people">
+      <div>
+        <p class="eyebrow">People</p>
+        <h2 id="team-people" class="h2" style="margin-top: var(--space-4)">Researchers and students</h2>
+      </div>
+      <div class="people__lists">
+        {members.length > 0 ? <RoleGroups people={members} level={3} /> : <Pending owner={`${short} site PI`} what="Postdocs and students" hidePublic />}
+        {
+          alumni.length > 0 && (
+            <div>
+              <p class="eyebrow eyebrow--bare" style="margin-bottom: var(--space-3)">Former members</p>
+              <MemberList people={alumni} />
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  {
+    pubs.length > 0 && (
+      <section class="section" aria-labelledby="team-pubs">
+        <div class="container people">
+          <div>
+            <p class="eyebrow">Publications</p>
+            <h2 id="team-pubs" class="h2" style="margin-top: var(--space-4)">
+              {pubs.length} {pubs.length === 1 ? 'paper' : 'papers'}
+            </h2>
+          </div>
+          <ol role="list" class="team-pubs">
+            {pubs.map((p) => (
+              <PubItem pub={p} teamNames={teamNames} codes={codes} />
+            ))}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="team-footer">
+    <div class="container">
+      <nav class="pager" aria-label="Other teams">
+        {prev ? <a class="pager__link" href={url(`/teams/${prev.id}`)}><span class="mono">←</span>{prev.data.name}</a> : <span />}
+        <a class="link-arrow" href={url('/teams')}>All teams</a>
+        {next && <a class="pager__link pager__link--next" href={url(`/teams/${next.id}`)}><span class="mono">→</span>{next.data.name}</a>}
+      </nav>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .team {
+    display: grid;
+    gap: var(--space-8);
+  }
+  @media (min-width: 1000px) {
+    .team {
+      grid-template-columns: minmax(0, 1fr) 300px;
+      align-items: start;
+    }
+  }
+  .team__overview:not(:empty) {
+    margin-bottom: var(--space-7);
+  }
+  .sub-head {
+    margin-bottom: var(--space-5);
+  }
+  .thrusts {
+    display: grid;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--ink);
+  }
+  .thrust {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr);
+    gap: var(--space-4);
+    padding: var(--space-5) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .thrust__n {
+    font-size: 0.8rem;
+    color: var(--accent);
+    padding-top: 0.3rem;
+  }
+  .thrust h2 {
+    font-size: var(--step-1);
+    letter-spacing: -0.015em;
+    margin-bottom: var(--space-2);
+  }
+  .thrust p {
+    color: var(--ink-2);
+    max-width: 70ch;
+  }
+  .thrust__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+  .thrust__meta a {
+    text-decoration: none;
+  }
+
+  .team__aside {
+    display: grid;
+    gap: var(--space-5);
+  }
+  @media (min-width: 1000px) {
+    .team__aside {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-5));
+    }
+  }
+  .team__pis {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--space-5);
+  }
+  .team__partners ul {
+    display: grid;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    padding: 0;
+    list-style: none;
+    font-size: 0.925rem;
+  }
+  .team__partners a:hover {
+    color: var(--accent);
+  }
+
+  .figures {
+    display: grid;
+    gap: var(--space-7) var(--space-6);
+  }
+  @media (min-width: 900px) {
+    .figures {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .strips {
+    display: grid;
+    gap: var(--space-3);
+    padding: 0;
+    list-style: none;
+  }
+
+  .people {
+    display: grid;
+    gap: var(--space-6) var(--space-8);
+  }
+  @media (min-width: 900px) {
+    .people {
+      grid-template-columns: 1fr 1.6fr;
+    }
+  }
+  .people__lists {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .team-footer {
+    padding-block: var(--space-7);
+  }
+  .team-pubs {
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--ink);
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--space-5);
+  }
+  .pager__link {
+    display: flex;
+    gap: var(--space-2);
+    font-weight: 550;
+    text-decoration: none;
+  }
+  .pager__link .mono {
+    color: var(--accent);
+  }
+  .pager__link:hover {
+    color: var(--accent);
+  }
+  .pager__link--next {
+    justify-content: flex-end;
+    text-align: right;
+  }
+</style>

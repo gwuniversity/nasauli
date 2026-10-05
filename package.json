@@ -7,7 +7,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "blur-photos": "node scripts/blur-photos.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

@@ -1,0 +1,118 @@
+---
+import { getUseCases } from '~/lib/content';
+import { challenges } from '~/lib/site';
+import { url } from '~/lib/url';
+
+const useCases = await getUseCases();
+const rows = challenges.flatMap((tc, i) =>
+  tc.tasks.map((task, j) => ({ id: `${i + 1}.${j + 1}`, tc: tc.id, task })),
+);
+---
+
+<div class="matrix-scroll" tabindex="0" role="region" aria-label="Task coverage by use case">
+  <table class="matrix">
+    <thead>
+      <tr>
+        <th scope="col" class="matrix__task-head">Task</th>
+        {
+          useCases.map((uc) => (
+            <th scope="col">
+              <a href={url(`/research/${uc.id}`)} title={uc.data.title}>
+                {uc.data.code}
+              </a>
+            </th>
+          ))
+        }
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((row, r) => (
+          <tr class:list={{ 'matrix__group-start': r % 3 === 0 }}>
+            <th scope="row">
+              <span class="mono">{row.id}</span>
+              {row.task}
+            </th>
+            {useCases.map((uc) => {
+              const on = uc.data.tasks.includes(row.id);
+              return (
+                <td class:list={{ on }}>
+                  {on ? <span class="dot" role="img" aria-label="Yes" /> : <span class="visually-hidden">No</span>}
+                </td>
+              );
+            })}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .matrix-scroll {
+    position: relative;
+    overflow-x: auto;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-2);
+    background: var(--bg-raised);
+  }
+  .matrix {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  .matrix th,
+  .matrix td {
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--line);
+  }
+  .matrix thead th {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-align: center;
+    background: var(--bg-sunken);
+  }
+  .matrix thead a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .matrix thead a:hover {
+    text-decoration: underline;
+  }
+  .matrix__task-head {
+    text-align: left !important;
+  }
+  .matrix tbody th {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    text-align: left;
+    font-weight: 450;
+    color: var(--ink-2);
+  }
+  .matrix tbody th .mono {
+    font-size: 0.75rem;
+    color: var(--ink-3);
+    padding-top: 0.1rem;
+  }
+  .matrix__group-start th,
+  .matrix__group-start td {
+    border-top: 1px solid var(--line-strong);
+  }
+  .matrix td {
+    text-align: center;
+    width: 64px;
+  }
+  .matrix td.on {
+    background: var(--accent-soft);
+  }
+  .dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent-graphic);
+  }
+</style>

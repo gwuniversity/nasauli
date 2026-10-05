@@ -1,11 +1,240 @@
 ---
-import PlaceholderPage from '~/layouts/PlaceholderPage.astro';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/ui/PageHeader.astro';
+import PubItem from '~/components/ui/PubItem.astro';
+import { getPublications, getTeams, getUseCases } from '~/lib/content';
+
+const pubs = await getPublications();
+const teams = await getTeams();
+const useCases = await getUseCases();
+const teamNames = Object.fromEntries(teams.map((t) => [t.id, t.data.short]));
+const codes = Object.fromEntries(useCases.map((u) => [u.id, u.data.code]));
+const years = [...new Set(pubs.map((p) => p.data.year))].sort((a, b) => b - a);
+const byYear = years.map((y) => ({ year: y, items: pubs.filter((p) => p.data.year === y) }));
+const journals = pubs.filter((p) => p.data.kind === 'journal').length;
 ---
 
-<PlaceholderPage
-  eyebrow="Publications"
-  title="Publications"
-  lede="Peer-reviewed papers from the project, filterable by year, team, and use case."
-  phase={3}
-  what="Publication list (published and accepted work only) with filters and DOI links."
-/>
+<BaseLayout title="Publications" description="Peer-reviewed publications from the NASA ULI Securing High-Density Urban Airspaces project.">
+  <PageHeader
+    eyebrow="Publications"
+    title="Publications"
+    lede="Peer-reviewed papers from across the project, filterable by year, team, and use case. Only published and accepted work is listed."
+  >
+    <dl class="pub-stats mono">
+      <div><dt>Papers</dt><dd>{pubs.length}</dd></div>
+      <div><dt>Journal articles</dt><dd>{journals}</dd></div>
+      <div><dt>Years</dt><dd>{years.at(-1)}–{years[0]}</dd></div>
+    </dl>
+  </PageHeader>
+
+  <section class="section">
+    <div class="container" data-pubs>
+      <form class="filters" role="search" aria-label="Filter publications" onsubmit="return false">
+        <div class="filters__years" role="group" aria-label="Year">
+          <button type="button" data-year-btn="" aria-pressed="true">All years</button>
+          {years.map((y) => <button type="button" data-year-btn={y} aria-pressed="false">{y}</button>)}
+        </div>
+        <label class="filters__field">
+          <span class="visually-hidden">Team</span>
+          <select data-filter-team>
+            <option value="">All teams</option>
+            {teams.map((t) => <option value={t.id}>{t.data.short}</option>)}
+          </select>
+        </label>
+        <label class="filters__field">
+          <span class="visually-hidden">Use case</span>
+          <select data-filter-uc>
+            <option value="">All use cases</option>
+            {useCases.map((u) => <option value={u.id}>{u.data.code} · {u.data.title}</option>)}
+          </select>
+        </label>
+        <label class="filters__field filters__search">
+          <span class="visually-hidden">Search</span>
+          <input type="search" placeholder="Search title, author, venue" data-filter-text />
+        </label>
+      </form>
+      <p class="filters__count mono" aria-live="polite" data-count>{pubs.length} of {pubs.length} papers</p>
+
+      <div class="years">
+        {
+          byYear.map(({ year, items }) => (
+            <section class="year" data-year-group={year}>
+              <h2 class="year__label mono">{year}</h2>
+              <ol class="year__list" role="list">
+                {items.map((p) => (
+                  <PubItem pub={p} teamNames={teamNames} codes={codes} />
+                ))}
+              </ol>
+            </section>
+          ))
+        }
+      </div>
+      <p class="empty muted" hidden data-empty>No publications match these filters.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .pub-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    margin-top: var(--space-3);
+  }
+  .pub-stats div {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .pub-stats dt {
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .pub-stats dd {
+    font-family: var(--font-sans);
+    font-size: var(--step-3);
+    font-weight: 550;
+    letter-spacing: -0.03em;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 900px) {
+    .filters {
+      position: sticky;
+      top: var(--header-h);
+      z-index: 5;
+    }
+  }
+  @media (max-width: 899px) {
+    .filters__field {
+      flex: 1 1 100%;
+    }
+    .filters__field select {
+      width: 100%;
+    }
+  }
+  .filters__years {
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--bg-raised);
+  }
+  .filters__years button {
+    padding: 0.35rem 0.8rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+  .filters__years button[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .filters__field select,
+  .filters__field input {
+    height: 2.4rem;
+    padding: 0 0.85rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--bg-raised);
+    font-size: 0.875rem;
+    max-width: 100%;
+  }
+  .filters__search {
+    flex: 1 1 220px;
+  }
+  .filters__search input {
+    width: 100%;
+  }
+  .filters__count {
+    margin: var(--space-4) 0 var(--space-2);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .year {
+    display: grid;
+    gap: var(--space-2) var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--ink);
+    margin-top: var(--space-5);
+  }
+  @media (min-width: 900px) {
+    .year {
+      grid-template-columns: 120px minmax(0, 1fr);
+    }
+    .year__label {
+      position: sticky;
+      top: calc(var(--header-h) + 5rem);
+      align-self: start;
+    }
+  }
+  .year__label {
+    font-size: var(--step-2);
+    font-weight: 500;
+    color: var(--accent);
+  }
+  .year__list {
+    padding: 0;
+    list-style: none;
+  }
+  .year__list :global(.pub:first-child) {
+    padding-top: 0;
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-pubs]');
+  if (root) {
+    const items = [...root.querySelectorAll<HTMLElement>('[data-pub]')];
+    const groups = [...root.querySelectorAll<HTMLElement>('[data-year-group]')];
+    const yearBtns = [...root.querySelectorAll<HTMLButtonElement>('[data-year-btn]')];
+    const team = root.querySelector<HTMLSelectElement>('[data-filter-team]')!;
+    const uc = root.querySelector<HTMLSelectElement>('[data-filter-uc]')!;
+    const text = root.querySelector<HTMLInputElement>('[data-filter-text]')!;
+    const count = root.querySelector<HTMLElement>('[data-count]')!;
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    let year = '';
+
+    const apply = () => {
+      const q = text.value.trim().toLowerCase();
+      let shown = 0;
+      for (const el of items) {
+        const ok =
+          (!year || el.dataset.year === year) &&
+          (!team.value || el.dataset.teams!.split(' ').includes(team.value)) &&
+          (!uc.value || el.dataset.uc!.split(' ').includes(uc.value)) &&
+          (!q || el.dataset.text!.includes(q));
+        el.hidden = !ok;
+        if (ok) shown++;
+      }
+      groups.forEach((g) => (g.hidden = !g.querySelector('[data-pub]:not([hidden])')));
+      count.textContent = `${shown} of ${items.length} papers`;
+      empty.hidden = shown > 0;
+    };
+
+    yearBtns.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        year = btn.dataset.yearBtn ?? '';
+        yearBtns.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        apply();
+      }),
+    );
+    [team, uc].forEach((el) => el.addEventListener('change', apply));
+    text.addEventListener('input', apply);
+  }
+</script>

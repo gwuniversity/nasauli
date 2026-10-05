@@ -1,12 +1,283 @@
 ---
-import PlaceholderPage from '~/layouts/PlaceholderPage.astro';
-import { site } from '~/lib/site';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/ui/PageHeader.astro';
+import { getPeople, getTeams } from '~/lib/content';
+import { nasaContacts, site } from '~/lib/site';
+import { url } from '~/lib/url';
+
+const teams = await getTeams();
+const pi = (await getPeople()).find((p) => p.data.role === 'pi');
+const lead = teams[0];
+
+const facts = [
+  { k: 'Program', v: 'NASA Aeronautics Research Mission Directorate · University Leadership Initiative' },
+  { k: 'Award', v: site.award },
+  { k: 'Period of performance', v: site.period },
+  { k: 'Lead institution', v: lead.data.name },
+  { k: 'Principal investigator', v: pi ? `${pi.data.name}, ${lead.data.short}` : '' },
+  { k: 'NASA technical monitor', v: nasaContacts[0].name },
+  { k: 'Partners', v: teams.map((t) => t.data.short).join(' · ') },
+];
+
+const timeline = [
+  { when: 'Sep 2024', what: 'Award', detail: 'NASA selects the project for a University Leadership Initiative award.' },
+  { when: 'Oct 2024', what: 'Kick-off', detail: 'Investigators and NASA colleagues meet at GWU in Washington, DC.' },
+  { when: 'Jan 2026', what: 'Survey papers', detail: 'Two team-wide security surveys at AIAA SciTech map the threat landscape for AAM and UTM.' },
+  { when: 'Oct 2025', what: 'Year 1 review', detail: 'Annual meeting at Vanderbilt University and Tennessee State University, Nashville.' },
+  { when: 'Sep 2026', what: 'Year 2 review', detail: 'Annual meeting at Purdue University.' },
+  { when: 'Spring 2027', what: 'Demo Day', detail: 'Project-wide showcase of integrated aviation use-case demonstrations.', upcoming: true },
+  { when: 'Aug 2027', what: 'Project completion', detail: 'End of the three-year period of performance.', upcoming: true },
+].sort((a, b) => Date.parse(`1 ${a.when.replace('Spring', 'Apr')}`) - Date.parse(`1 ${b.when.replace('Spring', 'Apr')}`));
+
+const priorities = [
+  { title: 'Demonstrations', body: 'Aviation use-case demos in simulation and, where possible, flight tests.' },
+  { title: 'Integration', body: 'Bringing lines of work together at both the team level and the task level.' },
+  { title: 'Mitigations', body: 'Pairing every attack we identify with concrete defenses and recommendations.' },
+  { title: 'Engagement', body: 'Working with an external advisory board, government, and industry stakeholders.' },
+];
 ---
 
-<PlaceholderPage
-  eyebrow="About"
-  title="About the project"
-  lede={site.description}
-  phase={4}
-  what="Project facts, Year 1–3 timeline, NASA acknowledgment, and contact details."
-/>
+<BaseLayout title="About" description={site.description}>
+  <PageHeader eyebrow="About" title="About the project" lede={site.description} />
+
+  <section class="section">
+    <div class="container about">
+      <div class="prose about__text">
+        <h2>Why this project</h2>
+        <p>
+          Advanced Air Mobility (AAM) and UAS Traffic Management (UTM) will bring electric air taxis and fleets of small
+          drones into dense urban airspace, coordinated largely by automated services. That autonomy depends on
+          perception, navigation, broadcast surveillance, and wireless links, every one of which an adversary may try
+          to spoof, jam, or manipulate.
+        </p>
+        <p>
+          This project establishes a security framework and algorithmic foundations to safeguard high-density urban
+          airspace against cyberattacks, focusing on heterogeneous aircraft and airspace operations: eVTOL vehicles in
+          AAM and small UAS in UTM. Its results are intended to raise industry awareness of vulnerable links, inform
+          investment in mitigations, and recommend security updates for system architectures, avionics software
+          standards, and communication, navigation, and surveillance infrastructure.
+        </p>
+        <h2>How we work</h2>
+        <p>
+          Research is organized around <a href={url('/research')}>three technical challenges</a> and a cross-cutting
+          validation and demonstration plan. Cross-institution subteams form around concrete aviation use cases, meet
+          regularly, and come together in monthly project meetings, an internal research seminar series, invited talks
+          from industry and government experts, and annual review meetings hosted by partner institutions.
+        </p>
+      </div>
+      <aside class="facts" aria-label="Project facts">
+        <p class="eyebrow eyebrow--bare">Project facts</p>
+        <dl>
+          {
+            facts.map((f) => (
+              <div>
+                <dt class="mono">{f.k}</dt>
+                <dd>{f.v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--sunken" aria-labelledby="timeline-title">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">Timeline</p>
+        <h2 id="timeline-title" class="h2">2024–2027 at a glance</h2>
+      </header>
+      <ol class="tl" role="list">
+        {
+          timeline.map((t) => (
+            <li class:list={['tl__item', { 'tl__item--upcoming': t.upcoming }]}>
+              <span class="tl__dot" aria-hidden="true" />
+              <p class="tl__when mono">{t.when}</p>
+              <h3>{t.what}</h3>
+              <p>{t.detail}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="y3-title">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">Year 3 · 2026–2027</p>
+        <h2 id="y3-title" class="h2">Priorities for the final year</h2>
+      </header>
+      <ol class="priorities" role="list">
+        {
+          priorities.map((p, i) => (
+            <li data-reveal>
+              <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--sunken" aria-labelledby="contact-title">
+    <div class="container contact">
+      <div>
+        <p class="eyebrow">Contact</p>
+        <h2 id="contact-title" class="h2" style="margin-top: var(--space-4)">Get in touch</h2>
+        <p class="lede" style="margin-top: var(--space-4)">
+          For partnership, stakeholder feedback, media, or questions about the research, please write to us.
+        </p>
+        <p style="margin-top: var(--space-5)">
+          <a class="btn" href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
+        </p>
+      </div>
+      <div class="ack">
+        <p class="eyebrow eyebrow--bare">Acknowledgment</p>
+        <p>{site.acknowledgment}</p>
+        <p class="muted">{site.disclaimer}</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about {
+    display: grid;
+    gap: var(--space-7) var(--space-8);
+  }
+  @media (min-width: 1000px) {
+    .about {
+      grid-template-columns: minmax(0, 1fr) 360px;
+      align-items: start;
+    }
+    .facts {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-5));
+    }
+  }
+  .facts {
+    padding: var(--space-5);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-2);
+    background: var(--bg-raised);
+  }
+  .facts dl {
+    display: grid;
+    margin-top: var(--space-4);
+  }
+  .facts dl div {
+    display: grid;
+    gap: 0.15rem;
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--line);
+  }
+  .facts dt {
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .facts dd {
+    font-weight: 550;
+    font-size: 0.95rem;
+  }
+
+  .tl {
+    position: relative;
+    display: grid;
+    gap: var(--space-5);
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 1000px) {
+    .tl {
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: var(--space-4);
+    }
+    .tl::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 0;
+      right: 0;
+      border-top: 1.5px solid var(--ink);
+    }
+  }
+  .tl__item {
+    position: relative;
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+  }
+  .tl__dot {
+    width: 14px;
+    height: 14px;
+    margin-bottom: var(--space-3);
+    border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    background: var(--ink);
+  }
+  .tl__item--upcoming .tl__dot {
+    background: var(--bg-sunken);
+    border-color: var(--accent-graphic);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+  .tl__when {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .tl h3 {
+    font-size: 1.05rem;
+  }
+  .tl p:last-child {
+    font-size: 0.875rem;
+    color: var(--ink-2);
+  }
+
+  .priorities {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-6);
+    padding: 0;
+    list-style: none;
+  }
+  .priorities li {
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--ink);
+  }
+  .priorities .mono {
+    font-size: 0.75rem;
+    color: var(--accent);
+  }
+  .priorities h3 {
+    font-size: var(--step-2);
+  }
+  .priorities p {
+    color: var(--ink-2);
+  }
+
+  .contact {
+    display: grid;
+    gap: var(--space-7) var(--space-8);
+  }
+  @media (min-width: 900px) {
+    .contact {
+      grid-template-columns: 1.2fr 1fr;
+      align-items: end;
+    }
+  }
+  .ack {
+    display: grid;
+    gap: var(--space-3);
+    font-size: 0.925rem;
+    color: var(--ink-2);
+  }
+</style>

@@ -13,6 +13,33 @@ export const site = {
     'Any opinions, findings, conclusions, or recommendations expressed on this site are those of the authors and do not necessarily reflect the views of NASA.',
 };
 
+// NASA program contacts (named with the PI's approval).
+export const nasaContacts = [
+  { name: 'Dennis Iannicca', role: 'NASA Technical Monitor', since: '2026' },
+  { name: 'Vincent Varouh', role: 'NASA Technical Monitor, 2024–2025', since: '2024' },
+];
+
+export const roleLabels = {
+  pi: 'Principal Investigator',
+  'site-pi': 'Site PI',
+  'co-i': 'Co-Investigator',
+  postdoc: 'Postdoctoral researcher',
+  phd: 'PhD student',
+  ms: 'MS student',
+  undergrad: 'Undergraduate researcher',
+  intern: 'Research intern',
+  staff: 'Staff',
+} as const;
+
+export const roleGroupLabels = {
+  staff: 'Staff',
+  postdoc: 'Postdoctoral researchers',
+  phd: 'PhD students',
+  ms: 'MS students',
+  undergrad: 'Undergraduate researchers',
+  intern: 'Research interns',
+} as const;
+
 export const nav = [
   { label: 'Research', href: '/research' },
   { label: 'Teams', href: '/teams' },
@@ -24,14 +51,6 @@ export const nav = [
   { label: 'About', href: '/about' },
 ];
 
-// TODO(verify before launch): headline figures are hand-counted from the Year 1–2 reports.
-// Publications will be derived from publications.yaml once Phase 3 populates it.
-export const stats = [
-  { value: '8', label: 'Partner institutions' },
-  { value: '30+', label: 'Peer-reviewed publications' },
-  { value: '45+', label: 'Researchers and students' },
-  { value: '3', label: 'Technical challenges' },
-];
 
 export const challenges = [
   {

@@ -1,11 +1,239 @@
 ---
-import PlaceholderPage from '~/layouts/PlaceholderPage.astro';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/ui/PageHeader.astro';
+import PersonCard from '~/components/ui/PersonCard.astro';
+import RoleGroups from '~/components/ui/RoleGroups.astro';
+import Pending from '~/components/ui/Pending.astro';
+import { getPeople, getTeams, isInvestigator } from '~/lib/content';
+import { nasaContacts, roleLabels } from '~/lib/site';
+import { url } from '~/lib/url';
+
+const teams = await getTeams();
+const teamById = Object.fromEntries(teams.map((t) => [t.id, t]));
+const people = await getPeople();
+const current = people.filter((p) => !p.data.alumni);
+const investigators = current.filter((p) => isInvestigator(p.data.role));
+const alumni = people.filter((p) => p.data.alumni);
+const byTeam = teams
+  .map((t) => ({ team: t, members: current.filter((p) => p.data.team.id === t.id && !isInvestigator(p.data.role)) }))
+  .filter((g) => g.members.length > 0);
+const memberCount = byTeam.reduce((n, g) => n + g.members.length, 0);
 ---
 
-<PlaceholderPage
-  eyebrow="People"
-  title="The people behind the research"
-  lede="Principal investigators, postdoctoral researchers, and students across all partner institutions."
-  phase={2}
-  what="PI and co-I cards with photos; postdocs and students listed by institution; alumni; advisory board."
-/>
+<BaseLayout title="People" description="Investigators, researchers, and students of the NASA ULI Securing High-Density Urban Airspaces project.">
+  <PageHeader
+    eyebrow="People"
+    title="The people behind the research"
+    lede={`${investigators.length} investigators and ${memberCount} postdoctoral researchers, students, and staff across eight institutions.`}
+  />
+
+  <section class="section" aria-labelledby="pis-title">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">Investigators</p>
+        <h2 id="pis-title" class="h2">Principal investigators and co-investigators</h2>
+      </header>
+      <div class="pi-grid">
+        {investigators.map((p) => <PersonCard person={p} team={teamById[p.data.team.id]} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sunken" aria-labelledby="members-title">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">Researchers &amp; students</p>
+        <h2 id="members-title" class="h2">Postdocs, students, and staff</h2>
+      </header>
+      <nav class="jump" aria-label="Jump to institution">
+        {
+          byTeam.map(({ team, members }) => (
+            <a href={`#members-${team.id}`}>
+              {team.data.short}
+              <span>{members.length}</span>
+            </a>
+          ))
+        }
+      </nav>
+      <div class="directory">
+        {
+          byTeam.map(({ team, members }) => (
+            <section class="directory__row" id={`members-${team.id}`}>
+              <header class="directory__inst">
+                <p class="mono">{team.data.short}</p>
+                <h3>
+                  <a href={url(`/teams/${team.id}`)}>{team.data.name}</a>
+                </h3>
+                <p class="directory__count">
+                  {members.length} {members.length === 1 ? 'member' : 'members'}
+                </p>
+              </header>
+              <RoleGroups people={members} />
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="partners-title">
+    <div class="container partners">
+      <div>
+        <p class="eyebrow">NASA</p>
+        <h2 id="partners-title" class="h2" style="margin-top: var(--space-4)">Program partners</h2>
+        <ul class="contacts" role="list">
+          {
+            nasaContacts.map((c) => (
+              <li>
+                <span class="members__name">{c.name}</span>
+                <span class="muted">{c.role}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div>
+        <p class="eyebrow">Advisory board</p>
+        <h2 class="h2" style="margin-top: var(--space-4)">External advisors</h2>
+        <div style="margin-top: var(--space-5)">
+          <Pending
+            owner="Project PI"
+            what="Advisory board members from government and industry (name, affiliation)."
+            publicText="Our external advisory board of government and industry experts is being established."
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    alumni.length > 0 && (
+      <section class="section section--sunken" aria-labelledby="alumni-title">
+        <div class="container partners">
+          <div>
+            <p class="eyebrow">Alumni</p>
+            <h2 id="alumni-title" class="h2" style="margin-top: var(--space-4)">Former members</h2>
+          </div>
+          <ul class="alumni" role="list">
+            {alumni.map((p) => (
+              <li>
+                <span class="members__name">{p.data.name}</span>
+                <span class="muted">
+                  {roleLabels[p.data.role]}
+                  {p.data.cohort && ` (${p.data.cohort})`} · {teamById[p.data.team.id].data.short}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .pi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(150px, 42vw), 1fr));
+    gap: var(--space-7) var(--space-5);
+  }
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+  }
+  .jump a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: var(--bg-raised);
+  }
+  .jump a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .jump span {
+    color: var(--ink-3);
+  }
+  .directory {
+    border-top: 1px solid var(--ink);
+  }
+  .directory__row {
+    display: grid;
+    gap: var(--space-4) var(--space-7);
+    padding-block: var(--space-6);
+    border-bottom: 1px solid var(--line-strong);
+    scroll-margin-top: calc(var(--header-h) + var(--space-4));
+  }
+  @media (min-width: 900px) {
+    .directory__row {
+      grid-template-columns: 260px minmax(0, 1fr);
+    }
+  }
+  .directory__inst {
+    display: grid;
+    gap: var(--space-1);
+    align-content: start;
+  }
+  .directory__inst .mono {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .directory__inst h3 {
+    font-size: var(--step-1);
+    line-height: 1.25;
+  }
+  .directory__inst a {
+    text-decoration: none;
+  }
+  .directory__inst a:hover {
+    color: var(--accent);
+  }
+  .directory__count {
+    font-size: 0.85rem;
+    color: var(--ink-3);
+  }
+  .partners {
+    display: grid;
+    gap: var(--space-7) var(--space-8);
+  }
+  @media (min-width: 900px) {
+    .partners {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .contacts,
+  .alumni {
+    display: grid;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+  .contacts {
+    margin-top: var(--space-5);
+  }
+  .contacts li,
+  .alumni li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0 var(--space-4);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.925rem;
+  }
+  .members__name {
+    font-weight: 550;
+  }
+</style>

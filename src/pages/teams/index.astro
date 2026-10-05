@@ -1,0 +1,112 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/ui/PageHeader.astro';
+import { getPeople, getTeams, getUseCases, isInvestigator } from '~/lib/content';
+import { url } from '~/lib/url';
+
+const teams = await getTeams();
+const people = await getPeople();
+const codes = Object.fromEntries((await getUseCases()).map((u) => [u.id, u.data.code]));
+const kindLabel = { university: 'University', industry: 'Industry partner', 'community-college': 'Community college' };
+---
+
+<BaseLayout title="Teams" description="The eight institutions of the NASA ULI Securing High-Density Urban Airspaces project.">
+  <PageHeader
+    eyebrow="Teams"
+    title="Eight institutions, one integrated effort"
+    lede="Universities, an industry partner, and a community college, working across aviation, autonomy, control, machine learning, and cybersecurity."
+  />
+  <section class="section">
+    <div class="container">
+      <ul class="team-cards" role="list">
+        {
+          teams.map((t) => {
+            const pis = people.filter((p) => p.data.team.id === t.id && isInvestigator(p.data.role) && !p.data.alumni);
+            return (
+              <li data-reveal>
+                <a class="team-card" href={url(`/teams/${t.id}`)}>
+                  <div class="team-card__top mono">
+                    <span>{t.data.short}</span>
+                    <span>{kindLabel[t.data.kind]}</span>
+                  </div>
+                  <h2>{t.data.name}</h2>
+                  <p class="team-card__place">
+                    {t.data.city}, {t.data.state}
+                  </p>
+                  <p class="team-card__role">{t.data.role}</p>
+                  <p class="team-card__pis">{pis.map((p) => p.data.name).join(' · ')}</p>
+                  <div class="tag-row">
+                    {t.data.useCases.map((u) => (
+                      <span class="tag">{codes[u.id]}</span>
+                    ))}
+                  </div>
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .team-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-5);
+    padding: 0;
+    list-style: none;
+  }
+  .team-card {
+    display: grid;
+    gap: var(--space-3);
+    align-content: start;
+    height: 100%;
+    padding: var(--space-5);
+    border: 1px solid var(--line-strong);
+    border-top: 3px solid var(--accent-graphic);
+    border-radius: var(--radius-2);
+    background: var(--bg-raised);
+    text-decoration: none;
+    transition:
+      transform 0.25s var(--ease),
+      box-shadow 0.25s var(--ease);
+  }
+  .team-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-2);
+  }
+  .team-card:hover h2 {
+    color: var(--accent);
+  }
+  .team-card__top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .team-card__top span:first-child {
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .team-card h2 {
+    font-size: var(--step-2);
+    transition: color 0.2s var(--ease);
+  }
+  .team-card__place {
+    margin-top: calc(-1 * var(--space-2));
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+  .team-card__role {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+  .team-card__pis {
+    font-size: 0.875rem;
+    font-weight: 550;
+  }
+</style>
