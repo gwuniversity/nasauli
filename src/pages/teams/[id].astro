@@ -1,0 +1,18 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import PlaceholderPage from '~/layouts/PlaceholderPage.astro';
+
+export async function getStaticPaths() {
+  return (await getCollection('teams')).map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props as { entry: CollectionEntry<'teams'> };
+---
+
+<PlaceholderPage
+  eyebrow={`${entry.data.short} · ${entry.data.city}, ${entry.data.state}`}
+  title={entry.data.name}
+  lede={entry.data.role}
+  phase={2}
+  what="Team page: overview (site PI), focus areas, highlights, PI cards, student list, and publications."
+/>

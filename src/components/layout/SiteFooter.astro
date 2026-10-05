@@ -1,0 +1,111 @@
+---
+import Logo from './Logo.astro';
+import { getTeams } from '~/lib/content';
+import { nav, site } from '~/lib/site';
+import { url } from '~/lib/url';
+
+const teams = await getTeams();
+const explore = nav.slice(0, 4);
+const resources = nav.slice(4);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__grid">
+      <div class="site-footer__about">
+        <Logo />
+        <p>{site.acknowledgment}</p>
+        <p class="site-footer__partners">
+          {teams.map((t) => t.data.short).join(' · ')}
+        </p>
+      </div>
+
+      <nav aria-label="Explore">
+        <h2 class="eyebrow eyebrow--bare">Explore</h2>
+        <ul>{explore.map((item) => <li><a href={url(item.href)}>{item.label}</a></li>)}</ul>
+      </nav>
+
+      <nav aria-label="Resources">
+        <h2 class="eyebrow eyebrow--bare">Resources</h2>
+        <ul>{resources.map((item) => <li><a href={url(item.href)}>{item.label}</a></li>)}</ul>
+      </nav>
+
+      <div>
+        <h2 class="eyebrow eyebrow--bare">Contact</h2>
+        <ul>
+          <li><a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></li>
+          <li class="muted">Washington, DC</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="site-footer__legal">
+      <p>© {year} {site.name}. Lead institution: The George Washington University.</p>
+      <p>{site.disclaimer}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: auto;
+    padding-block: var(--space-8) var(--space-6);
+    background: var(--bg-sunken);
+    border-top: 1px solid var(--line);
+    font-size: 0.9rem;
+    color: var(--ink-2);
+  }
+  .site-footer__grid {
+    display: grid;
+    gap: var(--space-7) var(--space-6);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .site-footer__about {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--space-4);
+    align-content: start;
+    max-width: 44ch;
+  }
+  @media (min-width: 900px) {
+    .site-footer__grid {
+      grid-template-columns: 2fr 1fr 1fr 1.2fr;
+    }
+    .site-footer__about {
+      grid-column: auto;
+    }
+  }
+  .site-footer__partners {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+  .site-footer h2 {
+    margin-bottom: var(--space-4);
+  }
+  .site-footer ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+  .site-footer a {
+    text-decoration: none;
+  }
+  .site-footer a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .site-footer__legal {
+    display: grid;
+    gap: var(--space-2);
+    margin-top: var(--space-8);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+    font-size: 0.8rem;
+    color: var(--ink-3);
+  }
+</style>

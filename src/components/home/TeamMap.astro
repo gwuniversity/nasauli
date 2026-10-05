@@ -1,0 +1,265 @@
+---
+import { geoAlbersUsa, geoPath } from 'd3-geo';
+import { feature, mesh } from 'topojson-client';
+import type { GeometryCollection, Topology } from 'topojson-specification';
+import usAtlas from 'us-atlas/states-10m.json';
+import { getTeams } from '~/lib/content';
+import { url } from '~/lib/url';
+
+// The map is rendered to static SVG at build time; no map library ships to the browser.
+const us = usAtlas as unknown as Topology<{ states: GeometryCollection }>;
+const states = feature(us, us.objects.states);
+const W = 975;
+const H = 610;
+const projection = geoAlbersUsa().fitExtent(
+  [
+    [8, 8],
+    [W - 8, H - 8],
+  ],
+  states,
+);
+const path = geoPath(projection);
+const outline = path(mesh(us, us.objects.states, (a, b) => a === b)) ?? '';
+const borders = path(mesh(us, us.objects.states, (a, b) => a !== b)) ?? '';
+
+const teams = await getTeams();
+
+// Hand-placed label offsets keep the DC and Nashville pairs legible.
+const labelOffset: Record<string, [number, number, 'start' | 'end']> = {
+  gwu: [16, -14, 'start'],
+  nvcc: [16, 22, 'start'],
+  vanderbilt: [-16, -14, 'end'],
+  tsu: [-16, 22, 'end'],
+  purdue: [14, -12, 'start'],
+  'ut-austin': [14, 4, 'start'],
+  'uc-irvine': [14, 4, 'start'],
+  collins: [-14, -12, 'end'],
+};
+
+const sites = teams.map((t) => {
+  const [x, y] = projection([t.data.lon, t.data.lat]) ?? [0, 0];
+  const [dx, dy, anchor] = labelOffset[t.id] ?? [12, 4, 'start'];
+  return { id: t.id, short: t.data.short, name: t.data.name, place: `${t.data.city}, ${t.data.state}`, x, y, dx, dy, anchor };
+});
+const lead = sites.find((s) => s.id === 'gwu')!;
+
+// Gentle arcs from the lead institution to each partner.
+const arcs = sites
+  .filter((s) => s.id !== lead.id && Math.hypot(s.x - lead.x, s.y - lead.y) > 30)
+  .map((s) => {
+    const mx = (s.x + lead.x) / 2;
+    const my = (s.y + lead.y) / 2;
+    const len = Math.hypot(s.x - lead.x, s.y - lead.y);
+    const cx = mx;
+    const cy = my - len * 0.22;
+    return `M${lead.x},${lead.y} Q${cx},${cy} ${s.x},${s.y}`;
+  });
+---
+
+<section class="section" aria-labelledby="teams-title">
+  <div class="container">
+    <header class="section-head section-head--split">
+      <div>
+        <p class="eyebrow">The team</p>
+        <h2 id="teams-title" class="h2" style="margin-top: var(--space-4)">
+          Eight institutions, coast to coast
+        </h2>
+      </div>
+      <p class="lede">
+        Universities, an industry partner, and a community college bring together expertise in aviation, autonomy,
+        cybersecurity, control, and machine learning.
+      </p>
+    </header>
+
+    <div class="team-map" data-team-map>
+      <figure class="team-map__figure" data-reveal>
+        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="map-title">
+          <title id="map-title">Map of the United States showing the locations of the eight partner institutions</title>
+          <path class="map-land" d={outline}></path>
+          <path class="map-borders" d={borders}></path>
+          <g class="map-arcs">{arcs.map((d) => <path d={d} />)}</g>
+          {
+            sites.map((s) => (
+              <g class="map-site" data-team={s.id} transform={`translate(${s.x} ${s.y})`}>
+                <circle class="map-site__ring" r="11" />
+                <circle class="map-site__dot" r={s.id === lead.id ? 6 : 4.5} />
+                <line class="map-site__leader" x1="0" y1="0" x2={s.dx * 0.7} y2={s.dy * 0.55} />
+                <text x={s.dx} y={s.dy} text-anchor={s.anchor}>
+                  {s.short}
+                  {s.id === lead.id ? ' · Lead' : ''}
+                </text>
+              </g>
+            ))
+          }
+        </svg>
+      </figure>
+
+      <ul class="team-list" role="list">
+        {
+          sites.map((s) => (
+            <li>
+              <a href={url(`/teams/${s.id}`)} data-team={s.id}>
+                <span class="team-list__short mono">{s.short}</span>
+                <span class="team-list__name">{s.name}</span>
+                <span class="team-list__place">{s.place}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .team-map {
+    display: grid;
+    gap: var(--space-6);
+    align-items: center;
+  }
+  @media (min-width: 1000px) {
+    .team-map {
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: var(--space-8);
+    }
+  }
+  .team-map__figure svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .map-land {
+    fill: var(--bg-sunken);
+    stroke: var(--line-strong);
+    stroke-width: 1;
+  }
+  .map-borders {
+    fill: none;
+    stroke: var(--line-strong);
+    stroke-width: 0.6;
+    opacity: 0.8;
+  }
+  .map-arcs path {
+    fill: none;
+    stroke: var(--accent-graphic);
+    stroke-width: 1.2;
+    stroke-dasharray: 4 5;
+    opacity: 0.55;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .map-arcs path {
+      animation: dash 2.4s linear infinite;
+    }
+    .map-site__ring {
+      animation: ping 2.8s var(--ease) infinite;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+  }
+  @keyframes dash {
+    to {
+      stroke-dashoffset: -18;
+    }
+  }
+  @keyframes ping {
+    0% {
+      transform: scale(0.4);
+      opacity: 0.7;
+    }
+    80%,
+    100% {
+      transform: scale(1.6);
+      opacity: 0;
+    }
+  }
+  .map-site__dot {
+    fill: var(--accent-graphic);
+    stroke: var(--bg);
+    stroke-width: 2;
+  }
+  .map-site__ring {
+    fill: none;
+    stroke: var(--accent-graphic);
+    stroke-width: 1.2;
+  }
+  .map-site__leader {
+    stroke: var(--ink-3);
+    stroke-width: 0.8;
+  }
+  .map-site text {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    fill: var(--ink);
+    paint-order: stroke;
+    stroke: var(--bg);
+    stroke-width: 5px;
+    stroke-linejoin: round;
+  }
+  @media (max-width: 640px) {
+    .map-site text {
+      font-size: 26px;
+      stroke-width: 7px;
+    }
+  }
+  .map-site.is-hl .map-site__dot {
+    fill: var(--signal-graphic);
+  }
+  .map-site.is-hl text {
+    fill: var(--signal);
+  }
+
+  .team-list {
+    list-style: none;
+    padding: 0;
+    border-top: 1px solid var(--ink);
+  }
+  .team-list a {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 0 var(--space-4);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    transition:
+      padding 0.2s var(--ease),
+      background-color 0.2s var(--ease);
+  }
+  .team-list a:hover,
+  .team-list a.is-hl {
+    padding-left: var(--space-2);
+    background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+  }
+  .team-list__short {
+    grid-row: span 2;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding-top: 0.2rem;
+    color: var(--accent);
+  }
+  .team-list__name {
+    font-weight: 550;
+    line-height: 1.3;
+  }
+  .team-list__place {
+    font-size: 0.825rem;
+    color: var(--ink-3);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-team-map]').forEach((root) => {
+    const highlight = (id: string | null) =>
+      root.querySelectorAll<Element>('[data-team]').forEach((el) => {
+        el.classList.toggle('is-hl', el.getAttribute('data-team') === id);
+      });
+    root.querySelectorAll<HTMLElement | SVGElement>('[data-team]').forEach((el) => {
+      const id = el.getAttribute('data-team');
+      el.addEventListener('mouseenter', () => highlight(id));
+      el.addEventListener('mouseleave', () => highlight(null));
+      el.addEventListener('focus', () => highlight(id));
+      el.addEventListener('blur', () => highlight(null));
+    });
+  });
+</script>

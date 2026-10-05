@@ -1,0 +1,54 @@
+---
+/**
+ * Placeholder for content a site PI will provide later.
+ * Development (and builds with PUBLIC_SHOW_PENDING=true, e.g. a review preview) show a highlighted
+ * TODO naming the owner; production shows a quiet "coming soon" note.
+ */
+interface Props {
+  /** Who is expected to fill this in, e.g. "Purdue site PI". */
+  owner?: string;
+  /** What is missing, e.g. "Team overview". */
+  what: string;
+  /** Text visitors see in production. */
+  publicText?: string;
+  /** Render nothing at all in production. */
+  hidePublic?: boolean;
+}
+
+const { owner, what, publicText = 'More details coming soon.', hidePublic = false } = Astro.props;
+const showTodo = import.meta.env.DEV || import.meta.env.PUBLIC_SHOW_PENDING === 'true';
+---
+
+{
+  showTodo ? (
+    <div class="pending pending--todo" role="note">
+      <span class="pending__label mono">Pending{owner ? ` · ${owner}` : ''}</span>
+      <span>{what}</span>
+    </div>
+  ) : (
+    !hidePublic && <p class="pending pending--public">{publicText}</p>
+  )
+}
+
+<style>
+  .pending--todo {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-5);
+    border: 1px dashed var(--signal-graphic);
+    border-radius: var(--radius-2);
+    background: var(--signal-soft);
+    color: var(--ink-2);
+    font-size: 0.925rem;
+  }
+  .pending__label {
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--signal);
+  }
+  .pending--public {
+    color: var(--ink-3);
+    font-style: italic;
+  }
+</style>

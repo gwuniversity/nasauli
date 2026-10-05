@@ -1,0 +1,18 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import PlaceholderPage from '~/layouts/PlaceholderPage.astro';
+
+export async function getStaticPaths() {
+  return (await getCollection('useCases')).map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props as { entry: CollectionEntry<'useCases'> };
+---
+
+<PlaceholderPage
+  eyebrow={`${entry.data.code} · Use case`}
+  title={entry.data.title}
+  lede={entry.data.summary}
+  phase={2}
+  what="Use-case page: problem, threat, approach, participating teams, highlight result, demo, and related papers."
+/>

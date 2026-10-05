@@ -1,0 +1,21 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/ui/PageHeader.astro';
+import NewsList from '~/components/ui/NewsList.astro';
+import { getNews } from '~/lib/content';
+
+const items = await getNews();
+---
+
+<BaseLayout title="News & events" description="Milestones, meetings, publications, and talks from the project.">
+  <PageHeader
+    eyebrow="News & events"
+    title="News & events"
+    lede="Milestones, annual meetings, publications, and invited talks."
+  />
+  <section class="section">
+    <div class="container">
+      <NewsList items={items} />
+    </div>
+  </section>
+</BaseLayout>

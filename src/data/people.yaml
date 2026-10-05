@@ -1,0 +1,15 @@
+# Principal investigators and co-investigators. Students, postdocs, and staff are added in Phase 2.
+# Photos (PIs and co-Is only) go in src/assets/people/ and are referenced as ../assets/people/<file>.
+- { id: peng-wei, name: Peng Wei, team: gwu, role: pi, title: Professor }
+- { id: bryan-ward, name: Bryan C. Ward, team: vanderbilt, role: site-pi }
+- { id: gautam-biswas, name: Gautam Biswas, team: vanderbilt, role: co-i }
+- { id: xenofon-koutsoukos, name: Xenofon Koutsoukos, team: vanderbilt, role: co-i, alumni: true }
+- { id: vijay-gupta, name: Vijay Gupta, team: purdue, role: site-pi }
+- { id: mahsa-ghasemi, name: Mahsa Ghasemi, team: purdue, role: co-i }
+- { id: ufuk-topcu, name: Ufuk Topcu, team: ut-austin, role: site-pi }
+- { id: alfred-chen, name: Alfred Chen, team: uc-irvine, role: site-pi }
+- { id: amir-shirkhodaie, name: Amir Shirkhodaie, team: tsu, role: site-pi }
+- { id: isaac-amundson, name: Isaac Amundson, team: collins, role: site-pi }
+- { id: heber-herencia-zapana, name: Heber Herencia-Zapana, team: collins, role: co-i }
+- { id: saqib-hasan, name: Saqib Hasan, team: collins, role: co-i, alumni: true }
+- { id: kwabena-konadu, name: Kwabena Konadu, team: nvcc, role: site-pi }

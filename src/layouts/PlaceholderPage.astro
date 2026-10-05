@@ -1,0 +1,26 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import PageHeader from '~/components/ui/PageHeader.astro';
+import Pending from '~/components/ui/Pending.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  lede?: string;
+  /** Which build phase fills this page in (see docs/PLAN.md). */
+  phase: number;
+  what: string;
+}
+
+const { eyebrow, title, lede, phase, what } = Astro.props;
+---
+
+<BaseLayout title={title} description={lede}>
+  <PageHeader eyebrow={eyebrow} title={title} lede={lede} />
+  <section class="section">
+    <div class="container">
+      <slot />
+      <Pending owner={`Phase ${phase}`} what={what} publicText="This page is being prepared. Please check back soon." />
+    </div>
+  </section>
+</BaseLayout>

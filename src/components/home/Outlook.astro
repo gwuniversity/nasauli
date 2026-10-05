@@ -1,0 +1,154 @@
+---
+import { getCollection } from 'astro:content';
+import NewsList from '~/components/ui/NewsList.astro';
+import Pending from '~/components/ui/Pending.astro';
+import { getNews } from '~/lib/content';
+import { url } from '~/lib/url';
+
+const featuredDemos = (await getCollection('demos')).filter((d) => d.data.featured);
+const latest = (await getNews()).slice(0, 3);
+
+const years = [
+  { year: 'Year 1', span: '2024–25', title: 'Foundations', body: 'Threat surveys, simulation platforms, and the first attacks and defenses.', state: 'done' },
+  { year: 'Year 2', span: '2025–26', title: 'Aviation use cases', body: 'Cross-team use cases, hardware testbeds, and published results.', state: 'done' },
+  { year: 'Year 3', span: '2026–27', title: 'Demonstrations', body: 'Integrated simulation and flight-test demos, and a project Demo Day in Spring 2027.', state: 'current' },
+];
+---
+
+<section class="section section--sunken" aria-labelledby="next-title">
+  <div class="container outlook">
+    <div class="outlook__next" data-reveal>
+      <p class="eyebrow">Where we are</p>
+      <h2 id="next-title" class="h2">From algorithms to demonstrations</h2>
+      <p class="lede">
+        Two years in, the project is moving its research into integrated demonstrations that industry, government, and
+        the public can see working.
+      </p>
+      <a class="link-arrow" href={url('/demos')}>Demos</a>
+    </div>
+
+    <ol class="timeline" role="list" data-reveal>
+      {
+        years.map((y) => (
+          <li class={`timeline__item timeline__item--${y.state}`}>
+            <span class="timeline__marker" aria-hidden="true" />
+            <p class="timeline__when mono">
+              {y.year} · {y.span}
+              {y.state === 'current' && <span class="tag tag--accent">Now</span>}
+            </p>
+            <h3>{y.title}</h3>
+            <p class="timeline__body">{y.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+
+  <div class="container">
+    {
+      featuredDemos.length === 0 && (
+        <div style="margin-top: var(--space-7)">
+          <Pending
+            owner="Project team"
+            what="Featured demo videos appear here once demos.yaml has entries with featured: true."
+            hidePublic
+          />
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<section class="section" aria-labelledby="news-title">
+  <div class="container">
+    <header class="section-head section-head--split">
+      <div>
+        <p class="eyebrow">News &amp; events</p>
+        <h2 id="news-title" class="h2" style="margin-top: var(--space-4)">Latest from the project</h2>
+      </div>
+      <p class="outlook__all"><a class="link-arrow" href={url('/news')}>All news</a></p>
+    </header>
+    <NewsList items={latest} />
+  </div>
+</section>
+
+<style>
+  .outlook {
+    display: grid;
+    gap: var(--space-7) var(--space-8);
+    align-items: center;
+  }
+  @media (min-width: 960px) {
+    .outlook {
+      grid-template-columns: 1fr 1.15fr;
+    }
+  }
+  .outlook__next {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+  }
+  .outlook__all {
+    justify-self: end;
+  }
+
+  .timeline {
+    position: relative;
+    display: grid;
+    gap: var(--space-5);
+    padding: 0 0 0 var(--space-6);
+    list-style: none;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 8px;
+    bottom: 8px;
+    border-left: 1.5px dashed var(--line-strong);
+  }
+  .timeline__item {
+    position: relative;
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-2);
+    background: var(--bg-raised);
+  }
+  .timeline__item--current {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-2);
+  }
+  .timeline__marker {
+    position: absolute;
+    left: calc(-1 * var(--space-6));
+    top: 1.35rem;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    background: var(--ink);
+  }
+  .timeline__item--current .timeline__marker {
+    border-color: var(--accent-graphic);
+    background: var(--bg-sunken);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+  .timeline__when {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .timeline h3 {
+    font-size: var(--step-1);
+  }
+  .timeline__body {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+</style>

@@ -1,0 +1,43 @@
+---
+import FlightStrip from '~/components/ui/FlightStrip.astro';
+import { getTeams, getUseCases } from '~/lib/content';
+
+const useCases = await getUseCases();
+const teamNames = Object.fromEntries((await getTeams()).map((t) => [t.id, t.data.short]));
+---
+
+<section class="section" aria-labelledby="usecases-title">
+  <div class="container">
+    <header class="section-head section-head--split">
+      <div>
+        <p class="eyebrow">Aviation use cases</p>
+        <h2 id="usecases-title" class="h2" style="margin-top: var(--space-4)">
+          Research grounded in real operations
+        </h2>
+      </div>
+      <p class="lede">
+        Cross-institution teams have formed around concrete scenarios, from package delivery to air-taxi landings,
+        each pairing a credible threat with a defense.
+      </p>
+    </header>
+
+    <ul class="strips" role="list">
+      {
+        useCases.map((uc, i) => (
+          <li data-reveal style={`transition-delay: ${(i % 4) * 60}ms`}>
+            <FlightStrip useCase={uc} teamNames={teamNames} />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .strips {
+    display: grid;
+    gap: var(--space-3);
+    padding: 0;
+    list-style: none;
+  }
+</style>

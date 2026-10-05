@@ -1,0 +1,179 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { url } from '~/lib/url';
+
+interface Props {
+  useCase: CollectionEntry<'useCases'>;
+  /** team id → short name */
+  teamNames: Record<string, string>;
+}
+
+const { useCase, teamNames } = Astro.props;
+const { code, title, summary, threat, teams, challenges } = useCase.data;
+---
+
+<a class="strip" href={url(`/research/${useCase.id}`)}>
+  <div class="strip__cell strip__code">
+    <span class="strip__label">Case</span>
+    <span class="strip__code-value">{code}</span>
+  </div>
+  <div class="strip__cell strip__mission">
+    <span class="strip__label">Mission</span>
+    <h3>{title}</h3>
+    <p>{summary}</p>
+  </div>
+  <div class="strip__cell strip__threat">
+    <span class="strip__label strip__label--signal">Threat</span>
+    <p>{threat}</p>
+  </div>
+  <div class="strip__cell strip__teams">
+    <span class="strip__label">Teams</span>
+    <ul role="list">{teams.map((t) => <li>{teamNames[t.id] ?? t.id}</li>)}</ul>
+  </div>
+  <div class="strip__cell strip__tc">
+    <span class="strip__label">TC</span>
+    <ul role="list">{challenges.map((tc) => <li>{tc}</li>)}</ul>
+  </div>
+</a>
+
+<style>
+  .strip {
+    --edge: var(--accent-graphic);
+    position: relative;
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1.6fr) minmax(0, 1fr) 150px 64px;
+    border: 1px solid var(--line-strong);
+    border-left: 0;
+    border-radius: var(--radius-1);
+    background: var(--bg-raised);
+    color: inherit;
+    text-decoration: none;
+    box-shadow: var(--shadow-1);
+    transition:
+      transform 0.25s var(--ease),
+      box-shadow 0.25s var(--ease),
+      border-color 0.25s var(--ease);
+  }
+  .strip::before {
+    content: '';
+    position: absolute;
+    inset: -1px auto -1px 0;
+    width: 5px;
+    border-radius: var(--radius-1) 0 0 var(--radius-1);
+    background: var(--edge);
+    transition: background-color 0.25s var(--ease);
+  }
+  .strip:hover {
+    --edge: var(--signal-graphic);
+    transform: translateX(4px);
+    box-shadow: var(--shadow-2);
+  }
+  .strip:hover h3 {
+    color: var(--accent);
+  }
+
+  .strip__cell {
+    display: grid;
+    gap: var(--space-1);
+    align-content: start;
+    padding: var(--space-4) var(--space-4);
+    font-size: 0.875rem;
+    color: var(--ink-2);
+  }
+  .strip__cell + .strip__cell {
+    border-left: 1px solid var(--line);
+  }
+  .strip__label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .strip__label--signal {
+    color: var(--signal);
+  }
+  .strip__code {
+    padding-left: calc(var(--space-4) + 5px);
+  }
+  .strip__code-value {
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .strip h3 {
+    font-size: var(--step-1);
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    transition: color 0.2s var(--ease);
+  }
+  .strip ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.15rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+  }
+
+  @media (max-width: 960px) {
+    .strip {
+      grid-template-columns: 88px minmax(0, 1fr) 64px;
+    }
+    .strip__threat,
+    .strip__teams {
+      grid-column: 2 / -1;
+      border-left: 1px solid var(--line);
+      border-top: 1px solid var(--line);
+    }
+    .strip__mission {
+      grid-row: 1;
+      grid-column: 2;
+    }
+    .strip__tc {
+      grid-row: 1;
+      grid-column: 3;
+    }
+    .strip__code {
+      grid-row: 1 / span 3;
+    }
+    .strip__teams ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 0.75rem;
+    }
+  }
+  @media (max-width: 560px) {
+    .strip {
+      grid-template-columns: minmax(0, 1fr) 56px;
+    }
+    .strip__code {
+      grid-row: auto;
+      grid-column: 1 / -1;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-3);
+    }
+    .strip__mission {
+      grid-row: 2;
+      grid-column: 1;
+      border-left: 0 !important;
+      padding-left: calc(var(--space-4) + 5px);
+    }
+    .strip__tc {
+      grid-row: 2;
+      grid-column: 2;
+    }
+    .strip__threat,
+    .strip__teams {
+      grid-column: 1 / -1;
+      border-left: 0;
+      padding-left: calc(var(--space-4) + 5px);
+    }
+  }
+</style>

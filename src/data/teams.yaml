@@ -1,0 +1,107 @@
+# Partner institutions. `order` sets display order (lead institution first).
+# `overview` is PI-owned: leave it out and the team page shows a pending placeholder.
+
+- id: gwu
+  order: 1
+  name: The George Washington University
+  short: GWU
+  kind: university
+  city: Washington
+  state: DC
+  lat: 38.8997
+  lon: -77.0486
+  role: Lead institution. Perception-based drone delivery and landing, AI-based separation assurance, and the security of air traffic control voice communication.
+  focus: [Vision-based landing, Separation assurance, LLMs for air traffic, ATC voice security]
+  useCases: [vision-landing, separation-assurance, atc-voice, control-link]
+
+- id: vanderbilt
+  order: 2
+  name: Vanderbilt University
+  short: Vanderbilt
+  kind: university
+  city: Nashville
+  state: TN
+  lat: 36.1447
+  lon: -86.8027
+  role: Networked multi-UAV simulation, Remote ID spoofing detection, and machine-learning anomaly detection for small unmanned aircraft.
+  focus: [Networked UAV simulation, Remote ID security, Anomaly detection, RF sensing]
+  useCases: [remote-id, control-link, secure-architecture, airspace-coordination]
+
+- id: purdue
+  order: 3
+  name: Purdue University
+  short: Purdue
+  kind: university
+  city: West Lafayette
+  state: IN
+  lat: 40.4237
+  lon: -86.9212
+  role: Game-theoretic and learning-based foundations for secure, fair, and decentralized coordination among airspace users.
+  focus: [Stackelberg games, Multi-agent learning, Collusion detection, Fair deconfliction]
+  useCases: [separation-assurance, airspace-coordination]
+
+- id: ut-austin
+  order: 4
+  name: The University of Texas at Austin
+  short: UT Austin
+  kind: university
+  city: Austin
+  state: TX
+  lat: 30.2849
+  lon: -97.7341
+  role: Information-shaping control, secure communication, and robust coordination for autonomous aircraft and dense airspace operations.
+  focus: [Deception and observability, Directional jamming, Auction-based coordination, Vertiport sequencing]
+  useCases: [separation-assurance, remote-id, airspace-coordination]
+
+- id: uc-irvine
+  order: 5
+  name: University of California, Irvine
+  short: UC Irvine
+  kind: university
+  city: Irvine
+  state: CA
+  lat: 33.6405
+  lon: -117.8443
+  role: Security analysis of camera- and AI-based drone autonomy, from target tracking and precision landing to vision-language models.
+  focus: [Autonomous tracking security, Fiducial-marker landing, Vision-language model defense]
+  useCases: [vision-landing]
+
+- id: tsu
+  order: 6
+  name: Tennessee State University
+  short: TSU
+  kind: university
+  city: Nashville
+  state: TN
+  lat: 36.1676
+  lon: -86.8297
+  role: Physics-based simulation of urban air mobility environments and resilient emergency landing for eVTOL aircraft and drones.
+  focus: [IRIS simulation, Safe landing zones, Multimodal sensing, Synthetic datasets]
+  useCases: [emergency-landing, vision-landing]
+
+- id: collins
+  order: 7
+  name: Collins Aerospace
+  short: Collins
+  kind: industry
+  # TODO(confirm): office location for the Collins team.
+  city: Cedar Rapids
+  state: IA
+  lat: 41.9779
+  lon: -91.6656
+  role: Industry partner contributing aerospace expertise, zero-trust architecture patterns, and formally verified security assessment.
+  focus: [Zero-trust design patterns, Formal methods, Lean theorem proving, Avionics expertise]
+  useCases: [secure-architecture, control-link]
+
+- id: nvcc
+  order: 8
+  name: Northern Virginia Community College
+  short: NVCC
+  kind: community-college
+  city: Annandale
+  state: VA
+  lat: 38.8318
+  lon: -77.2365
+  role: Community-college research pathway. Student interns investigate drone command-and-control link security alongside GWU researchers.
+  focus: [Student research, MAVLink security, UTM monitoring]
+  useCases: [control-link]

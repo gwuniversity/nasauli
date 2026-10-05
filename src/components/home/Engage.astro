@@ -1,0 +1,60 @@
+---
+import { site } from '~/lib/site';
+---
+
+<section class="engage" aria-labelledby="engage-title">
+  <div class="container engage__inner" data-reveal>
+    <div>
+      <p class="eyebrow">Work with us</p>
+      <h2 id="engage-title" class="h1">Help shape secure urban air mobility.</h2>
+    </div>
+    <div class="engage__body">
+      <p>
+        We welcome conversations with industry, government agencies, and fellow researchers: feedback on our use cases,
+        operational perspective, and partnership on demonstrations.
+      </p>
+      <a class="btn" href={`mailto:${site.contactEmail}`}>Get in touch</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .engage {
+    padding-block: var(--space-9);
+    background: var(--bg-inverse);
+    color: var(--ink-inverse);
+  }
+  .engage .eyebrow {
+    color: color-mix(in srgb, var(--ink-inverse) 60%, transparent);
+  }
+  .engage__inner {
+    display: grid;
+    gap: var(--space-6) var(--space-8);
+    align-items: end;
+  }
+  @media (min-width: 960px) {
+    .engage__inner {
+      grid-template-columns: 1.3fr 1fr;
+    }
+  }
+  .engage h2 {
+    margin-top: var(--space-4);
+    max-width: 16ch;
+  }
+  .engage__body {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+    color: color-mix(in srgb, var(--ink-inverse) 78%, transparent);
+  }
+  .engage .btn {
+    --btn-bg: var(--ink-inverse);
+    --btn-fg: var(--bg-inverse);
+    --btn-border: var(--ink-inverse);
+  }
+  .engage .btn:hover {
+    --btn-bg: var(--accent-graphic);
+    --btn-border: var(--accent-graphic);
+    --btn-fg: #04201d;
+  }
+</style>

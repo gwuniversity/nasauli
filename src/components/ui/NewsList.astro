@@ -1,0 +1,79 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatMonth } from '~/lib/url';
+
+interface Props {
+  items: CollectionEntry<'news'>[];
+}
+
+const { items } = Astro.props;
+const kindLabel: Record<CollectionEntry<'news'>['data']['kind'], string> = {
+  milestone: 'Milestone',
+  event: 'Event',
+  publication: 'Publication',
+  talk: 'Talk',
+  outreach: 'Outreach',
+};
+---
+
+<ol class="news" role="list">
+  {
+    items.map((item) => (
+      <li class="news__item">
+        <div class="news__meta mono">
+          <time datetime={item.data.date.toISOString().slice(0, 7)}>{formatMonth(item.data.date)}</time>
+          <span>{kindLabel[item.data.kind]}</span>
+        </div>
+        <h3 class="news__title">{item.data.title}</h3>
+        <p class="news__summary">{item.data.summary}</p>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .news {
+    display: grid;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--ink);
+  }
+  @media (min-width: 900px) {
+    .news {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0 var(--space-6);
+    }
+  }
+  .news__item {
+    display: grid;
+    gap: var(--space-3);
+    align-content: start;
+    padding: var(--space-5) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 900px) {
+    .news__item {
+      border-bottom: 0;
+    }
+  }
+  .news__meta {
+    display: flex;
+    gap: var(--space-4);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .news__meta span {
+    color: var(--accent);
+  }
+  .news__title {
+    font-size: var(--step-1);
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+  }
+  .news__summary {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+</style>

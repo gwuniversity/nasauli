@@ -1,0 +1,102 @@
+---
+import { stats } from '~/lib/site';
+---
+
+<section class="section mission" aria-labelledby="mission-title">
+  <div class="container">
+    <div class="mission__grid">
+      <div data-reveal>
+        <p class="eyebrow">The challenge</p>
+        <h2 id="mission-title" class="h1 mission__statement">
+          Thousands of autonomous aircraft. One shared sky. <span>Every link a potential attack surface.</span>
+        </h2>
+      </div>
+      <div class="mission__body prose" data-reveal>
+        <p>
+          Advanced Air Mobility will bring electric air taxis (eVTOLs) and fleets of small drones into the airspace
+          above our cities, coordinated by automated traffic-management services rather than human controllers alone.
+          That autonomy depends on perception, navigation, broadcast surveillance, and data links that an adversary can
+          spoof, jam, or manipulate.
+        </p>
+        <p>
+          This project is building the security framework and algorithmic foundations to keep high-density urban
+          airspace safe, even in the presence of malicious activity, in support of NASA's Advanced Air Mobility and UAS
+          Traffic Management (UTM) research.
+        </p>
+      </div>
+    </div>
+
+    <dl class="stats" data-reveal>
+      {
+        stats.map((s) => (
+          <div class="stat">
+            <dt>{s.label}</dt>
+            <dd>{s.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .mission__grid {
+    display: grid;
+    gap: var(--space-6) var(--space-8);
+  }
+  @media (min-width: 960px) {
+    .mission__grid {
+      grid-template-columns: 1.15fr 1fr;
+      align-items: end;
+    }
+  }
+  .mission__statement {
+    margin-top: var(--space-4);
+    max-width: 18ch;
+  }
+  .mission__statement span {
+    color: var(--ink-3);
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--space-6);
+    margin-top: var(--space-8);
+    border-top: 1px solid var(--ink);
+  }
+  .stat {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    padding: var(--space-5) var(--space-4) 0 0;
+  }
+  .stat:nth-child(even) {
+    padding-left: var(--space-4);
+    border-left: 1px solid var(--line);
+  }
+  @media (min-width: 800px) {
+    .stats {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .stat + .stat {
+      padding-left: var(--space-4);
+      border-left: 1px solid var(--line);
+    }
+  }
+  .stat dd {
+    font-size: var(--step-5);
+    font-weight: 550;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat dt {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+</style>
