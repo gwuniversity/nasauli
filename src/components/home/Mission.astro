@@ -9,7 +9,7 @@ const [teams, pubs, people] = await Promise.all([
 ]);
 const stats = [
   { value: String(teams.length), label: 'Partner institutions' },
-  { value: String(pubs.length), label: 'Peer-reviewed publications' },
+  { value: String(pubs.length), label: 'Publications' },
   { value: String(people.filter((p) => !p.data.alumni).length), label: 'Researchers and students' },
   { value: '3', label: 'Technical challenges' },
 ];

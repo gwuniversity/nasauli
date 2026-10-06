@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { publicationHref } from '~/lib/content';
+import { formatCitation, publicationHref } from '~/lib/content';
 import { url } from '~/lib/url';
 
 interface Props {
@@ -47,10 +47,27 @@ const kindLabel = { journal: 'Journal', conference: 'Conference', workshop: 'Wor
             {codes[u.id]}
           </a>
         ))}
+        <button type="button" class="cite" data-cite={formatCitation(pub)}>
+          Copy citation
+        </button>
       </p>
     )
   }
 </li>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-cite]').forEach((btn) =>
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.cite ?? '');
+        btn.textContent = 'Copied';
+      } catch {
+        btn.textContent = 'Copy failed';
+      }
+      setTimeout(() => (btn.textContent = 'Copy citation'), 1800);
+    }),
+  );
+</script>
 
 <style>
   .pub {
@@ -104,5 +121,20 @@ const kindLabel = { journal: 'Journal', conference: 'Conference', workshop: 'Wor
   }
   .pub__tags a {
     text-decoration: none;
+  }
+  .cite {
+    margin-left: auto;
+    padding: 0.15rem 0.6rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-1);
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .cite:hover {
+    border-color: var(--accent);
   }
 </style>

@@ -53,6 +53,14 @@ export async function getPublications(filter: { team?: string; useCase?: string 
     .sort((a, b) => b.data.year - a.data.year || a.data.title.localeCompare(b.data.title));
 }
 
+/** Plain-text citation, IEEE-like. */
+export function formatCitation(p: { data: { authors: string[]; title: string; venue: string; year: number; doi?: string; url?: string } }) {
+  const a = p.data.authors;
+  const authors = a.length > 2 ? `${a.slice(0, -1).join(', ')}, and ${a.at(-1)}` : a.join(' and ');
+  const link = p.data.doi ? ` doi:${p.data.doi}.` : p.data.url ? ` ${p.data.url}` : '';
+  return `${authors}, "${p.data.title}," ${p.data.venue}, ${p.data.year}.${link}`.replace(', and et al.', ', et al.');
+}
+
 export function publicationHref(p: { data: { doi?: string; url?: string } }) {
   return p.data.doi ? `https://doi.org/${p.data.doi}` : p.data.url;
 }

@@ -56,6 +56,13 @@ const month = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', timeZ
                       <p class="entry__kind mono">{kindLabel[i.data.kind]}</p>
                       <h3>{i.data.title}</h3>
                       <p>{i.data.summary}</p>
+                      {i.data.link && (
+                        <p>
+                          <a class="link-arrow" href={url(i.data.link)} rel={i.data.link.startsWith('http') ? 'noopener' : undefined}>
+                            Read more
+                          </a>
+                        </p>
+                      )}
                       {i.data.teams.length > 0 && (
                         <p class="entry__teams">
                           {i.data.teams.map((t) => (

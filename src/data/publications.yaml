@@ -93,6 +93,7 @@
   kind: conference
   teams: [gwu, purdue, vanderbilt]
   doi: 10.2514/6.2026-2892
+  featured: true
 
 - id: diaz-gonzalez-2026-networked-sim
   title: Networked Simulation for Cybersecurity Evaluation of Small Unmanned Aircraft Systems in Dense Urban Environments
@@ -137,6 +138,7 @@
   teams: [uc-irvine]
   useCases: [vision-landing]
   doi: 10.14722/ndss.2026.230904
+  featured: true
 
 - id: vu-2026-atc-tts
   title: Generating Realistic Air Traffic Control Voice Communication using AI-based Text-to-Speech Models
@@ -202,6 +204,7 @@
   teams: [vanderbilt, ut-austin]
   useCases: [remote-id]
   url: https://arxiv.org/abs/2607.19650
+  featured: true
 
 - id: isaacson-2026-sdr-remote-id
   title: 'Detecting Falsified UAV Telemetry: An SDR Approach to Remote ID Spoofing Detection'
@@ -318,6 +321,7 @@
   teams: [ut-austin]
   useCases: [airspace-coordination]
   doi: 10.1109/tac.2026.3725625
+  featured: true
 
 - id: im-2026-chance-ce
   title: Chance-Constrained Correlated Equilibria for Robust Noncooperative Coordination

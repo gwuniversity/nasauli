@@ -302,6 +302,20 @@ a {
   }
 }
 
+/* ---------- Spacing utilities ---------- */
+.mt-3 {
+  margin-top: var(--space-3);
+}
+.mt-4 {
+  margin-top: var(--space-4);
+}
+.mt-5 {
+  margin-top: var(--space-5);
+}
+.mt-7 {
+  margin-top: var(--space-7);
+}
+
 /* ---------- Buttons & links ---------- */
 .btn {
   --btn-bg: var(--ink);

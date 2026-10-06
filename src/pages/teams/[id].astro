@@ -10,8 +10,11 @@ import Figure from '~/components/ui/Figure.astro';
 import Pending from '~/components/ui/Pending.astro';
 import IrisGallery from '~/components/research/IrisGallery.astro';
 import PubItem from '~/components/ui/PubItem.astro';
+import ToolList from '~/components/ui/ToolList.astro';
+import { getCollection } from 'astro:content';
 import { getFigures, getPeople, getPublications, getTeams, getUseCases, isInvestigator } from '~/lib/content';
 import { url } from '~/lib/url';
+import { breadcrumbLd } from '~/lib/seo';
 
 export async function getStaticPaths() {
   const all = await getTeams();
@@ -33,6 +36,7 @@ const useCases = (await getUseCases()).filter((u) => u.data.teams.some((t) => t.
 const codes = Object.fromEntries((await getUseCases()).map((u) => [u.id, u.data.code]));
 const figures = await getFigures({ team: entry.id });
 const pubs = await getPublications({ team: entry.id });
+const tools = (await getCollection('tools')).filter((t) => t.data.teams.some((x) => x.id === entry.id));
 
 const people = (await getPeople()).filter((p) => p.data.team.id === entry.id);
 const investigators = people.filter((p) => isInvestigator(p.data.role) && !p.data.alumni);
@@ -43,10 +47,17 @@ const alumni = people.filter((p) => p.data.alumni);
 const partnerIds = new Set(useCases.flatMap((u) => u.data.teams.map((t) => t.id)));
 partnerIds.delete(entry.id);
 const partners = teams.filter((t) => partnerIds.has(t.id));
+const crumbs = [
+  { label: 'Teams', href: '/teams' },
+  { label: short, href: `/teams/${entry.id}` },
+];
+const ld = breadcrumbLd(crumbs, Astro.site, import.meta.env.BASE_URL);
+// Social preview: the team's first figure, else the site PI's photo.
+const shareImage = figures[0]?.data.src ?? investigators.find((p) => p.data.photo)?.data.photo;
 ---
 
-<BaseLayout title={name} description={role}>
-  <PageHeader eyebrow={`${short} · ${city}, ${state}`} title={name} lede={role}>
+<BaseLayout title={name} description={role} image={shareImage} jsonLd={ld}>
+  <PageHeader eyebrow={`${short} · ${city}, ${state}`} title={name} lede={role} crumbs={crumbs}>
     <div class="tag-row">{focus.map((f) => <span class="tag">{f}</span>)}</div>
     {website && <p><a class="link-arrow" href={website} rel="noopener">Team website</a></p>}
   </PageHeader>
@@ -101,6 +112,7 @@ const partners = teams.filter((t) => partnerIds.has(t.id));
         <div class="team__pis">
           {investigators.map((p) => <PersonCard person={p} team={entry} showTeam={false} />)}
         </div>
+        <ToolList tools={tools} teamNames={teamNames} stacked />
         {
           partners.length > 0 && (
             <div class="team__partners">
@@ -166,7 +178,7 @@ const partners = teams.filter((t) => partnerIds.has(t.id));
     <div class="container people">
       <div>
         <p class="eyebrow">People</p>
-        <h2 id="team-people" class="h2" style="margin-top: var(--space-4)">Researchers and students</h2>
+        <h2 id="team-people" class="h2 mt-4">Researchers and students</h2>
       </div>
       <div class="people__lists">
         {members.length > 0 ? <RoleGroups people={members} level={3} /> : <Pending owner={`${short} site PI`} what="Postdocs and students" hidePublic />}
@@ -188,7 +200,7 @@ const partners = teams.filter((t) => partnerIds.has(t.id));
         <div class="container people">
           <div>
             <p class="eyebrow">Publications</p>
-            <h2 id="team-pubs" class="h2" style="margin-top: var(--space-4)">
+            <h2 id="team-pubs" class="h2 mt-4">
               {pubs.length} {pubs.length === 1 ? 'paper' : 'papers'}
             </h2>
           </div>
@@ -222,6 +234,14 @@ const partners = teams.filter((t) => partnerIds.has(t.id));
     .team {
       grid-template-columns: minmax(0, 1fr) 300px;
       align-items: start;
+    }
+  }
+  @media (max-width: 999px) {
+    .team__aside {
+      order: -1;
+    }
+    .team__pis {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 180px));
     }
   }
   .team__overview:not(:empty) {

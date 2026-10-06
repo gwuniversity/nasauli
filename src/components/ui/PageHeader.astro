@@ -1,15 +1,32 @@
 ---
+import { url } from '~/lib/url';
+
 interface Props {
   eyebrow: string;
   title: string;
   lede?: string;
+  /** Breadcrumb trail above the eyebrow; the last item is the current page. */
+  crumbs?: { label: string; href?: string }[];
 }
 
-const { eyebrow, title, lede } = Astro.props;
+const { eyebrow, title, lede, crumbs } = Astro.props;
 ---
 
 <header class="page-header">
   <div class="container">
+    {
+      crumbs && (
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <ol role="list">
+            {crumbs.map((c, i) => (
+              <li>
+                {c.href && i < crumbs.length - 1 ? <a href={url(c.href)}>{c.label}</a> : <span aria-current="page">{c.label}</span>}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
     <p class="eyebrow">{eyebrow}</p>
     <h1 class="h1">{title}</h1>
     {lede && <p class="lede">{lede}</p>}
@@ -28,6 +45,30 @@ const { eyebrow, title, lede } = Astro.props;
   .page-header .container {
     display: grid;
     gap: var(--space-4);
+  }
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .crumbs li + li::before {
+    content: '/';
+    margin-right: var(--space-2);
+    color: var(--line-strong);
+  }
+  .crumbs a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .crumbs a:hover {
+    text-decoration: underline;
   }
   .page-header h1 {
     max-width: 20ch;

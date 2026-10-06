@@ -108,6 +108,8 @@ const publications = defineCollection({
     useCases: z.array(reference('useCases')).default([]),
     doi: z.string().optional(),
     url: z.url().optional(),
+    /** Shown in "Selected publications" on the homepage. */
+    featured: z.boolean().default(false),
   }),
 });
 
@@ -159,6 +161,8 @@ const news = defineCollection({
     kind: z.enum(['milestone', 'event', 'publication', 'talk', 'outreach']),
     summary: z.string(),
     teams: z.array(reference('teams')).default([]),
+    /** Optional "Read more" target: a site path (/research/remote-id) or a full URL. */
+    link: z.string().optional(),
   }),
 });
 

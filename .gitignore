@@ -1,6 +1,7 @@
 # Confidential source material — never commit
 reports/
 private/
+demos/
 
 # Build / tooling
 node_modules/

@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { formatMonth } from '~/lib/url';
+import { formatMonth, url } from '~/lib/url';
 
 interface Props {
   items: CollectionEntry<'news'>[];
@@ -26,6 +26,11 @@ const kindLabel: Record<CollectionEntry<'news'>['data']['kind'], string> = {
         </div>
         <h3 class="news__title">{item.data.title}</h3>
         <p class="news__summary">{item.data.summary}</p>
+        {item.data.link && (
+          <a class="link-arrow news__more" href={url(item.data.link)}>
+            Read more
+          </a>
+        )}
       </li>
     ))
   }
@@ -71,6 +76,9 @@ const kindLabel: Record<CollectionEntry<'news'>['data']['kind'], string> = {
     font-size: var(--step-1);
     letter-spacing: -0.015em;
     line-height: 1.25;
+  }
+  .news__more {
+    font-size: 0.9rem;
   }
   .news__summary {
     color: var(--ink-2);

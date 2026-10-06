@@ -7,14 +7,20 @@ import UseCases from '~/components/home/UseCases.astro';
 import TeamMap from '~/components/home/TeamMap.astro';
 import Outlook from '~/components/home/Outlook.astro';
 import Engage from '~/components/home/Engage.astro';
+import SelectedPubs from '~/components/home/SelectedPubs.astro';
+import { getTeams } from '~/lib/content';
+import { projectLd } from '~/lib/seo';
+
+const ld = projectLd(Astro.site, (await getTeams()).map((t) => t.data.name));
 ---
 
-<BaseLayout>
+<BaseLayout jsonLd={ld}>
   <Hero />
   <Mission />
   <Challenges />
   <UseCases />
   <TeamMap />
+  <SelectedPubs />
   <Outlook />
   <Engage />
 </BaseLayout>

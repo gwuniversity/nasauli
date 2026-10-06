@@ -29,6 +29,13 @@ import { url } from '~/lib/url';
       linear-gradient(var(--map-grid) 1px, transparent 1px) 0 0 / 24px 24px,
       linear-gradient(90deg, var(--map-grid) 1px, transparent 1px) 0 0 / 24px 24px;
   }
+  @media (max-width: 700px) {
+    .notfound {
+      background:
+        linear-gradient(var(--map-grid) 1px, transparent 1px) 0 0 / 24px 24px,
+        linear-gradient(90deg, var(--map-grid) 1px, transparent 1px) 0 0 / 24px 24px;
+    }
+  }
   .notfound__inner {
     display: grid;
     gap: var(--space-5);

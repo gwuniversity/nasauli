@@ -24,6 +24,8 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - name: Type-check and validate content
+        run: npm run check
       - id: pages
         uses: actions/configure-pages@v5
       - run: npm run build
@@ -33,6 +35,10 @@ jobs:
           # Set the repository variable PUBLIC_SHOW_PENDING=true to publish a review build in which
           # every section awaiting PI content is highlighted. Unset it for the public launch.
           PUBLIC_SHOW_PENDING: ${{ vars.PUBLIC_SHOW_PENDING }}
+      - name: Check internal links
+        run: npm run check:links
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

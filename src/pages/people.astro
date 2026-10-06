@@ -80,7 +80,7 @@ const memberCount = byTeam.reduce((n, g) => n + g.members.length, 0);
     <div class="container partners">
       <div>
         <p class="eyebrow">NASA</p>
-        <h2 id="partners-title" class="h2" style="margin-top: var(--space-4)">Program partners</h2>
+        <h2 id="partners-title" class="h2 mt-4">Program partners</h2>
         <ul class="contacts" role="list">
           {
             nasaContacts.map((c) => (
@@ -94,8 +94,8 @@ const memberCount = byTeam.reduce((n, g) => n + g.members.length, 0);
       </div>
       <div>
         <p class="eyebrow">Advisory board</p>
-        <h2 class="h2" style="margin-top: var(--space-4)">External advisors</h2>
-        <div style="margin-top: var(--space-5)">
+        <h2 class="h2 mt-4">External advisors</h2>
+        <div class="mt-5">
           <Pending
             owner="Project PI"
             what="Advisory board members from government and industry (name, affiliation)."
@@ -112,7 +112,7 @@ const memberCount = byTeam.reduce((n, g) => n + g.members.length, 0);
         <div class="container partners">
           <div>
             <p class="eyebrow">Alumni</p>
-            <h2 id="alumni-title" class="h2" style="margin-top: var(--space-4)">Former members</h2>
+            <h2 id="alumni-title" class="h2 mt-4">Former members</h2>
           </div>
           <ul class="alumni" role="list">
             {alumni.map((p) => (

@@ -82,6 +82,7 @@ Set `alumni: true` when someone leaves. Their name then moves to "Former members
   teams: [purdue]
   useCases: [airspace-coordination]   # optional, see the list below
   doi: 10.1109/tac.2027.1234567       # or  url: https://…
+  featured: true                      # optional; shows it under "Selected publications" on the homepage
 ```
 
 **A demo video** (`src/data/demos.yaml`). Videos play on our own page, so visitors never leave
@@ -106,6 +107,7 @@ date: 2027-03-15
 kind: milestone          # milestone | event | publication | talk | outreach
 summary: Two sentences describing the news.
 teams: [ut-austin]
+link: https://doi.org/10.xxxx/...   # optional "Read more" target: a full URL or a site path like /research/remote-id
 ---
 ```
 

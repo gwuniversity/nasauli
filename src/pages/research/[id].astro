@@ -7,10 +7,12 @@ import Figure from '~/components/ui/Figure.astro';
 import Pending from '~/components/ui/Pending.astro';
 import PubItem from '~/components/ui/PubItem.astro';
 import DemoCard from '~/components/ui/DemoCard.astro';
+import ToolList from '~/components/ui/ToolList.astro';
 import { getCollection } from 'astro:content';
 import { getFigures, getPublications, getTeams, getUseCases } from '~/lib/content';
 import { challenges } from '~/lib/site';
 import { url } from '~/lib/url';
+import { breadcrumbLd } from '~/lib/seo';
 
 export async function getStaticPaths() {
   const all = await getUseCases();
@@ -35,16 +37,22 @@ const involved = entry.data.teams.map((t) => teamById[t.id]).filter(Boolean);
 const figures = await getFigures({ useCase: entry.id });
 const pubs = await getPublications({ useCase: entry.id });
 const demos = (await getCollection('demos')).filter((d) => d.data.useCase?.id === entry.id);
+const tools = (await getCollection('tools')).filter((t) => t.data.useCases.some((u) => u.id === entry.id));
 const codes = Object.fromEntries((await getUseCases()).map((u) => [u.id, u.data.code]));
 const taskText = Object.fromEntries(
   challenges.flatMap((tc, i) => tc.tasks.map((task, j) => [`${i + 1}.${j + 1}`, task])),
 );
 const highlights = entry.data.highlights.map((h) => ({ ...h, team: teamNames[h.team.id] }));
 const teamList = involved.map((t) => t.data.short).join(', ');
+const crumbs = [
+  { label: 'Research', href: '/research' },
+  { label: entry.data.code, href: `/research/${entry.id}` },
+];
+const ld = breadcrumbLd(crumbs, Astro.site, import.meta.env.BASE_URL);
 ---
 
-<BaseLayout title={entry.data.title} description={entry.data.summary}>
-  <PageHeader eyebrow={`${entry.data.code} · Aviation use case`} title={entry.data.title} lede={entry.data.summary}>
+<BaseLayout title={entry.data.title} description={entry.data.summary} image={figures[0]?.data.src} jsonLd={ld}>
+  <PageHeader eyebrow={`${entry.data.code} · Aviation use case`} title={entry.data.title} lede={entry.data.summary} crumbs={crumbs}>
     <div class="tag-row">
       {entry.data.challenges.map((tc) => <span class="tag tag--accent">{tc}</span>)}
       {
@@ -143,6 +151,7 @@ const teamList = involved.map((t) => t.data.short).join(', ');
           <Pending owner={teamList} what="Demo video for this use case (demos.yaml entry with this useCase)." hidePublic />
         )
       }
+      <ToolList tools={tools} teamNames={teamNames} />
       {
         pubs.length > 0 && (
           <div class="uc-pubs">
@@ -275,7 +284,7 @@ const teamList = involved.map((t) => t.data.short).join(', ');
   }
   .uc-more {
     display: grid;
-    gap: var(--space-4);
+    gap: var(--space-7);
   }
   .pager {
     display: grid;

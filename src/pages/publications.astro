@@ -2,7 +2,7 @@
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import PageHeader from '~/components/ui/PageHeader.astro';
 import PubItem from '~/components/ui/PubItem.astro';
-import { getPublications, getTeams, getUseCases } from '~/lib/content';
+import { getPublications, getTeams, getUseCases, publicationHref } from '~/lib/content';
 
 const pubs = await getPublications();
 const teams = await getTeams();
@@ -12,13 +12,30 @@ const codes = Object.fromEntries(useCases.map((u) => [u.id, u.data.code]));
 const years = [...new Set(pubs.map((p) => p.data.year))].sort((a, b) => b - a);
 const byYear = years.map((y) => ({ year: y, items: pubs.filter((p) => p.data.year === y) }));
 const journals = pubs.filter((p) => p.data.kind === 'journal').length;
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Publications',
+  itemListElement: pubs.map((p, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': p.data.kind === 'thesis' ? 'Thesis' : 'ScholarlyArticle',
+      headline: p.data.title,
+      author: p.data.authors.filter((a) => a !== 'et al.').map((name) => ({ '@type': 'Person', name })),
+      datePublished: String(p.data.year),
+      isPartOf: p.data.venue,
+      url: publicationHref(p),
+    },
+  })),
+};
 ---
 
-<BaseLayout title="Publications" description="Peer-reviewed publications from the NASA ULI Securing High-Density Urban Airspaces project.">
+<BaseLayout title="Publications" description="Publications from the NASA ULI Securing High-Density Urban Airspaces project." jsonLd={ld}>
   <PageHeader
     eyebrow="Publications"
     title="Publications"
-    lede="Peer-reviewed papers from across the project, filterable by year, team, and use case. Only published and accepted work is listed."
+    lede="Journal articles, conference and workshop papers, and theses from across the project, filterable by year, team, and use case. Only published and accepted work is listed."
   >
     <dl class="pub-stats mono">
       <div><dt>Papers</dt><dd>{pubs.length}</dd></div>

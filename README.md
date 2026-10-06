@@ -17,6 +17,7 @@ npm run dev      # http://localhost:4321 — pending sections show as highlighte
 npm run build    # static output in dist/
 npm run preview  # serve the production build
 npm run check    # type-check and validate content
+npm run check:links  # after a build: verify every internal link resolves
 ```
 
 ## Where content lives

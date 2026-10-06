@@ -8,9 +8,11 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "blur-photos": "node scripts/blur-photos.mjs"
+    "blur-photos": "node scripts/blur-photos.mjs",
+    "check:links": "node scripts/check-links.mjs"
   },
   "dependencies": {
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
     "@fontsource-variable/instrument-sans": "^5.3.0",
     "@fontsource/ibm-plex-mono": "^5.3.0",
