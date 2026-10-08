@@ -1,104 +1,170 @@
 ---
 import { challenges } from '~/lib/site';
 
-const flows = ['Identified attacks · quantified risks', 'Risk & security requirements · mitigation algorithms'];
+// What each challenge hands to the next (from the proposal's Figure 1).
+const flows = [
+  { from: 'TC1', to: 'TC2', text: 'Identified attacks and quantified risks' },
+  { from: 'TC2', to: 'TC3', text: 'Risk and security requirements, mitigation algorithms' },
+  { from: 'TC3', to: 'TC1 · TC2', text: 'System-level security guarantees' },
+];
+const validation = ['Simulation testing', 'Hardware testbeds', 'Integrated live-virtual-constructive demonstrations'];
 ---
 
 <figure class="fw" aria-labelledby="fw-caption">
-  <div class="fw__band">
-    <span class="fw__band-title">AAM and UTM system architectures</span>
-    <span class="fw__io mono"><span aria-hidden="true">↓</span> current architecture design</span>
-    <span class="fw__io mono"><span aria-hidden="true">↑</span> vulnerabilities and updates</span>
+  <div class="fw__layer">
+    <p class="fw__kicker mono">System context</p>
+    <h3>AAM and UTM system architectures</h3>
+  </div>
+
+  <div class="fw__link" aria-hidden="true">
+    <span class="fw__pill"><b>↓</b> Current architecture design</span>
+    <span class="fw__pill"><b>↑</b> Vulnerabilities and updates</span>
   </div>
 
   <div class="fw__core">
-    <div class="fw__tcs">
+    <p class="fw__kicker mono">Research core</p>
+
+    <ol class="fw__tcs" role="list">
       {
         challenges.map((tc, i) => (
           <>
-            <section class="fw__tc">
-              <p class="fw__code mono">{tc.id}</p>
-              <h3>{tc.heading}</h3>
+            <li class="fw__tc">
+              <p class="fw__code mono">
+                {tc.id} · {tc.title}
+              </p>
+              <h4>{tc.heading}</h4>
               <ol role="list">
                 {tc.tasks.map((task, j) => (
                   <li>
                     <span class="mono">
                       {i + 1}.{j + 1}
                     </span>
-                    {task}
+                    <span>{task}</span>
                   </li>
                 ))}
               </ol>
-            </section>
-            {i < flows.length && (
-              <p class="fw__flow mono">
-                <span class="fw__arrow" aria-hidden="true" />
-                {flows[i]}
-              </p>
+            </li>
+            {i < challenges.length - 1 && (
+              <li class="fw__arrow" aria-hidden="true">
+                <span>→</span>
+              </li>
             )}
           </>
         ))
       }
-    </div>
-    <p class="fw__return mono"><span aria-hidden="true">↺</span> System-level security guarantees feed back to TC1 and TC2</p>
+    </ol>
 
-    <div class="fw__loop mono" aria-hidden="true">
-      <span>prototypes →</span>
-      <span>← feedback</span>
+    <ul class="fw__flows" role="list" aria-label="How the challenges connect">
+      {
+        flows.map((f) => (
+          <li>
+            <span class="fw__route mono">
+              {f.from} <b>→</b> {f.to}
+            </span>
+            <span>{f.text}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="fw__link fw__link--inner" aria-hidden="true">
+      <span class="fw__pill"><b>↓</b> Prototypes</span>
+      <span class="fw__pill"><b>↑</b> Feedback</span>
     </div>
 
-    <section class="fw__vd">
-      <p class="fw__code mono">V&amp;D</p>
-      <h3>Validation and demonstration</h3>
-      <ul role="list">
-        <li>Simulation testing</li>
-        <li>Hardware testbeds</li>
-        <li>Integrated live-virtual-constructive demonstrations</li>
-      </ul>
-    </section>
+    <div class="fw__vd">
+      <div>
+        <p class="fw__code mono">V&amp;D · Cross-cutting</p>
+        <h4>Validation and demonstration</h4>
+      </div>
+      <ul role="list">{validation.map((v) => <li>{v}</li>)}</ul>
+    </div>
   </div>
 
-  <div class="fw__band">
-    <span class="fw__band-title">CNS infrastructure and avionics standards</span>
-    <span class="fw__io mono"><span aria-hidden="true">↑</span> existing standards and constraints</span>
-    <span class="fw__io mono"><span aria-hidden="true">↓</span> security needs for updated standards</span>
+  <div class="fw__link" aria-hidden="true">
+    <span class="fw__pill"><b>↑</b> Existing standards and constraints</span>
+    <span class="fw__pill"><b>↓</b> Security needs for updated standards</span>
+  </div>
+
+  <div class="fw__layer">
+    <p class="fw__kicker mono">Standards</p>
+    <h3>CNS infrastructure and avionics standards</h3>
   </div>
 
   <figcaption id="fw-caption">
-    The three integrated technical challenges, their task-level interdependencies, and their interaction with
-    validation and demonstration, between today's airspace architectures and the standards that govern them.
+    The three integrated technical challenges, what each passes to the next, and their interaction with validation and
+    demonstration, between today’s airspace architectures and the standards that govern them.
   </figcaption>
 </figure>
 
 <style>
   .fw {
     display: grid;
-    gap: var(--space-3);
+    max-width: 1100px;
+    margin-inline: auto;
   }
-  .fw__band {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-2) var(--space-5);
-    padding: var(--space-3) var(--space-5);
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-2);
-    background: var(--bg-sunken);
-  }
-  .fw__band-title {
-    flex: 1 1 260px;
-    font-weight: 600;
-  }
-  .fw__io {
-    font-size: 0.72rem;
-    letter-spacing: 0.04em;
+  .fw__kicker {
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-3);
   }
-  .fw__io span {
-    color: var(--accent);
+
+  /* Outer layers */
+  .fw__layer {
+    display: grid;
+    gap: var(--space-1);
+    justify-items: center;
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-2);
+    background: var(--bg-raised);
+    text-align: center;
+  }
+  .fw__layer h3 {
+    font-size: var(--step-1);
   }
 
+  /* Connectors between layers: a dashed spine with labeled pills */
+  .fw__link {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2) var(--space-5);
+    padding-block: var(--space-4);
+  }
+  .fw__link::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    border-left: 1.5px dashed var(--line-strong);
+  }
+  .fw__pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--bg-sunken);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    white-space: nowrap;
+  }
+  .fw__pill b {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* Research core */
   .fw__core {
     display: grid;
     gap: var(--space-4);
@@ -106,141 +172,169 @@ const flows = ['Identified attacks · quantified risks', 'Risk & security requir
     border: 1.5px dashed var(--line-strong);
     border-radius: var(--radius-3);
   }
-  @media (min-width: 1100px) {
-    .fw__core {
-      grid-template-columns: minmax(0, 1fr) 88px 260px;
-      align-items: stretch;
-    }
-    .fw__tcs,
-    .fw__return {
-      grid-column: 1;
-    }
-    .fw__loop {
-      grid-column: 2;
-      grid-row: 1 / span 2;
-    }
-    .fw__vd {
-      grid-column: 3;
-      grid-row: 1 / span 2;
-    }
-  }
-
   .fw__tcs {
-    display: grid;
-    gap: var(--space-3);
-  }
-  @media (min-width: 860px) {
-    .fw__tcs {
-      grid-template-columns: minmax(0, 1fr) 72px minmax(0, 1fr) 72px minmax(0, 1fr);
-      gap: 0;
-    }
-  }
-  .fw__tc,
-  .fw__vd {
-    display: grid;
-    gap: var(--space-3);
-    align-content: start;
-    padding: var(--space-5);
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-2);
-    background: var(--bg-raised);
-  }
-  .fw__vd {
-    border-color: var(--accent);
-  }
-  .fw__code {
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-  }
-  .fw h3 {
-    font-size: 1.05rem;
-    line-height: 1.3;
-  }
-  .fw ol,
-  .fw ul {
     display: grid;
     gap: var(--space-2);
     padding: 0;
     list-style: none;
-    font-size: 0.85rem;
+  }
+  @media (min-width: 960px) {
+    .fw__tcs {
+      grid-template-columns: minmax(0, 1fr) 36px minmax(0, 1fr) 36px minmax(0, 1fr);
+      gap: 0;
+    }
+  }
+  .fw__tc {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: var(--space-3);
+    min-width: 0;
+    padding: var(--space-5);
+    border: 1px solid var(--line-strong);
+    border-top: 3px solid var(--accent-graphic);
+    border-radius: var(--radius-2);
+    background: var(--bg-raised);
+  }
+  .fw__code {
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .fw h4 {
+    font-size: var(--text-md);
+    line-height: 1.3;
+  }
+  .fw__tc ol {
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+    padding: var(--space-3) 0 0;
+    border-top: 1px solid var(--line);
+    list-style: none;
+    font-size: var(--text-xs);
+    line-height: 1.45;
     color: var(--ink-2);
   }
-  .fw ol li {
+  .fw__tc ol li {
     display: grid;
-    grid-template-columns: 2rem 1fr;
+    grid-template-columns: 2.1rem minmax(0, 1fr);
   }
-  .fw ol .mono {
-    font-size: 0.72rem;
-    padding-top: 0.12rem;
+  .fw__tc ol .mono {
+    font-size: var(--text-label);
+    padding-top: 0.1rem;
     color: var(--ink-3);
   }
-  .fw ul li::before {
-    content: '▸ ';
+
+  /* Arrow badges between cards (down on narrow screens) */
+  .fw__arrow {
+    display: grid;
+    place-items: center;
+  }
+  .fw__arrow span {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    background: var(--bg);
     color: var(--accent);
+    font-size: var(--text-sm);
+    line-height: 1;
+    transform: rotate(90deg);
+  }
+  @media (min-width: 960px) {
+    .fw__arrow span {
+      transform: none;
+    }
   }
 
-  .fw__flow {
-    display: flex;
+  /* What flows between challenges, aligned under the cards */
+  .fw__flows {
+    display: grid;
+    gap: var(--space-3);
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 960px) {
+    .fw__flows {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 36px;
+    }
+  }
+  .fw__flows li {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-3) var(--space-4);
+    border-left: 2px solid var(--accent-graphic);
+    background: var(--accent-soft);
+    border-radius: 0 var(--radius-1) var(--radius-1) 0;
+    font-size: var(--text-xs);
+    line-height: 1.4;
+    color: var(--ink-2);
+  }
+  .fw__route {
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .fw__route b {
+    font-weight: 600;
+  }
+  .fw__link--inner {
+    padding-block: var(--space-1);
+  }
+
+  /* Validation & demonstration band */
+  .fw__vd {
+    display: grid;
+    gap: var(--space-4) var(--space-6);
     align-items: center;
-    gap: var(--space-2);
-    font-size: 0.65rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--ink-3);
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-2);
+    background: var(--bg-raised);
   }
-  .fw__arrow::before {
-    content: '↓';
-    color: var(--accent);
-    font-size: 1rem;
-  }
-  @media (min-width: 860px) {
-    .fw__flow {
-      flex-direction: column;
-      justify-content: center;
-      padding: 0 var(--space-2);
-      text-align: center;
-    }
-    .fw__arrow::before {
-      content: '→';
+  @media (min-width: 960px) {
+    .fw__vd {
+      grid-template-columns: auto minmax(0, 1fr);
     }
   }
-
-  .fw__return {
-    font-size: 0.72rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--ink-3);
-    text-align: center;
-    padding: var(--space-2);
-    border-top: 1px solid var(--line);
-  }
-  .fw__return span {
-    color: var(--accent);
-  }
-
-  .fw__loop {
+  .fw__vd ul {
     display: flex;
-    justify-content: center;
-    gap: var(--space-5);
-    font-size: 0.65rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--ink-3);
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: 0;
+    list-style: none;
   }
-  @media (min-width: 1100px) {
-    .fw__loop {
-      flex-direction: column;
-      align-items: center;
-      gap: var(--space-3);
-      text-align: center;
+  @media (min-width: 960px) {
+    .fw__vd ul {
+      justify-content: flex-end;
     }
+  }
+  .fw__vd li {
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    font-size: var(--text-xs);
+    color: var(--ink);
   }
 
   figcaption {
-    margin-top: var(--space-2);
-    font-size: 0.875rem;
+    margin-top: var(--space-5);
+    font-size: var(--text-xs);
     color: var(--ink-3);
     max-width: 80ch;
+  }
+  @media (max-width: 560px) {
+    .fw__core {
+      padding: var(--space-3);
+    }
+    .fw__pill {
+      white-space: normal;
+    }
   }
 </style>

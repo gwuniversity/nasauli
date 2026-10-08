@@ -1,11 +1,19 @@
 ---
+import { heroAnimation } from '~/lib/site';
 import { url } from '~/lib/url';
 ---
 
 <section class="hero" aria-labelledby="hero-title">
-  <div class="hero__stage" aria-hidden="true">
-    <canvas class="hero__canvas" data-airspace></canvas>
+  <div class="hero__stage" aria-hidden="true" data-stage data-default={heroAnimation}>
+    <canvas class="hero__canvas" data-airspace-3d hidden></canvas>
+    <canvas class="hero__canvas hero__labels" data-airspace-labels hidden></canvas>
+    <canvas class="hero__canvas" data-airspace-2d hidden></canvas>
     <div class="hero__veil"></div>
+  </div>
+
+  <div class="hero__view" role="group" aria-label="Animation view" data-view-toggle hidden>
+    <button type="button" data-view="3d" aria-pressed="false">3D</button>
+    <button type="button" data-view="2d" aria-pressed="false">2D</button>
   </div>
 
   <div class="container hero__inner">
@@ -26,16 +34,28 @@ import { url } from '~/lib/url';
       </div>
     </div>
 
+  </div>
+
     <dl class="hero__readout mono" aria-hidden="true" data-readout data-phase="nominal">
-      <div><dt>Sector</dt><dd>URBAN-01</dd></div>
+      <div class="hero__readout-fleets">
+        <dt>Fleets</dt>
+        <dd>
+          <span class="sw--a"><svg class="sw" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.4"/><circle cx="3" cy="3" r="2.2" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="13" cy="3" r="2.2" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="3" cy="13" r="2.2" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="13" cy="13" r="2.2" fill="none" stroke="currentColor" stroke-width="1.1"/><rect x="5.6" y="5.6" width="4.8" height="4.8" rx="1" fill="currentColor"/></svg>OP-A</span>
+          <span class="sw--b"><svg class="sw" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.4"/><circle cx="3" cy="3" r="2.2" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="13" cy="3" r="2.2" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="3" cy="13" r="2.2" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="13" cy="13" r="2.2" fill="none" stroke="currentColor" stroke-width="1.1"/><rect x="5.6" y="5.6" width="4.8" height="4.8" rx="1" fill="currentColor"/></svg>OP-B</span>
+          <span class="sw--c"><svg class="sw" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.4"/><circle cx="3" cy="3" r="2.2" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="13" cy="3" r="2.2" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="3" cy="13" r="2.2" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="13" cy="13" r="2.2" fill="none" stroke="currentColor" stroke-width="1.1"/><rect x="5.6" y="5.6" width="4.8" height="4.8" rx="1" fill="currentColor"/></svg>OP-C</span>
+        </dd>
+      </div>
       <div><dt>Tracks</dt><dd data-readout-tracks>—</dd></div>
+      <div class="hero__readout-sep">
+        <dt>Separation</dt>
+        <dd><span class="sep-ring"></span><span data-readout-sep>0</span>&nbsp;yielding</dd>
+      </div>
       <div>
         <dt>Remote ID</dt>
         <dd><span class="hero__dot"></span><span data-readout-rid>Nominal</span></dd>
       </div>
       <div class="hero__readout-status"><dt>Status</dt><dd data-readout-status>All broadcasts consistent</dd></div>
     </dl>
-  </div>
 
   <p class="visually-hidden">
     Animated illustration: drone traffic over a city. One aircraft broadcasts a false position; the system detects the
@@ -59,27 +79,80 @@ import { url } from '~/lib/url';
     z-index: -1;
   }
   .hero__canvas {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
+  }
+  .hero__canvas[hidden] {
+    display: none;
+  }
+  .hero__labels {
+    pointer-events: none;
+  }
+
+  /* 3D | 2D view switch */
+  .hero__view {
+    position: absolute;
+    z-index: 2;
+    top: var(--space-5);
+    right: var(--gutter);
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--bg-raised) 82%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: var(--shadow-1);
+  }
+  .hero__view[hidden] {
+    display: none;
+  }
+  .hero__view button {
+    min-width: 2.75rem;
+    padding: 0.3rem 0.7rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: var(--text-label-lg);
+    font-weight: 500;
+    letter-spacing: var(--track-label);
+    color: var(--ink-2);
+  }
+  .hero__view button:hover {
+    color: var(--ink);
+  }
+  .hero__view button[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .sep-ring {
+    width: 10px;
+    height: 10px;
+    border: 1.2px dashed currentColor;
+    border-radius: 50%;
+    opacity: 0.7;
   }
   .hero__veil {
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(90deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 88%, transparent) 30%, transparent 62%),
+      linear-gradient(90deg, var(--bg) 0%, var(--bg) 22%, color-mix(in srgb, var(--bg) 90%, transparent) 38%, transparent 58%),
       linear-gradient(0deg, var(--bg) 0%, transparent 22%);
   }
-  @media (max-width: 800px) {
+  @media (max-width: 1120px) {
     .hero__veil {
       background:
-        linear-gradient(180deg, color-mix(in srgb, var(--bg) 35%, transparent) 0%, color-mix(in srgb, var(--bg) 92%, transparent) 45%, var(--bg) 100%);
+        linear-gradient(180deg, transparent 0%, transparent 34%, color-mix(in srgb, var(--bg) 88%, transparent) 52%, var(--bg) 100%);
     }
   }
 
   .hero__inner {
     display: grid;
     gap: var(--space-7);
-    padding-block: var(--space-9);
+    padding-block: var(--space-8);
   }
   .hero__copy {
     display: grid;
@@ -96,11 +169,15 @@ import { url } from '~/lib/url';
     margin-top: var(--space-2);
   }
 
+  /* Docked under the animation; the script centers it beneath the flight area. */
   .hero__readout {
-    justify-self: end;
-    align-self: end;
+    position: absolute;
+    z-index: 1;
+    bottom: var(--space-6);
+    left: var(--readout-left, auto);
+    right: var(--readout-right, var(--gutter));
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(4, auto);
     gap: var(--space-2) var(--space-5);
     padding: var(--space-4) var(--space-5);
     border: 1px solid var(--line-strong);
@@ -108,8 +185,8 @@ import { url } from '~/lib/url';
     background: color-mix(in srgb, var(--bg-raised) 78%, transparent);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    font-size: 0.6875rem;
-    letter-spacing: 0.06em;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     box-shadow: var(--shadow-1);
   }
@@ -122,6 +199,27 @@ import { url } from '~/lib/url';
     gap: 0.4rem;
     color: var(--ink);
     font-weight: 500;
+  }
+  .hero__readout-fleets dd {
+    gap: var(--space-3);
+  }
+  .hero__readout-fleets span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .sw {
+    width: 14px;
+    height: 14px;
+  }
+  .sw--a {
+    color: var(--fleet-a);
+  }
+  .sw--b {
+    color: var(--fleet-b);
+  }
+  .sw--c {
+    color: var(--fleet-c);
   }
   .hero__readout-status {
     grid-column: 1 / -1;
@@ -148,7 +246,7 @@ import { url } from '~/lib/url';
     color: var(--accent);
   }
 
-  @media (max-width: 800px) {
+  @media (max-width: 1120px) {
     .hero {
       align-items: end;
     }
@@ -165,7 +263,13 @@ import { url } from '~/lib/url';
 <script>
   import { startAirspace, type AirspaceStatus } from '~/scripts/airspace';
 
-  const canvas = document.querySelector<HTMLCanvasElement>('[data-airspace]');
+  const labels = document.querySelector<HTMLCanvasElement>('[data-airspace-labels]');
+
+  const stage = document.querySelector<HTMLElement>('[data-stage]');
+  const canvas3d = document.querySelector<HTMLCanvasElement>('[data-airspace-3d]');
+  const canvas2d = document.querySelector<HTMLCanvasElement>('[data-airspace-2d]');
+  const toggle = document.querySelector<HTMLElement>('[data-view-toggle]');
+  const sepCount = document.querySelector('[data-readout-sep]');
   const readout = document.querySelector<HTMLElement>('[data-readout]');
   const tracks = readout?.querySelector('[data-readout-tracks]');
   const rid = readout?.querySelector('[data-readout-rid]');
@@ -178,13 +282,96 @@ import { url } from '~/lib/url';
     recovering: ['Nominal', 'Unsafe region cleared'],
   };
 
-  if (canvas) {
-    startAirspace(canvas, ({ phase, tracks: count }) => {
-      if (!readout) return;
-      readout.dataset.phase = phase;
-      if (tracks) tracks.textContent = String(count);
-      if (rid) rid.textContent = copy[phase][0];
-      if (status) status.textContent = copy[phase][1];
-    });
+  const copyEl = document.querySelector<HTMLElement>('.hero__copy');
+
+  /** Flight zone: right of the text on wide screens, above it on narrow ones; clear of the readout. */
+  const zoneFor = (width: number, height: number) => {
+    const c = stage!.getBoundingClientRect();
+    // Start the flight area below the 3D | 2D switch so traffic never hides behind it.
+    const sw = toggle && !toggle.hidden ? toggle.getBoundingClientRect() : null;
+    const top = sw ? Math.max(20, sw.bottom - c.top + 14) : 20;
+    const copy = copyEl?.getBoundingClientRect();
+    if (!copy) return { x: 0, y: 0, w: width, h: height };
+    const avoid: { x: number; y: number; w: number; h: number }[] = [];
+    if (width > 1120) {
+      const x = copy.right - c.left + 32;
+      const w = Math.max(240, width - x - 16);
+      let bottom = height - 40;
+      if (readout) {
+        // Center the status panel under the flight area, then end the flight area just above it.
+        const pw = readout.offsetWidth;
+        readout.style.setProperty('--readout-left', `${Math.round(x + w / 2 - pw / 2)}px`);
+        readout.style.setProperty('--readout-right', 'auto');
+        bottom = readout.getBoundingClientRect().top - c.top - 28;
+      }
+      return { x, y: top, w, h: Math.max(240, bottom - top), avoid };
+    }
+    return { x: 8, y: top, w: width - 16, h: Math.max(180, copy.top - c.top - 20 - (top - 16)) };
+  };
+
+  const onStatus = ({ phase, tracks: count }: AirspaceStatus) => {
+    if (!readout) return;
+    readout.dataset.phase = phase;
+    if (tracks) tracks.textContent = String(count);
+    if (rid) rid.textContent = copy[phase][0];
+    if (status) status.textContent = copy[phase][1];
+  };
+
+  const onSeparation = (n: number) => {
+    if (sepCount) sepCount.textContent = String(n);
+  };
+
+  type View = '3d' | '2d';
+  let stop: (() => void) | null = null;
+  let has3d: boolean | null = null;
+
+  async function show(view: View) {
+    if (!canvas2d || !canvas3d || !labels) return;
+    let mod: typeof import('~/scripts/airspace3d') | null = null;
+    if (view === '3d') {
+      try {
+        // Loaded on demand so three.js never delays the page's first paint.
+        mod = await import('~/scripts/airspace3d');
+        has3d = mod.webglAvailable();
+      } catch (err) {
+        console.warn('3D hero unavailable, using 2D', err);
+        has3d = false;
+      }
+      if (!has3d) view = '2d';
+    }
+    stop?.();
+    stop = null;
+    canvas3d.hidden = labels.hidden = view !== '3d';
+    canvas2d.hidden = view !== '2d';
+    if (view === '3d' && mod) stop = mod.startAirspace3D(canvas3d, labels, onStatus, zoneFor, onSeparation);
+    else stop = startAirspace(canvas2d, onStatus, zoneFor, onSeparation);
+    toggle?.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.view === view)),
+    );
+    if (toggle) toggle.hidden = has3d === false;
   }
+
+  // The visitor's last choice wins; otherwise the site default (3D).
+  let saved: string | null = null;
+  try {
+    saved = localStorage.getItem('hero-view');
+  } catch {}
+  const initial: View = saved === '2d' || saved === '3d' ? saved : stage?.dataset.default === '2d' ? '2d' : '3d';
+
+  toggle?.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((b) =>
+    b.addEventListener('click', () => {
+      const view = b.dataset.view as View;
+      try {
+        localStorage.setItem('hero-view', view);
+      } catch {}
+      show(view);
+    }),
+  );
+
+  // Start the 3D scene once the browser is idle so it never competes with the first paint.
+  const idle = (cb: () => void) =>
+    'requestIdleCallback' in window ? window.requestIdleCallback(cb, { timeout: 1200 }) : setTimeout(cb, 200);
+  if (toggle) toggle.hidden = false; // reveal first so the flight area is laid out below it
+  if (initial === '3d') idle(() => show('3d'));
+  else show('2d');
 </script>

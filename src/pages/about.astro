@@ -11,7 +11,6 @@ const lead = teams[0];
 
 const facts = [
   { k: 'Program', v: 'NASA Aeronautics Research Mission Directorate · University Leadership Initiative' },
-  { k: 'Award', v: site.award },
   { k: 'Period of performance', v: site.period },
   { k: 'Lead institution', v: lead.data.name },
   { k: 'Principal investigator', v: pi ? `${pi.data.name}, ${lead.data.short}` : '' },
@@ -133,6 +132,9 @@ const priorities = [
         <p class="mt-5">
           <a class="btn" href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
         </p>
+        <p class="muted mt-4">
+          Questions or corrections about this website: <a href={`mailto:${site.websiteEmail}`}>{site.websiteEmail}</a>
+        </p>
       </div>
       <div class="ack">
         <p class="eyebrow eyebrow--bare">Acknowledgment</p>
@@ -175,14 +177,14 @@ const priorities = [
     border-top: 1px solid var(--line);
   }
   .facts dt {
-    font-size: 0.6875rem;
-    letter-spacing: 0.08em;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-3);
   }
   .facts dd {
     font-weight: 550;
-    font-size: 0.95rem;
+    font-size: var(--text-sm);
   }
 
   .tl {
@@ -226,16 +228,16 @@ const priorities = [
     box-shadow: 0 0 0 4px var(--accent-soft);
   }
   .tl__when {
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--accent);
   }
   .tl h3 {
-    font-size: 1.05rem;
+    font-size: var(--text-md);
   }
   .tl p:last-child {
-    font-size: 0.875rem;
+    font-size: var(--text-xs);
     color: var(--ink-2);
   }
 
@@ -254,7 +256,7 @@ const priorities = [
     border-top: 1px solid var(--ink);
   }
   .priorities .mono {
-    font-size: 0.75rem;
+    font-size: var(--text-label-lg);
     color: var(--accent);
   }
   .priorities h3 {
@@ -277,7 +279,7 @@ const priorities = [
   .ack {
     display: grid;
     gap: var(--space-3);
-    font-size: 0.925rem;
+    font-size: var(--text-sm);
     color: var(--ink-2);
   }
 </style>

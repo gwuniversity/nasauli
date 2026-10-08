@@ -6,6 +6,7 @@ import DemoCard from '~/components/ui/DemoCard.astro';
 import Pending from '~/components/ui/Pending.astro';
 import { getTeams, getUseCases } from '~/lib/content';
 import { url } from '~/lib/url';
+import { videoInfo } from '~/lib/videos';
 
 const demos = await getCollection('demos');
 const tools = await getCollection('tools');
@@ -14,8 +15,14 @@ const useCases = await getUseCases();
 const teamNames = Object.fromEntries(teams.map((t) => [t.id, t.data.short]));
 const codes = Object.fromEntries(useCases.map((u) => [u.id, u.data.code]));
 const kindLabel = { simulator: 'Simulator', dataset: 'Dataset', software: 'Software' };
-// Featured first, then in file order.
-const ordered = [...demos].sort((a, b) => Number(b.data.featured) - Number(a.data.featured));
+const totalMinutes = Math.round(demos.reduce((n, d) => n + (d.data.video ? videoInfo(d.data.video).duration * videoInfo(d.data.video).speed : 0), 0) / 60);
+const demoTeams = new Set(demos.flatMap((d) => d.data.teams.map((t) => t.id)));
+const spotlight = demos.find((d) => d.data.featured && d.data.mode === 'player') ?? demos[0];
+// Group by use case in use-case order; demos without one go last.
+const groups = [
+  ...useCases.map((u) => ({ id: u.id, code: u.data.code, title: u.data.title, href: `/research/${u.id}`, items: demos.filter((d) => d.data.useCase?.id === u.id) })),
+  { id: 'other', code: '', title: 'Other research', href: '', items: demos.filter((d) => !d.data.useCase) },
+].filter((g) => g.items.length > 0);
 ---
 
 <BaseLayout title="Demos" description="Simulations, testbeds, and demonstrations from the NASA ULI Securing High-Density Urban Airspaces project.">
@@ -25,19 +32,63 @@ const ordered = [...demos].sort((a, b) => Number(b.data.featured) - Number(a.dat
     lede="Simulations, hardware testbeds, and demonstrations from across the project. Videos play right here on the page."
   />
 
+  {
+    demos.length > 0 && (
+      <section class="spotlight" aria-labelledby="spotlight-title">
+        <h2 id="spotlight-title" class="visually-hidden">Featured demo</h2>
+        <div class="container spotlight__inner">
+          <DemoCard demo={spotlight} teamNames={teamNames} codes={codes} anchor={false} />
+        </div>
+      </section>
+    )
+  }
+
   <section class="section" aria-labelledby="videos-title">
-    <div class="container">
-      <header class="section-head">
-        <p class="eyebrow">Videos</p>
-        <h2 id="videos-title" class="h2">Demonstrations</h2>
-      </header>
+    <div class="container" data-demos>
       {
-        ordered.length > 0 ? (
-          <div class="demo-grid">
-            {ordered.map((d) => (
-              <DemoCard demo={d} teamNames={teamNames} codes={codes} />
+        demos.length > 0 ? (
+          <>
+            <header class="section-head section-head--split">
+              <div>
+                <p class="eyebrow">Videos</p>
+                <h2 id="videos-title" class="h2 mt-4">
+                  Demonstrations by use case
+                </h2>
+              </div>
+              <dl class="demo-stats mono">
+                <div><dt>Videos</dt><dd>{demos.length}</dd></div>
+                <div><dt>Minutes</dt><dd>{totalMinutes}</dd></div>
+                <div><dt>Teams</dt><dd>{demoTeams.size}</dd></div>
+              </dl>
+            </header>
+            <nav class="chips" aria-label="Filter demos by use case">
+              <button type="button" data-filter="" aria-pressed="true">All</button>
+              {groups.map((g) => (
+                <button type="button" data-filter={g.id} aria-pressed="false">
+                  {g.code || g.title}
+                  <span>{g.items.length}</span>
+                </button>
+              ))}
+            </nav>
+            {groups.map((g) => (
+              <section class="dgroup" data-group={g.id} aria-labelledby={`g-${g.id}`}>
+                <header class="dgroup__head">
+                  {g.code && <span class="mono dgroup__code">{g.code}</span>}
+                  <h3 id={`g-${g.id}`}>{g.title}</h3>
+                  {g.href && (
+                    <a class="link-arrow" href={url(g.href)}>
+                      Use case
+                    </a>
+                  )}
+                </header>
+                <div class="demo-grid">
+                  {g.items.map((d) => (
+                    <DemoCard demo={d} teamNames={teamNames} codes={codes} />
+                  ))}
+                </div>
+              </section>
             ))}
-          </div>
+          </>
         ) : (
           <div class="coming">
             <div class="coming__screen" aria-hidden="true">
@@ -48,15 +99,14 @@ const ordered = [...demos].sort((a, b) => Number(b.data.featured) - Number(a.dat
             </div>
             <div>
               <h3>Demo videos are on the way</h3>
-              <p>
-                Year 3 is dedicated to aviation use-case demonstrations in simulation and flight tests. Videos will be
-                published here as each team releases them.
-              </p>
-              <Pending owner="Project team" what="Add videos to src/data/demos.yaml (title, summary, youtubeId, teams, useCase, featured)." hidePublic />
+              <p>Videos will be published here as each team releases them.</p>
             </div>
           </div>
         )
       }
+      <div class="mt-5">
+        <Pending owner="Purdue · Collins · UT Austin" what="No demo videos yet from Purdue or Collins, and only one animation from UT Austin. No demos yet for UC-04 (ATC voice), UC-07 (airspace coordination), or UC-08 (zero-trust architecture)." hidePublic />
+      </div>
     </div>
   </section>
 
@@ -118,13 +168,124 @@ const ordered = [...demos].sort((a, b) => Number(b.data.featured) - Number(a.dat
 </BaseLayout>
 
 <style>
+  .spotlight {
+    padding-block: var(--space-7);
+    background: var(--bg-inverse);
+    color: var(--ink-inverse);
+  }
+  .spotlight__inner :global(.demo) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5) var(--space-7);
+    align-items: center;
+  }
+  @media (min-width: 1000px) {
+    .spotlight__inner :global(.demo) {
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+    }
+  }
+  .spotlight :global(.demo h3) {
+    font-size: var(--step-3);
+  }
+  .spotlight :global(.demo p),
+  .spotlight :global(.demo__meta),
+  .spotlight :global(.demo__shown) {
+    color: color-mix(in srgb, var(--ink-inverse) 78%, transparent) !important;
+  }
+  .spotlight :global(.demo__meta a) {
+    color: color-mix(in srgb, var(--ink-inverse) 92%, transparent);
+    text-decoration: underline;
+  }
+  .spotlight :global(.vp) {
+    border-color: transparent;
+  }
+
+  .demo-stats {
+    display: flex;
+    gap: var(--space-6);
+    justify-self: end;
+  }
+  .demo-stats div {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .demo-stats dt {
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .demo-stats dd {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 550;
+    letter-spacing: -0.03em;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+  }
+  .chips button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--bg-raised);
+    font-family: var(--font-mono);
+    font-size: var(--text-label-lg);
+    letter-spacing: 0.04em;
+    color: var(--ink-2);
+  }
+  .chips button span {
+    color: var(--ink-3);
+  }
+  .chips button[aria-pressed='true'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+  .chips button[aria-pressed='true'] span {
+    color: inherit;
+  }
+
+  .dgroup {
+    padding-block: var(--space-6) var(--space-7);
+    border-top: 1px solid var(--ink);
+  }
+  .dgroup__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2) var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+  .dgroup__code {
+    font-size: var(--text-xs);
+    color: var(--accent);
+  }
+  .dgroup__head h3 {
+    font-size: var(--step-2);
+  }
+  .dgroup__head .link-arrow {
+    margin-left: auto;
+    font-size: var(--text-sm);
+  }
   .demo-grid {
     display: grid;
-    gap: var(--space-7) var(--space-6);
+    gap: var(--space-7) var(--space-5);
   }
-  @media (min-width: 900px) {
+  @media (min-width: 700px) {
     .demo-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1100px) {
+    .demo-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 
@@ -214,8 +375,8 @@ const ordered = [...demos].sort((a, b) => Number(b.data.featured) - Number(a.dat
     display: flex;
     justify-content: space-between;
     gap: var(--space-3);
-    font-size: 0.6875rem;
-    letter-spacing: 0.06em;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-3);
   }
@@ -227,7 +388,7 @@ const ordered = [...demos].sort((a, b) => Number(b.data.featured) - Number(a.dat
   }
   .tool p {
     color: var(--ink-2);
-    font-size: 0.925rem;
+    font-size: var(--text-sm);
   }
   .tool__foot {
     display: flex;
@@ -241,3 +402,18 @@ const ordered = [...demos].sort((a, b) => Number(b.data.featured) - Number(a.dat
     text-decoration: none;
   }
 </style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-demos]');
+  if (root) {
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const groups = [...root.querySelectorAll<HTMLElement>('[data-group]')];
+    buttons.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.filter;
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        groups.forEach((g) => (g.hidden = Boolean(id) && g.dataset.group !== id));
+      }),
+    );
+  }
+</script>

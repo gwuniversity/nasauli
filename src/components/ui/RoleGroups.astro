@@ -48,9 +48,9 @@ const groups = (Object.keys(roleGroupLabels) as (keyof typeof roleGroupLabels)[]
     align-items: center;
     gap: var(--space-2);
     margin-bottom: var(--space-3);
-    font-size: 0.6875rem;
+    font-size: var(--text-label);
     font-weight: 500;
-    letter-spacing: 0.08em;
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-3);
   }
@@ -85,10 +85,10 @@ const groups = (Object.keys(roleGroupLabels) as (keyof typeof roleGroupLabels)[]
   }
   .name {
     font-weight: 550;
-    font-size: 0.925rem;
+    font-size: var(--text-sm);
   }
   .detail {
-    font-size: 0.78rem;
+    font-size: var(--text-label-lg);
     color: var(--ink-3);
   }
 </style>

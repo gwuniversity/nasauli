@@ -1,7 +1,7 @@
 /* ==========================================================================
    Design system — "Airspace"
    Light mode reads as an aeronautical chart; dark mode as a night radar scope.
-   Light is the default; dark is opt-in via [data-theme="dark"] on <html>.
+   Dark is the default ([data-theme="dark"] on <html>); light is opt-in via the theme toggle.
    ========================================================================== */
 
 :root {
@@ -38,10 +38,23 @@
   --map-grid: rgb(13 22 38 / 0.04);
   --map-grid-major: rgb(13 22 38 / 0.09);
   --map-track: rgb(13 22 38 / 0.55);
+  /* Operator fleets in the hero animation (kept clear of the teal/amber signal colors) */
+  --fleet-a: #2563c9;
+  --fleet-b: #8445c7;
+  --fleet-c: #3a4558;
 
   /* Type */
   --font-sans: 'Instrument Sans Variable', 'Instrument Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', var(--font-sans);
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Small-text scale: every fixed size on the site maps to one of these. */
+  --text-label: 0.72rem; /* mono uppercase labels, tags, metadata */
+  --text-label-lg: 0.78rem; /* eyebrows, codes */
+  --text-xs: 0.875rem; /* captions, meta lines */
+  --text-sm: 0.9375rem; /* secondary body text */
+  --text-md: 1.0625rem; /* small headings */
+  --track-label: 0.08em;
 
   --step--1: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
   --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
@@ -68,7 +81,7 @@
 
   --container: 1240px;
   --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
-  --header-h: 64px;
+  --header-h: 76px;
 
   --shadow-1: 0 1px 2px rgb(13 22 38 / 0.05), 0 1px 1px rgb(13 22 38 / 0.03);
   --shadow-2: 0 10px 30px -12px rgb(13 22 38 / 0.18);
@@ -104,6 +117,9 @@
   --map-grid: rgb(61 211 195 / 0.05);
   --map-grid-major: rgb(61 211 195 / 0.09);
   --map-track: rgb(231 236 243 / 0.6);
+  --fleet-a: #6ea8ff;
+  --fleet-b: #b98cf5;
+  --fleet-c: #b3bdcc;
 
   --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
   --shadow-2: 0 14px 40px -14px rgb(0 0 0 / 0.7);
@@ -165,6 +181,7 @@ h1,
 h2,
 h3,
 h4 {
+  font-family: var(--font-display);
   line-height: 1.1;
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -236,9 +253,9 @@ a {
   align-items: center;
   gap: var(--space-3);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: var(--text-label-lg);
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--ink-3);
 }
@@ -252,9 +269,10 @@ a {
   display: none;
 }
 .display {
+  font-family: var(--font-display);
   font-size: var(--step-5);
   font-weight: 600;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.04em;
   line-height: 1;
 }
 .h1 {
@@ -329,7 +347,7 @@ a {
   border-radius: 999px;
   background: var(--btn-bg);
   color: var(--btn-fg);
-  font-size: 0.9375rem;
+  font-size: var(--text-sm);
   font-weight: 550;
   line-height: 1.2;
   text-decoration: none;
@@ -390,7 +408,7 @@ a {
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-1);
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;

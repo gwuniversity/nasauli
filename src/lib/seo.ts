@@ -26,7 +26,6 @@ export function projectLd(siteUrl: URL | undefined, partners: string[]) {
       name: 'NASA Aeronautics Research Mission Directorate',
       url: 'https://www.nasa.gov/aeronautics/',
     },
-    identifier: site.award,
     member: partners.map((name) => ({ '@type': 'Organization', name })),
     email: site.contactEmail,
   };

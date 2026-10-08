@@ -19,7 +19,7 @@
 - id: uci-miragemarker-tfa
   src: ../assets/figures/uci-miragemarker-tfa.png
   alt: Simulated drone landing on a paved area with an inset downward camera view of a fiducial marker board.
-  caption: MirageMarker evaluated in NVIDIA Isaac Sim against the PX4 autopilot's native precision-landing mode. Subtle geometric changes to the marker board shift the touchdown point far from the pad.
+  caption: MirageMarker evaluated in NVIDIA Isaac Sim against the PX4 autopilot’s native precision-landing mode. Subtle geometric changes to the marker board shift the touchdown point far from the pad.
   teams: [uc-irvine]
   useCases: [vision-landing]
 
@@ -54,14 +54,14 @@
 - id: vu-hardware-testbed
   src: ../assets/figures/vu-hardware-testbed.png
   alt: Quadcopter with red arms and an onboard computer next to a handheld radio controller.
-  caption: Vanderbilt's small UAS hardware testbed for validating Remote ID spoofing detection in real radio environments.
+  caption: Vanderbilt’s small UAS hardware testbed for validating Remote ID spoofing detection in real radio environments.
   teams: [vanderbilt]
   useCases: [remote-id]
 
 - id: tsu-slz-framework
   src: ../assets/figures/tsu-slz-framework.png
   alt: Block diagram of the emergency landing framework from perceptual inputs through validation to flight-control handoff.
-  caption: TSU's multimodal emergency safe-landing-zone framework, from sensing and candidate generation through semantic and geometric validation, tracking, and human-in-the-loop review.
+  caption: TSU’s multimodal emergency safe-landing-zone framework, from sensing and candidate generation through semantic and geometric validation, tracking, and human-in-the-loop review.
   teams: [tsu]
   useCases: [emergency-landing]
   dark: true
@@ -83,7 +83,7 @@
 - id: tsu-iris-vertiport
   src: ../assets/figures/tsu-iris-vertiport.png
   alt: Rendered rooftop vertiport with an eVTOL aircraft on a landing pad.
-  caption: A vertiport modeled in TSU's IRIS physics-based simulation environment.
+  caption: A vertiport modeled in TSU’s IRIS physics-based simulation environment.
   teams: [tsu]
   useCases: [emergency-landing]
 

@@ -1,0 +1,122 @@
+---
+/**
+ * Explains acronyms where they first appear on each page: the first use is wrapped in an <abbr>
+ * with a tooltip on hover, tap, or focus, and screen readers hear the expansion.
+ */
+import { glossary } from '~/data/glossary';
+
+const terms = glossary.map(({ term, expansion }) => ({ term, expansion }));
+---
+
+<script is:inline define:vars={{ terms }}>
+  (function () {
+    var main = document.getElementById('main');
+    if (!main || document.body.hasAttribute('data-no-glossary')) return;
+    var skip = ['A', 'BUTTON', 'ABBR', 'CODE', 'PRE', 'SCRIPT', 'STYLE', 'H1', 'H2', 'H3', 'H4', 'TITLE', 'SELECT', 'OPTION', 'LABEL', 'TEXTAREA', 'svg', 'DT'];
+    var skipClass = /\b(mono|tag|eyebrow|strip__label|vp__badges|crumbs)\b/;
+    var esc = function (s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); };
+    // Terms the page already spells out, e.g. "Advanced Air Mobility (AAM)", need no tooltip.
+    var pageText = main.textContent || '';
+    var pending = terms.filter(function (t) {
+      return pageText.indexOf('(' + t.term + ')') < 0 && pageText.indexOf('(' + t.term + 's)') < 0;
+    });
+    var walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (n) {
+        for (var el = n.parentElement; el && el !== main; el = el.parentElement) {
+          if (skip.indexOf(el.tagName) >= 0 || (typeof el.className === 'string' && skipClass.test(el.className))) return NodeFilter.FILTER_REJECT;
+          if (el.hidden) return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      },
+    });
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    // Wrap the earliest pending term in a text node, then keep scanning the rest of that node.
+    var wrapFirst = function (node) {
+      var text = node.nodeValue;
+      var hit = null, at = Infinity, word = '';
+      pending.forEach(function (t) {
+        var m = new RegExp('(^|[^\\w-])(' + esc(t.term) + 's?)(?![\\w-])').exec(text);
+        if (m && m.index + m[1].length < at && text.indexOf('(' + t.term + ')') < 0) { hit = t; at = m.index + m[1].length; word = m[2]; }
+      });
+      if (!hit) return null;
+      pending.splice(pending.indexOf(hit), 1);
+      var after = node.splitText(at);
+      after.nodeValue = after.nodeValue.slice(word.length);
+      var abbr = document.createElement('abbr');
+      abbr.className = 'term';
+      abbr.tabIndex = 0;
+      abbr.setAttribute('data-tip', hit.expansion);
+      abbr.textContent = word;
+      var sr = document.createElement('span');
+      sr.className = 'visually-hidden';
+      sr.textContent = ' (' + hit.expansion + ')';
+      abbr.appendChild(sr);
+      node.parentNode.insertBefore(abbr, after);
+      return after;
+    };
+    nodes.forEach(function (node) {
+      while (node && pending.length) node = wrapFirst(node);
+    });
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest && e.target.closest('abbr.term');
+      document.querySelectorAll('abbr.term.is-open').forEach(function (a) { if (a !== t) a.classList.remove('is-open'); });
+      if (t) t.classList.toggle('is-open');
+    });
+  })();
+</script>
+
+<style is:global>
+  abbr.term {
+    position: relative;
+    text-decoration: underline dotted;
+    text-decoration-color: var(--ink-3);
+    text-underline-offset: 0.22em;
+    cursor: help;
+  }
+  abbr.term::after {
+    content: attr(data-tip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 6px);
+    z-index: 20;
+    width: max-content;
+    max-width: 260px;
+    padding: 0.35rem 0.6rem;
+    border-radius: var(--radius-1);
+    background: var(--ink);
+    color: var(--bg);
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    font-style: normal;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+    white-space: normal;
+    text-align: center;
+    pointer-events: none;
+    transform: translateX(-50%);
+    display: none;
+  }
+  abbr.term:hover::after,
+  abbr.term:focus-visible::after,
+  abbr.term.is-open::after {
+    display: block;
+  }
+  /* Phones: show the explanation as a bar pinned to the bottom of the screen. */
+  @media (max-width: 700px), (hover: none) {
+    abbr.term::after {
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      width: auto;
+      max-width: none;
+      padding: 0.6rem 0.9rem;
+      font-size: var(--text-sm);
+      transform: none;
+      box-shadow: var(--shadow-2);
+    }
+  }
+</style>

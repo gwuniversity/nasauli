@@ -39,11 +39,11 @@ const showTodo = import.meta.env.DEV || import.meta.env.PUBLIC_SHOW_PENDING === 
     border-radius: var(--radius-2);
     background: var(--signal-soft);
     color: var(--ink-2);
-    font-size: 0.925rem;
+    font-size: var(--text-sm);
   }
   .pending__label {
-    font-size: 0.6875rem;
-    letter-spacing: 0.08em;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--signal);
   }

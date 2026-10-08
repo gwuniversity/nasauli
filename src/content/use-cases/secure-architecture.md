@@ -31,4 +31,4 @@ to review, easy to leave undocumented, and costly to repeat whenever the archite
 ## Looking ahead
 
 The team is growing a library of formalized attacks and defenses that supports security analysis across the
-project's use cases.
+project’s use cases.

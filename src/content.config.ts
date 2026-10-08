@@ -115,14 +115,23 @@ const publications = defineCollection({
 
 const demos = defineCollection({
   loader: file('src/data/demos.yaml'),
-  schema: z.object({
-    title: z.string(),
-    summary: z.string(),
-    youtubeId: z.string().regex(/^[\w-]{11}$/),
-    teams: z.array(reference('teams')),
-    useCase: reference('useCases').optional(),
-    featured: z.boolean().default(false),
-  }),
+  schema: z
+    .object({
+      title: z.string(),
+      summary: z.string(),
+      /** Self-hosted clip: public/videos/<video>.mp4 (+ .jpg poster), from `npm run encode-demos`. */
+      video: z.string().regex(/^[a-z0-9-]+$/).optional(),
+      /** Or a YouTube video, played inline via the privacy-enhanced embed. */
+      youtubeId: z.string().regex(/^[\w-]{11}$/).optional(),
+      /** loop: short, silent, autoplays while visible. player: full video with controls. */
+      mode: z.enum(['loop', 'player']).default('player'),
+      kind: z.enum(['simulation', 'real-world', 'dashboard']).optional(),
+      shown: z.enum(['year-1-review', 'year-2-review']).optional(),
+      teams: z.array(reference('teams')),
+      useCase: reference('useCases').optional(),
+      featured: z.boolean().default(false),
+    })
+    .refine((d) => Boolean(d.video) !== Boolean(d.youtubeId), { message: 'Set exactly one of `video` or `youtubeId`.' }),
 });
 
 const tools = defineCollection({
@@ -143,7 +152,7 @@ const outreach = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
-      audience: z.enum(['community-college', 'undergraduate', 'high-school', 'k-12']),
+      audience: z.enum(['community-college', 'graduate', 'undergraduate', 'high-school', 'k-12']),
       when: z.string(),
       summary: z.string(),
       teams: z.array(reference('teams')),

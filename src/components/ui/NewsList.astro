@@ -28,7 +28,7 @@ const kindLabel: Record<CollectionEntry<'news'>['data']['kind'], string> = {
         <p class="news__summary">{item.data.summary}</p>
         {item.data.link && (
           <a class="link-arrow news__more" href={url(item.data.link)}>
-            Read more
+            Read more<span class="visually-hidden">: {item.data.title}</span>
           </a>
         )}
       </li>
@@ -64,8 +64,8 @@ const kindLabel: Record<CollectionEntry<'news'>['data']['kind'], string> = {
   .news__meta {
     display: flex;
     gap: var(--space-4);
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-3);
   }
@@ -78,10 +78,10 @@ const kindLabel: Record<CollectionEntry<'news'>['data']['kind'], string> = {
     line-height: 1.25;
   }
   .news__more {
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
   }
   .news__summary {
     color: var(--ink-2);
-    font-size: 0.95rem;
+    font-size: var(--text-sm);
   }
 </style>

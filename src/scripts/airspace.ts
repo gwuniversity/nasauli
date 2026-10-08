@@ -1,5 +1,5 @@
 /**
- * Hero illustration: drone traffic over a city grid. Every cycle one aircraft starts
+ * Hero illustration: delivery-drone traffic from three operator fleets flying between vertiports (circled-H pads) over a city grid. Every cycle one aircraft starts
  * broadcasting a false Remote ID position; the system localizes it from signal measurements,
  * marks an unsafe region, and nearby traffic routes around it. This is the project's story in
  * one loop: an airspace where not every signal can be trusted.
@@ -7,6 +7,9 @@
 
 type Vec = { x: number; y: number };
 type Block = { x: number; y: number; w: number; h: number };
+/** Area of the canvas where traffic may fly, in CSS pixels relative to the canvas. */
+export type Zone = { x: number; y: number; w: number; h: number; avoid?: Rect[] };
+type Rect = { x: number; y: number; w: number; h: number };
 
 interface Drone {
   id: number;
@@ -21,6 +24,10 @@ interface Drone {
   /** Avoidance displacement, eased toward the desired value each frame. */
   offset: Vec;
   labeled: boolean;
+  /** Speed multiplier from separation keeping (1 = unconstrained), eased each frame. */
+  sep: number;
+  /** Id of the aircraft this one is yielding to, if any. */
+  yieldTo: number | null;
 }
 
 export type Phase = 'nominal' | 'spoofing' | 'detected' | 'recovering';
@@ -39,6 +46,10 @@ interface Palette {
   label: string;
   secure: string;
   threat: string;
+  /** Fill behind vertiport markers. */
+  pad: string;
+  /** One color per operator fleet. */
+  fleets: string[];
 }
 
 const PHASES: { phase: Phase; duration: number }[] = [
@@ -48,8 +59,13 @@ const PHASES: { phase: Phase; duration: number }[] = [
   { phase: 'recovering', duration: 1.0 },
 ];
 const CYCLE = PHASES.reduce((sum, p) => sum + p.duration, 0);
-const GHOST_DISTANCE = 72;
-const AVOID_RADIUS = 135;
+const GHOST_DISTANCE = 88;
+const AVOID_RADIUS = 160;
+// Separation keeping: an aircraft slows when another is inside its protected zone ahead.
+const SEP_LOOKAHEAD = 78;
+const SEP_MIN = 30;
+/** Call-sign prefixes for the three operator fleets; drones are assigned round-robin. */
+export const FLEET_CODES = ['OP-A', 'OP-B', 'OP-C'];
 const MONO = '"IBM Plex Mono", ui-monospace, monospace';
 
 function mulberry32(seed: number) {
@@ -73,6 +89,8 @@ function readPalette(): Palette {
     label: v('--ink-3'),
     secure: v('--accent-graphic'),
     threat: v('--signal-graphic'),
+    pad: v('--bg-raised'),
+    fleets: [v('--fleet-a'), v('--fleet-b'), v('--fleet-c')],
   };
 }
 
@@ -85,7 +103,14 @@ function withAlpha(color: string, alpha: number, ctx: CanvasRenderingContext2D, 
   ctx.restore();
 }
 
-export function startAirspace(canvas: HTMLCanvasElement, onStatus: (status: AirspaceStatus) => void) {
+export function startAirspace(
+  canvas: HTMLCanvasElement,
+  onStatus: (status: AirspaceStatus) => void,
+  /** Keeps traffic clear of the hero text; defaults to the whole canvas. */
+  getZone?: (width: number, height: number) => Zone,
+  /** Called when the number of aircraft actively keeping separation changes. */
+  onSeparation?: (active: number) => void,
+) {
   const ctx = canvas.getContext('2d');
   if (!ctx) return () => {};
 
@@ -96,6 +121,7 @@ export function startAirspace(canvas: HTMLCanvasElement, onStatus: (status: Airs
   let height = 0;
   let dpr = 1;
   let pads: Vec[] = [];
+  let zone: Zone = { x: 0, y: 0, w: 1, h: 1 };
   let blocks: Block[] = [];
   let drones: Drone[] = [];
   let clock = 0;
@@ -132,18 +158,41 @@ export function startAirspace(canvas: HTMLCanvasElement, onStatus: (status: Airs
       x += bw + street;
     }
 
+    zone = getZone?.(width, height) ?? { x: 0, y: 0, w: width, h: height };
+    const area = zone.w * zone.h;
+    const inset = 34;
+    const blocked = (p: Vec) =>
+      (zone.avoid ?? []).some((a) => p.x > a.x - 40 && p.x < a.x + a.w + 40 && p.y > a.y - 40 && p.y < a.y + a.h + 40);
+
+    // Waypoints spread over the whole zone: corners and center first, then edges and in-betweens.
+    const anchors: [number, number][] = [
+      [0, 0], [1, 0], [0, 1], [1, 1], [0.5, 0.5],
+      [0.5, 0], [0.5, 1], [0, 0.5], [1, 0.5],
+      [0.27, 0.28], [0.73, 0.72], [0.27, 0.72], [0.73, 0.28],
+    ];
+    const padCount = Math.max(7, Math.min(anchors.length, Math.round(area / 38000)));
     pads = [];
-    const padCount = Math.max(6, Math.min(12, Math.round((width * height) / 90000)));
-    const usable = blocks.filter((b) => b.x > 20 && b.y > 30 && b.x + b.w < width - 20 && b.y + b.h < height - 30);
-    for (let i = 0; i < padCount && usable.length; i++) {
-      const b = usable.splice(Math.floor(rand() * usable.length), 1)[0];
-      pads.push({ x: b.x + b.w / 2, y: b.y + b.h / 2 });
+    for (const [ax, ay] of anchors.slice(0, padCount)) {
+      const jx = ax === 0 || ax === 1 ? 0 : (rand() - 0.5) * 0.08;
+      const jy = ay === 0 || ay === 1 ? 0 : (rand() - 0.5) * 0.08;
+      const p = {
+        x: zone.x + inset + (ax + jx) * (zone.w - inset * 2),
+        y: zone.y + inset + (ay + jy) * (zone.h - inset * 2),
+      };
+      // A corner hidden by the status panel moves just above it instead.
+      const hit = (zone.avoid ?? []).find((a) => p.x > a.x - 40 && p.x < a.x + a.w + 40 && p.y > a.y - 40);
+      if (hit && blocked(p)) p.y = hit.y - 56;
+      if (!blocked(p)) pads.push(p);
     }
-    if (pads.length < 2) pads = [{ x: width * 0.3, y: height * 0.4 }, { x: width * 0.8, y: height * 0.6 }];
+    if (pads.length < 2)
+      pads = [
+        { x: zone.x + zone.w * 0.3, y: zone.y + zone.h * 0.4 },
+        { x: zone.x + zone.w * 0.75, y: zone.y + zone.h * 0.65 },
+      ];
 
     drawStaticLayer();
 
-    const count = Math.max(10, Math.min(26, Math.round((width * height) / 50000)));
+    const count = Math.max(9, Math.min(24, Math.round(area / 26000)));
     drones = Array.from({ length: count }, (_, id) => {
       const from = pads[Math.floor(rand() * pads.length)];
       const t = rand();
@@ -154,13 +203,15 @@ export function startAirspace(canvas: HTMLCanvasElement, onStatus: (status: Airs
         id,
         pos,
         target,
-        speed: 16 + rand() * 18,
+        speed: 20 + rand() * 22,
         heading: Math.atan2(to.y - from.y, to.x - from.x),
         trail: [],
         trailClock: 0,
         pulse: rand(),
         offset: { x: 0, y: 0 },
         labeled: id < 5,
+        sep: 1,
+        yieldTo: null,
       };
     });
     spoofer = null;
@@ -201,25 +252,47 @@ export function startAirspace(canvas: HTMLCanvasElement, onStatus: (status: Airs
       }
     }
 
-    // Vertiports
-    s.font = `500 9px ${MONO}`;
+    // Vertiports: the standard circled "H" landing pad.
+    s.font = `500 10px ${MONO}`;
+    const R = 10;
     pads.forEach((p, i) => {
+      s.globalAlpha = 0.9;
+      s.fillStyle = palette.pad;
+      s.beginPath();
+      s.arc(p.x, p.y, R, 0, Math.PI * 2);
+      s.fill();
       s.strokeStyle = palette.track;
-      s.globalAlpha = 0.5;
-      s.lineWidth = 1;
-      s.beginPath();
-      s.arc(p.x, p.y, 7, 0, Math.PI * 2);
+      s.globalAlpha = 0.55;
+      s.lineWidth = 1.2;
       s.stroke();
+      s.globalAlpha = 0.25;
       s.beginPath();
-      s.moveTo(p.x - 3, p.y);
-      s.lineTo(p.x + 3, p.y);
-      s.moveTo(p.x, p.y - 3);
-      s.lineTo(p.x, p.y + 3);
+      s.arc(p.x, p.y, R + 4, 0, Math.PI * 2);
+      s.setLineDash([2, 3]);
       s.stroke();
+      s.setLineDash([]);
+      // "H"
       s.globalAlpha = 0.75;
+      s.lineWidth = 1.6;
+      s.lineCap = 'round';
+      const h = 4.2;
+      const w = 3.4;
+      s.beginPath();
+      s.moveTo(p.x - w, p.y - h);
+      s.lineTo(p.x - w, p.y + h);
+      s.moveTo(p.x + w, p.y - h);
+      s.lineTo(p.x + w, p.y + h);
+      s.moveTo(p.x - w, p.y);
+      s.lineTo(p.x + w, p.y);
+      s.stroke();
+      s.lineCap = 'butt';
+      s.globalAlpha = 0.8;
       s.fillStyle = palette.label;
-      s.fillText(`VP-${String(i + 1).padStart(2, '0')}`, p.x + 11, p.y + 3);
-      s.fillStyle = palette.block;
+      const name = `VP-${String(i + 1).padStart(2, '0')}`;
+      const tw = s.measureText(name).width;
+      // Labels flip to the left of pads near the right edge so they never clip.
+      const lx = p.x + R + 7 + tw > width - 8 ? p.x - R - 7 - tw : p.x + R + 7;
+      s.fillText(name, lx, p.y + 3.5);
       s.globalAlpha = 1;
     });
   }
@@ -237,13 +310,60 @@ export function startAirspace(canvas: HTMLCanvasElement, onStatus: (status: Airs
   }
 
   function pickSpoofer() {
-    const inView = drones.filter(
-      (d) => d.pos.x > width * 0.55 && d.pos.x < width * 0.88 && d.pos.y > height * 0.2 && d.pos.y < height * 0.62,
+    // Prefer a drone well inside the zone so its claimed position and labels stay in view.
+    const cx = zone.x + zone.w / 2;
+    const cy = zone.y + zone.h / 2;
+    const clear = (d: Drone) =>
+      !(zone.avoid ?? []).some((a) => d.pos.x > a.x - 170 && d.pos.x < a.x + a.w + 170 && d.pos.y > a.y - 150);
+    const central = drones.filter(
+      (d) => Math.abs(d.pos.x - cx) < zone.w * 0.3 && Math.abs(d.pos.y - cy) < zone.h * 0.22 && clear(d),
     );
-    const pool = inView.length ? inView : drones;
+    const pool = central.length ? central : drones;
     spoofer = pool[Math.floor(Math.random() * pool.length)];
-    const side = Math.random() < 0.5 ? 1 : -1;
-    ghostDir = { x: -Math.sin(spoofer.heading) * side, y: Math.cos(spoofer.heading) * side };
+    // Offset the claimed position perpendicular to the track, toward the zone's center.
+    const n = { x: -Math.sin(spoofer.heading), y: Math.cos(spoofer.heading) };
+    const side = n.x * (cx - spoofer.pos.x) + n.y * (cy - spoofer.pos.y) >= 0 ? 1 : -1;
+    ghostDir = { x: n.x * side, y: n.y * side };
+  }
+
+  /**
+   * Separation keeping: each aircraft checks its protected zone ahead. If another aircraft is
+   * inside, it slows in proportion to how close that aircraft is. In head-on encounters the
+   * higher id yields, so exactly one aircraft gives way.
+   */
+  let sepActive = -1;
+  function keepSeparation(dt: number) {
+    let active = 0;
+    for (const d of drones) {
+      const hx = Math.cos(d.heading);
+      const hy = Math.sin(d.heading);
+      let factor = 1;
+      let yieldTo: number | null = null;
+      for (const o of drones) {
+        if (o === d) continue;
+        const rx = o.pos.x - d.pos.x;
+        const ry = o.pos.y - d.pos.y;
+        const dist = Math.hypot(rx, ry);
+        if (dist > SEP_LOOKAHEAD || dist < 0.001) continue;
+        const ahead = (hx * rx + hy * ry) / dist;
+        if (ahead < 0.35) continue;
+        // If the other also sees us ahead (head-on or crossing), only the higher id yields.
+        const back = (Math.cos(o.heading) * -rx + Math.sin(o.heading) * -ry) / dist;
+        if (back > 0.35 && d.id < o.id) continue;
+        const f = Math.max(0.12, Math.min(1, (dist - SEP_MIN) / (SEP_LOOKAHEAD - SEP_MIN)));
+        if (f < factor) {
+          factor = f;
+          yieldTo = o.id;
+        }
+      }
+      d.sep += (factor - d.sep) * Math.min(1, dt * 4);
+      d.yieldTo = factor < 0.97 ? yieldTo : null;
+      if (d.yieldTo !== null) active++;
+    }
+    if (active !== sepActive) {
+      sepActive = active;
+      onSeparation?.(active);
+    }
   }
 
   function step(dt: number) {
@@ -259,6 +379,7 @@ export function startAirspace(canvas: HTMLCanvasElement, onStatus: (status: Airs
     }
 
     const avoiding = phase === 'detected' && spoofer;
+    keepSeparation(dt);
     for (const d of drones) {
       const to = pads[d.target];
       const dx = to.x - d.pos.x;
@@ -273,7 +394,9 @@ export function startAirspace(canvas: HTMLCanvasElement, onStatus: (status: Airs
         let delta = desired - d.heading;
         delta = Math.atan2(Math.sin(delta), Math.cos(delta));
         d.heading += delta * Math.min(1, dt * 3);
-        const v = Math.min(d.speed * dt, dist);
+        // The spoofer loiters while it is being localized, so the scene stays in frame.
+        const loiter = d === spoofer && phase !== 'nominal' ? 0.25 : 1;
+        const v = Math.min(d.speed * loiter * d.sep * dt, dist);
         d.pos.x += Math.cos(d.heading) * v;
         d.pos.y += Math.sin(d.heading) * v;
       }
@@ -291,6 +414,10 @@ export function startAirspace(canvas: HTMLCanvasElement, onStatus: (status: Airs
       const ease = Math.min(1, dt * 2.2);
       d.offset.x += (want.x - d.offset.x) * ease;
       d.offset.y += (want.y - d.offset.y) * ease;
+      // Keep avoidance maneuvers inside the flight zone.
+      const pad = 14;
+      d.offset.x = Math.min(zone.x + zone.w + pad - d.pos.x, Math.max(zone.x - pad - d.pos.x, d.offset.x));
+      d.offset.y = Math.min(zone.y + zone.h + pad - d.pos.y, Math.max(zone.y - pad - d.pos.y, d.offset.y));
 
       d.pulse = (d.pulse + dt / 2.4) % 1;
       d.trailClock += dt;
@@ -304,30 +431,90 @@ export function startAirspace(canvas: HTMLCanvasElement, onStatus: (status: Airs
 
   // ---------- Rendering ----------
 
+  const fleetColor = (d: Drone) => palette.fleets[d.id % palette.fleets.length];
+
+  /**
+   * Top-down delivery quadcopter: X-frame, four rotors, a body carrying a parcel, and a nose
+   * marker so heading stays readable. `filled` = real aircraft; outline = spoofed (claimed) position.
+   */
   function glyph(p: Vec, heading: number, size: number, filled: boolean) {
-    ctx!.save();
-    ctx!.translate(p.x, p.y);
-    ctx!.rotate(heading);
-    ctx!.beginPath();
-    ctx!.moveTo(size * 1.3, 0);
-    ctx!.lineTo(-size, size * 0.85);
-    ctx!.lineTo(-size * 0.45, 0);
-    ctx!.lineTo(-size, -size * 0.85);
-    ctx!.closePath();
-    if (filled) ctx!.fill();
-    else ctx!.stroke();
-    ctx!.restore();
+    const c = ctx!;
+    const arm = size * 1.15;
+    const rotor = size * 0.62;
+    c.save();
+    c.translate(p.x, p.y);
+    c.rotate(heading + Math.PI / 4);
+    c.lineWidth = Math.max(1, size * 0.22);
+    c.lineCap = 'round';
+    // Arms
+    c.beginPath();
+    c.moveTo(-arm, -arm);
+    c.lineTo(arm, arm);
+    c.moveTo(arm, -arm);
+    c.lineTo(-arm, arm);
+    c.stroke();
+    // Rotors
+    c.lineWidth = Math.max(1, size * 0.16);
+    for (const [x, y] of [[arm, arm], [-arm, arm], [arm, -arm], [-arm, -arm]]) {
+      c.beginPath();
+      c.arc(x, y, rotor, 0, Math.PI * 2);
+      if (filled) {
+        c.save();
+        c.globalAlpha *= 0.22;
+        c.fill();
+        c.restore();
+      }
+      c.stroke();
+    }
+    c.rotate(-Math.PI / 4);
+    // Body with parcel
+    const b = size * 0.62;
+    c.beginPath();
+    c.roundRect(-b, -b, b * 2, b * 2, size * 0.2);
+    if (filled) c.fill();
+    else c.stroke();
+    if (filled) {
+      c.save();
+      c.globalAlpha *= 0.55;
+      c.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#fff';
+      c.lineWidth = Math.max(0.8, size * 0.12);
+      c.beginPath();
+      c.moveTo(-b * 0.55, 0);
+      c.lineTo(b * 0.55, 0);
+      c.moveTo(0, -b * 0.55);
+      c.lineTo(0, b * 0.55);
+      c.stroke();
+      c.restore();
+    }
+    // Nose marker (direction of travel)
+    c.beginPath();
+    c.moveTo(b + size * 0.9, 0);
+    c.lineTo(b + size * 0.25, size * 0.42);
+    c.lineTo(b + size * 0.25, -size * 0.42);
+    c.closePath();
+    c.fill();
+    c.restore();
   }
 
-  function label(text: string, p: Vec, color: string, alpha = 1) {
+  function label(text: string, p: Vec, color: string, alpha = 1, side?: 1 | -1) {
     withAlpha(color, alpha, ctx!, () => {
-      ctx!.font = `500 9.5px ${MONO}`;
+      ctx!.font = `500 10.5px ${MONO}`;
       ctx!.lineWidth = 1;
+      const w = ctx!.measureText(text).width;
+      const fitsRight = p.x + 18 + w < Math.min(width - 10, zone.x + zone.w + 8);
+      const minX = Math.max(10, zone.x - 8);
+      const maxX = Math.min(width - 10, zone.x + zone.w + 8);
+      const fitsLeft = p.x - 18 - w > minX;
+      // Prefer the requested side, but never draw off-canvas.
+      const flip = side ? (side < 0 ? fitsLeft || !fitsRight : !fitsRight && fitsLeft) : !fitsRight;
+      const dir = flip ? -1 : 1;
       ctx!.beginPath();
-      ctx!.moveTo(p.x + 5, p.y - 5);
-      ctx!.lineTo(p.x + 12, p.y - 12);
+      ctx!.moveTo(p.x + 5 * dir, p.y - 5);
+      ctx!.lineTo(p.x + 12 * dir, p.y - 12);
       ctx!.stroke();
-      ctx!.fillText(text, p.x + 15, p.y - 14);
+      // Clamp the text inside the canvas when neither side has room.
+      const start = Math.min(maxX - w, Math.max(minX, flip ? p.x - 15 - w : p.x + 15));
+      ctx!.fillText(text, start, p.y - 14);
     });
   }
 
@@ -347,7 +534,7 @@ export function startAirspace(canvas: HTMLCanvasElement, onStatus: (status: Airs
       const p = { x: d.pos.x + d.offset.x, y: d.pos.y + d.offset.y };
 
       if (d.trail.length > 1) {
-        withAlpha(palette.track, 0.28, c, () => {
+        withAlpha(fleetColor(d), 0.32, c, () => {
           c.lineWidth = 1;
           c.beginPath();
           c.moveTo(d.trail[0].x, d.trail[0].y);
@@ -357,21 +544,48 @@ export function startAirspace(canvas: HTMLCanvasElement, onStatus: (status: Airs
         });
       }
 
+      if (d.yieldTo !== null) {
+        const o = drones[d.yieldTo];
+        const strength = 1 - d.sep;
+        withAlpha(fleetColor(d), 0.35 + strength * 0.5, c, () => {
+          c.lineWidth = 1.1;
+          c.setLineDash([3, 3]);
+          c.beginPath();
+          c.arc(p.x, p.y, SEP_MIN * 0.9, 0, Math.PI * 2);
+          c.stroke();
+          c.setLineDash([]);
+        });
+        if (o) {
+          withAlpha(palette.label, 0.25 + strength * 0.45, c, () => {
+            c.lineWidth = 1;
+            c.setLineDash([1.5, 3]);
+            c.beginPath();
+            c.moveTo(p.x, p.y);
+            c.lineTo(o.pos.x + o.offset.x, o.pos.y + o.offset.y);
+            c.stroke();
+            c.setLineDash([]);
+          });
+        }
+      }
+
       const isSpoofer = attackActive && d === spoofer;
       const ghost = isSpoofer
-        ? { x: p.x + ghostDir.x * GHOST_DISTANCE * ghostAmount, y: p.y + ghostDir.y * GHOST_DISTANCE * ghostAmount }
+        ? {
+            x: Math.min(zone.x + zone.w - 12, Math.max(zone.x + 12, p.x + ghostDir.x * GHOST_DISTANCE * ghostAmount)),
+            y: Math.min(zone.y + zone.h - 12, Math.max(zone.y + 24, p.y + ghostDir.y * GHOST_DISTANCE * ghostAmount)),
+          }
         : p;
 
       // Remote ID broadcast ring: the spoofer's rings come from the position it claims.
-      const r = 4 + d.pulse * 20;
-      withAlpha(isSpoofer ? palette.threat : palette.secure, (1 - d.pulse) * 0.45 * (isSpoofer ? fade : 1), c, () => {
+      const r = 5 + d.pulse * 26;
+      withAlpha(isSpoofer ? palette.threat : fleetColor(d), (1 - d.pulse) * 0.45 * (isSpoofer ? fade : 1), c, () => {
         c.lineWidth = 1;
         c.beginPath();
         c.arc(ghost.x, ghost.y, r, 0, Math.PI * 2);
         c.stroke();
       });
 
-      withAlpha(palette.track, 1, c, () => glyph(p, d.heading, 4.2, true));
+      withAlpha(fleetColor(d), 1, c, () => glyph(p, d.heading, 5.2, true));
 
       if (isSpoofer && ghostAmount > 0.02) {
         withAlpha(palette.threat, fade, c, () => {
@@ -382,14 +596,14 @@ export function startAirspace(canvas: HTMLCanvasElement, onStatus: (status: Airs
           c.lineTo(ghost.x, ghost.y);
           c.stroke();
           c.setLineDash([]);
-          glyph(ghost, d.heading, 4.6, false);
+          glyph(ghost, d.heading, 5.2, false);
         });
-        label('RID · CLAIMED POSITION', ghost, palette.threat, fade * Math.min(1, ghostAmount * 2));
+        label(width < 600 ? 'CLAIMED POSITION' : 'RID · CLAIMED POSITION', ghost, palette.threat, fade * Math.min(1, ghostAmount * 2));
       }
 
       if (isSpoofer && phase !== 'spoofing') {
         const grow = phase === 'detected' ? Math.min(1, progress * 4) : 1;
-        const radius = (34 + Math.sin(clock * 3) * 2) * grow;
+        const radius = (42 + Math.sin(clock * 3) * 2) * grow;
         withAlpha(palette.secure, fade, c, () => {
           c.lineWidth = 1.4;
           c.setLineDash([5, 4]);
@@ -400,9 +614,24 @@ export function startAirspace(canvas: HTMLCanvasElement, onStatus: (status: Airs
           c.globalAlpha *= 0.08;
           c.fill();
         });
-        label('SPOOFER LOCALIZED · UNSAFE REGION', { x: p.x + radius * 0.6, y: p.y + radius + 22 }, palette.secure, fade * grow);
-      } else if (d.labeled && !isSpoofer) {
-        label(`UAS ${String(400 + d.id * 37).slice(0, 3)}`, p, palette.label, 0.9);
+        // Above or below the unsafe region, on the side away from the claimed position.
+        const text = width < 600 ? 'SPOOFER LOCALIZED' : 'SPOOFER LOCALIZED · UNSAFE REGION';
+        withAlpha(palette.secure, fade * grow, c, () => {
+          c.font = `500 10.5px ${MONO}`;
+          const w = c.measureText(text).width;
+          const x = Math.min(Math.min(width - 10, zone.x + zone.w + 8) - w, Math.max(Math.max(10, zone.x - 8), p.x - w / 2));
+          const y = ghostDir.y > 0 ? p.y - radius - 10 : p.y + radius + 18;
+          c.fillText(text, x, y);
+        });
+      } else if (
+        d.labeled &&
+        !isSpoofer &&
+        // Keep the attack labels readable: hide nearby call signs while they're shown.
+        !(attackActive && spoofer && Math.hypot(p.x - spoofer.pos.x, p.y - spoofer.pos.y) < 130) &&
+        // ...and while a drone is at a vertiport, whose own label sits there.
+        !pads.some((v) => Math.hypot(p.x - v.x, p.y - v.y) < 46)
+      ) {
+        label(`${FLEET_CODES[d.id % FLEET_CODES.length]} ${String(400 + d.id * 37).slice(0, 3)}`, p, fleetColor(d), 0.95);
       }
     }
   }

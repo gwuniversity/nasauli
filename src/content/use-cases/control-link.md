@@ -28,7 +28,7 @@ telemetry downlink are exposed.
 - **Detecting hijacked vehicles.** Vanderbilt generates attack datasets from its networked UAV simulator and
   develops learning-based detectors, including graph methods that spot a compromised drone by comparing it with
   its neighbors under tight communication budgets.
-- **Hardening by design.** Collins Aerospace's zero-trust patterns include public key infrastructure and secure
+- **Hardening by design.** Collins Aerospace’s zero-trust patterns include public key infrastructure and secure
   channels for MAVLink.
 
 ## Looking ahead

@@ -60,7 +60,7 @@ const rows = challenges.flatMap((tc, i) =>
     width: 100%;
     min-width: 760px;
     border-collapse: collapse;
-    font-size: 0.875rem;
+    font-size: var(--text-xs);
   }
   .matrix th,
   .matrix td {
@@ -69,7 +69,7 @@ const rows = challenges.flatMap((tc, i) =>
   }
   .matrix thead th {
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: var(--text-label);
     font-weight: 500;
     letter-spacing: 0.04em;
     text-align: center;
@@ -93,7 +93,7 @@ const rows = challenges.flatMap((tc, i) =>
     color: var(--ink-2);
   }
   .matrix tbody th .mono {
-    font-size: 0.75rem;
+    font-size: var(--text-label-lg);
     color: var(--ink-3);
     padding-top: 0.1rem;
   }

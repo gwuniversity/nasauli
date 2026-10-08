@@ -27,12 +27,12 @@ defenses and shared data.
 
 - **Understanding the vulnerabilities.** UC Irvine performed the first security analyses of camera-based
   autonomous target tracking (FlyTrap) and of fiducial-marker pose estimation used for precision landing
-  (MirageMarker), showing that small, physically realizable changes in the scene can steer a drone's behavior while
+  (MirageMarker), showing that small, physically realizable changes in the scene can steer a drone’s behavior while
   evading standard filtering.
 - **Trustworthy perception for delivery.** GWU benchmarked real-time detectors for safe landing with calibrated
   uncertainty, used vision-language models to identify and explain safe landing zones, and is developing a
   calibrated forecast of how long a drop zone will stay clear during tethered delivery.
-- **Shared data at scale.** TSU's IRIS D³ dataset simulates clean, degraded, occluded, and compromised drop
+- **Shared data at scale.** TSU’s IRIS D³ dataset simulates clean, degraded, occluded, and compromised drop
   zones in RGB and LiDAR, supporting cross-institution benchmarking of landing models.
 - **Securing AI reasoning onboard.** UC Irvine has begun work on defending vision-language models used in drone
   autonomy against visual prompt injection.

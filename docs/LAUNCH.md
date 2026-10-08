@@ -44,7 +44,7 @@ Twitter preview image (`public/og-image.png`), and an Apple touch icon.
 - [ ] Spelling to confirm: "Stanley Zheng" and "Maheed Hatem Most Ahmed" (see `src/data/people.yaml`)
 
 **Settings**
-- [ ] Decide on the long-term contact address (currently i.sharifi@gwu.edu, in `src/lib/site.ts`).
+- [x] Contact addresses set in `src/lib/site.ts`: project inquiries go to pwei@gwu.edu, website questions to i.sharifi@gwu.edu.
 
 ## PI review round
 

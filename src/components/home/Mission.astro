@@ -10,7 +10,7 @@ const [teams, pubs, people] = await Promise.all([
 const stats = [
   { value: String(teams.length), label: 'Partner institutions' },
   { value: String(pubs.length), label: 'Publications' },
-  { value: String(people.filter((p) => !p.data.alumni).length), label: 'Researchers and students' },
+  { value: String(people.filter((p) => !p.data.alumni).length), label: 'Team members' },
   { value: '3', label: 'Technical challenges' },
 ];
 ---
@@ -33,7 +33,7 @@ const stats = [
         </p>
         <p>
           This project is building the security framework and algorithmic foundations to keep high-density urban
-          airspace safe, even in the presence of malicious activity, in support of NASA's Advanced Air Mobility and UAS
+          airspace safe, even in the presence of malicious activity, in support of NASA’s Advanced Air Mobility and UAS
           Traffic Management (UTM) research.
         </p>
       </div>
@@ -99,6 +99,7 @@ const stats = [
     }
   }
   .stat dd {
+    font-family: var(--font-display);
     font-size: var(--step-5);
     font-weight: 550;
     letter-spacing: -0.04em;
@@ -107,8 +108,8 @@ const stats = [
   }
   .stat dt {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.06em;
+    font-size: var(--text-label-lg);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-3);
   }

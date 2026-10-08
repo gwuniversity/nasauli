@@ -59,7 +59,7 @@ const month = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', timeZ
                       {i.data.link && (
                         <p>
                           <a class="link-arrow" href={url(i.data.link)} rel={i.data.link.startsWith('http') ? 'noopener' : undefined}>
-                            Read more
+                            Read more<span class="visually-hidden">: {i.data.title}</span>
                           </a>
                         </p>
                       )}
@@ -98,7 +98,7 @@ const month = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', timeZ
     border: 1px solid var(--line-strong);
     border-radius: 999px;
     background: var(--bg-raised);
-    font-size: 0.875rem;
+    font-size: var(--text-xs);
     font-weight: 500;
     color: var(--ink-2);
   }
@@ -179,8 +179,8 @@ const month = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', timeZ
   }
   .entry__date {
     padding-top: 0.15rem;
-    font-size: 0.75rem;
-    letter-spacing: 0.06em;
+    font-size: var(--text-label-lg);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-3);
   }
@@ -195,8 +195,8 @@ const month = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', timeZ
     max-width: 72ch;
   }
   .entry__kind {
-    font-size: 0.6875rem;
-    letter-spacing: 0.08em;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-3);
   }

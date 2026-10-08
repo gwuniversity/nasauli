@@ -1,0 +1,138 @@
+{
+  "uci-flytrap": {
+    "width": 720,
+    "height": 1280,
+    "duration": 120,
+    "audio": true,
+    "speed": 1,
+    "bytes": 14721840
+  },
+  "uci-miragemarker-sim": {
+    "width": 1106,
+    "height": 720,
+    "duration": 82,
+    "audio": false,
+    "speed": 1,
+    "bytes": 2086708
+  },
+  "uci-miragemarker-real": {
+    "width": 1280,
+    "height": 302,
+    "duration": 249,
+    "audio": true,
+    "speed": 1,
+    "bytes": 15116772
+  },
+  "gwu-dropzone-forecast": {
+    "width": 1280,
+    "height": 542,
+    "duration": 45,
+    "audio": false,
+    "speed": 1,
+    "bytes": 2044578
+  },
+  "gwu-heterogeneous-fleets": {
+    "width": 1280,
+    "height": 792,
+    "duration": 108,
+    "audio": false,
+    "speed": 2,
+    "bytes": 3098463
+  },
+  "gwu-llm-deconfliction": {
+    "width": 1280,
+    "height": 712,
+    "duration": 162,
+    "audio": false,
+    "speed": 4,
+    "bytes": 3694456
+  },
+  "vu-urban-network-sim": {
+    "width": 1280,
+    "height": 720,
+    "duration": 92,
+    "audio": false,
+    "speed": 2,
+    "bytes": 13308049
+  },
+  "vu-multi-operator-gcs": {
+    "width": 1280,
+    "height": 536,
+    "duration": 104,
+    "audio": false,
+    "speed": 2,
+    "bytes": 1439794
+  },
+  "vu-collision-avoidance": {
+    "width": 1280,
+    "height": 536,
+    "duration": 88,
+    "audio": false,
+    "speed": 2,
+    "bytes": 7866388
+  },
+  "vu-fleet-scale": {
+    "width": 1280,
+    "height": 720,
+    "duration": 48,
+    "audio": false,
+    "speed": 1.5,
+    "bytes": 3104684
+  },
+  "nvcc-grideye": {
+    "width": 1280,
+    "height": 720,
+    "duration": 449,
+    "audio": true,
+    "speed": 1,
+    "bytes": 13871979
+  },
+  "tsu-slz-tracking": {
+    "width": 1280,
+    "height": 670,
+    "duration": 15,
+    "audio": false,
+    "speed": 1,
+    "bytes": 937313
+  },
+  "tsu-slz-candidates": {
+    "width": 1280,
+    "height": 566,
+    "duration": 20,
+    "audio": false,
+    "speed": 1,
+    "bytes": 1719537
+  },
+  "tsu-iris-multi-uam": {
+    "width": 1280,
+    "height": 720,
+    "duration": 141,
+    "audio": true,
+    "speed": 1,
+    "bytes": 14101141
+  },
+  "tsu-iris-sensors": {
+    "width": 1280,
+    "height": 720,
+    "duration": 24,
+    "audio": false,
+    "speed": 1,
+    "bytes": 3451462
+  },
+  "tsu-iris-delivery": {
+    "width": 1280,
+    "height": 720,
+    "duration": 15,
+    "audio": false,
+    "speed": 1,
+    "bytes": 1693811
+  },
+  "ut-directional-jamming": {
+    "width": 852,
+    "height": 622,
+    "duration": 15,
+    "audio": false,
+    "speed": 1,
+    "bytes": 197769
+  }
+}

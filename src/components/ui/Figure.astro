@@ -98,7 +98,7 @@ const { src, alt, caption, teams, dark } = figure.data;
     background: #000;
   }
   .lightbox__caption {
-    font-size: 0.95rem;
+    font-size: var(--text-sm);
     color: var(--ink-2);
     max-width: 90ch;
   }
@@ -158,15 +158,15 @@ const { src, alt, caption, teams, dark } = figure.data;
     height: auto;
   }
   figcaption {
-    font-size: 0.875rem;
+    font-size: var(--text-xs);
     line-height: 1.5;
     color: var(--ink-2);
   }
   .figure__credit {
     display: inline-block;
     margin-right: var(--space-2);
-    font-size: 0.6875rem;
-    letter-spacing: 0.06em;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--accent);
   }

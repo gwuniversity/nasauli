@@ -1,30 +1,36 @@
-# Outreach and education programs. Photos must be the blurred copies in src/assets/outreach/
-# (run `npm run blur-photos`) until photo consent is confirmed.
+# Outreach and education programs, summarized from the annual reports (each entry cites its source).
+# Every statement must be traceable to a source document; do not add details that are not in it.
+# Photos must be the blurred copies in src/assets/outreach/ (run `npm run blur-photos`) until
+# photo consent is confirmed; they appear only in local and review builds.
 
+# Source: Y1 report §5.8 (NVCC summary); Y2 report §5.8 (NVCC summary) and "STEM Outreach and Student Engagement" (GWU paragraph).
 - id: nvcc-internships
   order: 1
   title: NVCC summer research internships
   audience: community-college
   when: Summers 2025 and 2026
-  summary: Each summer, four Northern Virginia Community College students join GWU's lab as research interns, working side by side with graduate students on drone control-link security. The 2025 cohort built a software-in-the-loop testbed for MAVLink security; the 2026 cohort built the GridEye UTM monitor and presented posters at the project's annual review.
+  summary: Each summer, four Northern Virginia Community College students join GWU’s lab as research interns, working side by side with graduate students on drone control-link security. The 2025 cohort built a software-in-the-loop testbed for MAVLink security; the 2026 cohort built the GridEye UTM monitor and presented posters at the project’s annual review.
   teams: [nvcc, gwu]
 
+# Source: Y2 report, "STEM Outreach and Student Engagement" (Vanderbilt paragraph).
 - id: undergraduate-research
   order: 2
-  title: Undergraduate research
+  title: Undergraduate research at Vanderbilt
   audience: undergraduate
-  when: Ongoing
-  summary: Undergraduates at Vanderbilt, TSU, and GWU contribute to simulation, radio-frequency sensing, and perception research, several as co-authors of their first papers. Vanderbilt undergraduates have gone on to NASA-relevant internships and careers, including Blue Origin's lunar lander team and RF communications for atmospheric reentry at SpaceX.
-  teams: [vanderbilt, tsu, gwu]
+  when: 2025–2026
+  summary: The Vanderbilt team has included six undergraduate students in its research, giving them their first research experiences and, for some, their first scholarly publications. Two have gone on to NASA-relevant internships and job placements, on Blue Origin’s lunar lander team and in rocket propulsion firmware and RF communications for atmospheric reentry at SpaceX.
+  teams: [vanderbilt]
 
+# Source: Y1 report §5.7 (Collins, Industry Partnership); Y2 report §5.2F (Collaboration with Collins Aerospace).
 - id: summer-internships-industry
   order: 3
-  title: Industry research internships
-  audience: undergraduate
+  title: Industry research internships at Collins Aerospace
+  audience: graduate
   when: Summers 2025 and 2026
-  summary: Collins Aerospace hosts a Vanderbilt PhD student each summer, giving first-hand industry experience in formal security assessment of avionics architectures.
+  summary: Collins Aerospace hired a Vanderbilt University student as a summer research intern in 2025 and again in 2026. In the 2026 internship, the student formalized manipulative interference attacks in the Lean theorem prover against a representative small UAS architecture, as part of Collins’s formal security assessment work.
   teams: [collins, vanderbilt]
 
+# Source: Y2 report, "STEM Outreach and Student Engagement" (GWU paragraph).
 - id: high-school-mentoring
   order: 4
   title: High-school research mentoring
@@ -33,28 +39,31 @@
   summary: GWU graduate students mentor high-school researchers on projects such as using large language models for air traffic safety assessment, benchmarking speech-to-text models on air traffic control audio, and reconstructing 3D neighborhoods from drone video. One student was first author of a paper at AIAA Aviation 2026.
   teams: [gwu]
 
+# Source: Y2 report, "STEM Outreach and Student Engagement" (TSU paragraph); lab name from TSU Year 2 PI slides.
 - id: tsu-itmr-outreach
   order: 5
   title: Hands-on autonomy demonstrations at TSU
   audience: high-school
   when: Summer 2026
-  summary: TSU's Intelligent Tactical Mobility Robotics Lab hosted middle-school, high-school, and rising-freshman students for demonstrations of UAV platforms, AI, robotics, virtual simulation, and edge computing.
+  summary: TSU’s Intelligent Tactical Mobility Robotics Lab hosted middle-school, high-school, and rising-freshman students for demonstrations of UAV platforms, AI, robotics, virtual simulation, and edge computing.
   teams: [tsu]
   photos:
     - { src: ../assets/outreach/tsu-lab-demo-1.jpg, alt: Students in TSU's lab watching a demonstration on large screens. }
     - { src: ../assets/outreach/tsu-lab-demo-2.jpg, alt: Students raising hands during a lab demonstration at TSU. }
 
+# Source: Y2 report, "STEM Outreach and Student Engagement" (Del Valle AutoDrive Lab Internship).
 - id: del-valle-autodrive
   order: 6
   title: Del Valle AutoDrive Lab Internship
   audience: high-school
-  when: 2025–2026
-  summary: A partnership between Del Valle ISD and UT Austin's Center for Autonomy. Over seven hands-on lessons, high-school students progressed from RC-car hardware and basic electronics to Raspberry Pi programming, soldering, motor control, and autonomous-vehicle testing, supported by a 16-person team contributing more than 200 hours.
+  when: Year 2 (2025–2026)
+  summary: A partnership between Del Valle ISD and UT Austin’s Center for Autonomy. Over seven hands-on lessons, high-school students progressed from RC-car hardware and basic electronics to Raspberry Pi programming, soldering, motor control, and autonomous-vehicle testing, supported by a 16-person team contributing more than 200 hours.
   teams: [ut-austin]
   photos:
     - { src: ../assets/outreach/ut-del-valle-1.jpg, alt: High-school students outdoors testing a small autonomous RC car. }
     - { src: ../assets/outreach/ut-del-valle-2.jpg, alt: Students at computers during a programming lesson. }
 
+# Source: Y2 report, "STEM Outreach and Student Engagement" (UT Austin STEM Girl Day).
 - id: stem-girl-day
   order: 7
   title: STEM Girl Day at UT Austin
@@ -66,22 +75,24 @@
     - { src: ../assets/outreach/ut-stem-girl-day-1.jpg, alt: UT Austin volunteers in event T-shirts beside a robot-hand activity sign. }
     - { src: ../assets/outreach/ut-stem-girl-day-2.jpg, alt: Young students crafting at an activity table. }
 
+# Source: Y2 report, "STEM Outreach and Student Engagement" (Austin Public Library Tween Code Club).
 - id: tween-code-club
   order: 8
   title: Austin Public Library Tween Code Club
   audience: k-12
   when: Fall 2025 and Spring 2026
-  summary: Repeated sessions introducing students ages 9–12 to programming, from Scratch to Python, and to machine-learning classification in a collaborative, beginner-friendly setting.
+  summary: A UT Austin team member supported a four-session series in Fall 2025, in which students ages 9–12 progressed from Scratch toward Python, and four more sessions in Spring 2026 involving programming and machine-learning classification.
   teams: [ut-austin]
   photos:
     - { src: ../assets/outreach/ut-code-club.jpg, alt: Four volunteers standing together in a library. }
 
+# Source: Y2 report, "STEM Outreach and Student Engagement" (ROADS "From Earth to Venus").
 - id: roads-challenge
   order: 9
-  title: 'ROADS "From Earth to Venus" challenge'
+  title: 'ROADS “From Earth to Venus” challenge'
   audience: k-12
   when: April 18, 2026
-  summary: Student teams programmed rovers to traverse uneven terrain and collect sensor data in a simulated planetary environment, hosted by UT Austin's Center for Space Research.
+  summary: Student teams programmed rovers to traverse uneven terrain and collect sensor data in a simulated planetary environment, hosted by UT Austin’s Center for Space Research.
   teams: [ut-austin]
   photos:
     - { src: ../assets/outreach/ut-roads-challenge.jpg, alt: A group of student participants and volunteers posing together. }

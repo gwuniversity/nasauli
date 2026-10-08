@@ -103,13 +103,13 @@ const ld = {
     flex-direction: column-reverse;
   }
   .pub-stats dt {
-    font-size: 0.6875rem;
-    letter-spacing: 0.08em;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-3);
   }
   .pub-stats dd {
-    font-family: var(--font-sans);
+    font-family: var(--font-display);
     font-size: var(--step-3);
     font-weight: 550;
     letter-spacing: -0.03em;
@@ -151,7 +151,7 @@ const ld = {
     border: 0;
     border-radius: 999px;
     background: transparent;
-    font-size: 0.85rem;
+    font-size: var(--text-xs);
     font-weight: 500;
     color: var(--ink-2);
   }
@@ -166,7 +166,7 @@ const ld = {
     border: 1px solid var(--line-strong);
     border-radius: 999px;
     background: var(--bg-raised);
-    font-size: 0.875rem;
+    font-size: var(--text-xs);
     max-width: 100%;
   }
   .filters__search {
@@ -177,8 +177,8 @@ const ld = {
   }
   .filters__count {
     margin: var(--space-4) 0 var(--space-2);
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-3);
   }

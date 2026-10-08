@@ -1,14 +1,17 @@
 ---
 import '@fontsource-variable/instrument-sans';
+import '@fontsource-variable/space-grotesk';
 import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/ibm-plex-mono/500.css';
 import '~/styles/global.css';
 import SiteHeader from '~/components/layout/SiteHeader.astro';
 import SiteFooter from '~/components/layout/SiteFooter.astro';
+import GlossaryTerms from '~/components/layout/GlossaryTerms.astro';
 import { site } from '~/lib/site';
 import { url } from '~/lib/url';
 import { getImage } from 'astro:assets';
 import sansFont from '@fontsource-variable/instrument-sans/files/instrument-sans-latin-wght-normal.woff2?url';
+import displayFont from '@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2?url';
 import monoFont from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2?url';
 
 interface Props {
@@ -18,9 +21,11 @@ interface Props {
   image?: ImageMetadata;
   /** Structured data (schema.org) for this page. */
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** Skip inline acronym explanations (the glossary page itself). */
+  noGlossary?: boolean;
 }
 
-const { title, description = site.description, image, jsonLd } = Astro.props;
+const { title, description = site.description, image, jsonLd, noGlossary = false } = Astro.props;
 const ogImage = image
   ? new URL((await getImage({ src: image, width: 1200, format: 'jpeg' })).src, Astro.site)
   : new URL(url('/og-image.png'), Astro.site);
@@ -29,7 +34,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -37,6 +42,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="preload" href={sansFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={monoFont} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
     <link rel="sitemap" href={url('/sitemap-index.xml')} />
@@ -57,29 +63,30 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:image:alt" content={`${site.name}, ${site.program}`} />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="apple-touch-icon" href={url('/apple-touch-icon.png')} />
-    <meta name="theme-color" content="#f6f5f1" />
+    <meta name="theme-color" content="#080d17" />
     <link rel="alternate" type="application/rss+xml" title={`${site.name}: News`} href={url('/rss.xml')} />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     <script is:inline>
-      // Light is the default; only an explicit visitor choice switches to dark.
+      // Dark is the default; only an explicit visitor choice switches to light.
       (function () {
         var root = document.documentElement;
-        var theme = 'light';
+        var theme = 'dark';
         try {
-          if (localStorage.getItem('theme') === 'dark') theme = 'dark';
+          if (localStorage.getItem('theme') === 'light') theme = 'light';
         } catch (e) {}
         root.dataset.theme = theme;
         root.classList.add('js');
       })();
     </script>
   </head>
-  <body>
+  <body data-no-glossary={noGlossary ? '' : undefined}>
     <a class="skip-link" href="#main">Skip to content</a>
     <SiteHeader />
     <main id="main">
       <slot />
     </main>
     <SiteFooter />
+    <GlossaryTerms />
     <script>
       const targets = document.querySelectorAll('[data-reveal]');
       if ('IntersectionObserver' in window) {

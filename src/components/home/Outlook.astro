@@ -51,7 +51,7 @@ const years = [
     {
       featuredDemos.length > 0 && (
         <div class="featured-demos">
-          {featuredDemos.slice(0, 2).map((d) => (
+          {featuredDemos.slice(0, 4).map((d) => (
             <DemoCard demo={d} teamNames={teamNames} codes={codes} />
           ))}
         </div>
@@ -161,8 +161,8 @@ const years = [
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-3);
   }
@@ -171,6 +171,6 @@ const years = [
   }
   .timeline__body {
     color: var(--ink-2);
-    font-size: 0.95rem;
+    font-size: var(--text-sm);
   }
 </style>

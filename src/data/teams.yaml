@@ -1,5 +1,5 @@
 # Partner institutions. `order` sets display order (lead institution first).
-# `overview` is PI-owned: leave it out and the team page shows a pending placeholder.
+# `overview` was drafted from the Year 1–2 reports and PI slides (source noted above each); site PIs may revise it.
 # `thrusts` are summarized from the Year 1–2 reports; site PIs may revise them.
 
 - id: gwu
@@ -14,6 +14,8 @@
   role: Lead institution. Perception-based drone delivery and landing, AI-based separation assurance, and the security of air traffic control voice communication.
   focus: [Vision-based landing, Separation assurance, LLMs for air traffic, ATC voice security]
   useCases: [vision-landing, separation-assurance, atc-voice, control-link]
+  # Overview source: Y2 report §5.1 and §5.8; GWU Year 2 PI slides (slide 6, team briefing table).
+  overview: "The George Washington University is the lead institution; Principal Investigator Peng Wei leads the eight-institution team. GWU’s research covers aircraft separation assurance for small drones, including heterogeneous fleets, GPS degradation and spoofing, and language-model-based deconfliction; vision-based drone delivery and landing; and the security of air traffic control voice communication. GWU works with Purdue, TSU, UC Irvine, UT Austin, and NVCC, and hosts NVCC students as summer research interns."
   thrusts:
     - title: Perception-based drone delivery
       body: Benchmarked transformer and CNN detectors for safe autonomous landing with conformal uncertainty, used vision-language models to identify and explain safe landing zones, and is forecasting how long a drop zone will stay clear during tethered delivery.
@@ -46,6 +48,8 @@
   role: Networked multi-UAV simulation, Remote ID spoofing detection, and machine-learning anomaly detection for small unmanned aircraft.
   focus: [Networked UAV simulation, Remote ID security, Anomaly detection, RF sensing]
   useCases: [remote-id, control-link, secure-architecture, airspace-coordination]
+  # Overview source: Y2 report §5.2; Vanderbilt Year 2 PI slides (overview slide); GWU Year 2 PI slides (slide 6).
+  overview: "Vanderbilt’s team, led by Bryan C. Ward with co-investigator Gautam Biswas, builds the project’s networked simulation platform for small UAS, which models multi-operator urban operations and generates cyberattack datasets. On this platform the team studies Remote ID spoofing attacks and defenses, from signal-based detection and spoofing-aware trajectory planning to an SDR-equipped drone for physical demonstration, and develops learning-based detection of MAVLink cyber anomalies. Vanderbilt collaborates with Collins Aerospace and UT Austin."
   thrusts:
     - title: Networked UAV simulation platform
       body: An open-source distributed simulator integrating ArduPilot SITL, Gazebo, QGroundControl, and OMNeT++ that models multi-operator operations under the FAA UTM concept of operations, with a library of adversarial scenarios for cyberattack research.
@@ -79,9 +83,11 @@
   role: Game-theoretic and learning-based foundations for secure, fair, and decentralized coordination among airspace users.
   focus: [Stackelberg games, Multi-agent learning, Collusion detection, Fair deconfliction]
   useCases: [separation-assurance, airspace-coordination]
+  # Overview source: Y2 report §5.3; Purdue Year 2 PI slides (Gupta and Ghasemi decks); GWU Year 2 PI slides (slide 6).
+  overview: "Purdue’s team, led by Vijay Gupta with co-investigator Mahsa Ghasemi, develops learning and game-theoretic foundations for securing multi-UAV operations. At the individual-aircraft level, the team works on rapid detection of faults and anomalies in vehicle dynamics. At the system level, it develops learning algorithms for security games among multiple UAV owners, methods to detect collusion, digital-twin-based operation, robust information gathering, active communication in multi-agent reinforcement learning, and fair strategic deconfliction. Purdue collaborates with GWU."
   thrusts:
     - title: Decentralized leader-follower learning
-      body: Learning algorithms for Stackelberg games among UAV operators that converge without a trusted, information-rich central coordinator, preserving the privacy of each operator's costs.
+      body: Learning algorithms for Stackelberg games among UAV operators that converge without a trusted, information-rich central coordinator, preserving the privacy of each operator’s costs.
       useCase: airspace-coordination
     - title: Rational and robust learning
       body: Quantifying how much an agent can gain by deviating from a prescribed learning algorithm, and designing algorithms that remove that incentive.
@@ -109,11 +115,13 @@
   role: Information-shaping control, secure communication, and robust coordination for autonomous aircraft and dense airspace operations.
   focus: [Deception and observability, Directional jamming, Auction-based coordination, Vertiport sequencing]
   useCases: [separation-assurance, remote-id, airspace-coordination]
+  # Overview source: Y2 report §5.4 (Overview); UT Austin Year 2 PI slides (slide 2); GWU Year 2 PI slides (slide 6).
+  overview: "UT Austin’s team, led by Ufuk Topcu, studies how aircraft and airspace coordinators can operate safely when the information they rely on may be incomplete, uncertain, strategically manipulated, or deliberately corrupted. Its work progresses along three connected thrusts: information-shaping control for secure aircraft operations, scalable and robust coordination for dense airspace operations, and secure coordination when Remote ID or GPS-derived information cannot be trusted. The team collaborates with GWU and Vanderbilt."
   thrusts:
     - title: Information-shaping control
       body: Control that shapes what an adversary can learn or observe, including deception against data-driven attackers and controllers that limit adversarial observability, validated on the ADMIRE aircraft model.
     - title: Directional jamming and nulling
-      body: Jointly optimizing a UAV's motion and antenna phases to jam an eavesdropper while keeping a communication null toward a friendly receiver.
+      body: Jointly optimizing a UAV’s motion and antenna phases to jam an eavesdropper while keeping a communication null toward a friendly receiver.
     - title: Scalable, robust coordination
       body: Game-theoretic mitigation of airspace-sector overload on real European traffic data, the TACo auction for consensus without disclosing private preferences, and chance-constrained correlated equilibria for vertiports.
       useCase: airspace-coordination
@@ -134,12 +142,14 @@
   role: Security analysis of camera- and AI-based drone autonomy, from target tracking and precision landing to vision-language models.
   focus: [Autonomous tracking security, Fiducial-marker landing, Vision-language model defense]
   useCases: [vision-landing]
+  # Overview source: Y2 report §5.5; UC Irvine Year 2 PI slides (progress summary slides).
+  overview: "UC Irvine’s Autonomous & Smart Systems Guard (AS²Guard) research group, led by Alfred Chen, studies the security of AI in the latest small-UAS autonomy functions. Its FlyTrap study of autonomous target tracking was presented at NDSS 2026, responsibly disclosed to the affected drone makers, and covered by more than 15 news outlets; its MirageMarker study of marker-based autonomous landing appears at IROS 2026. With GWU and TSU, the group is developing defenses for vision-language-model-enabled drones and a drone-delivery benchmark."
   thrusts:
     - title: FlyTrap
       body: The first security analysis of camera-based autonomous target tracking in drones, demonstrated against commercial systems and presented at NDSS 2026.
       useCase: vision-landing
     - title: MirageMarker
-      body: The first security study of fiducial-marker pose estimation for precision landing, evaluated against the PX4 autopilot's native landing mode in NVIDIA Isaac Sim (IROS 2026).
+      body: The first security study of fiducial-marker pose estimation for precision landing, evaluated against the PX4 autopilot’s native landing mode in NVIDIA Isaac Sim (IROS 2026).
       useCase: vision-landing
     - title: Securing vision-language autonomy
       body: Ongoing work on defending vision-language models used for drone tracking and landing against visual prompt injection.
@@ -158,6 +168,8 @@
   role: Physics-based simulation of urban air mobility environments and resilient emergency landing for eVTOL aircraft and drones.
   focus: [IRIS simulation, Safe landing zones, Multimodal sensing, Synthetic datasets]
   useCases: [emergency-landing, vision-landing]
+  # Overview source: Y2 report §5.6 and STEM outreach section; TSU Year 2 PI slides (slides 1–3).
+  overview: "Tennessee State University’s team works in the Intelligent Tactical Mobility Robotics Laboratory, directed by Amir Shirkhodaie. The team develops IRIS, a physics-based simulation environment for urban air mobility and drone delivery, and uses it to study autonomous selection of emergency safe landing zones when an aircraft faces sensing failures or cyberattacks, combining computer vision, multi-sensor fusion, and hypothesis-driven decision making. It also generates annotated synthetic datasets for drone delivery, collaborates with GWU and UC Irvine, and runs outreach programs for students."
   thrusts:
     - title: IRIS simulation environment
       body: Physics-based downtown, suburban, vertiport, and airport scenes with eVTOL and drone models and simulated cameras, LiDAR, GPS, and inertial sensors under degraded weather and lighting.
@@ -182,6 +194,8 @@
   role: Industry partner contributing aerospace expertise, zero-trust architecture patterns, and formally verified security assessment.
   focus: [Zero-trust design patterns, Formal methods, Lean theorem proving, Avionics expertise]
   useCases: [secure-architecture, control-link]
+  # Overview source: Y1 report §5.7; Y2 report §5.7; Collins Year 2 PI slides (slides 2–5).
+  overview: "Collins Aerospace is the project’s industry partner, represented by Isaac Amundson and Heber Herencia-Zapana. Collins contributes aerospace subject-matter expertise and focuses on security assessment for high-density urban airspace: zero-trust design patterns for UAS architectures, and a toolchain that pairs large language models with the Lean theorem prover so that security reasoning is captured formally and can be re-run when an architecture changes. Collins collaborates with Vanderbilt and hosts university students as summer interns."
   thrusts:
     - title: Zero-trust design patterns
       body: New and updated zero-trust patterns for high-density urban airspace, modeled in AADL as building blocks for secure UAS systems.
@@ -205,9 +219,11 @@
   role: Community-college research pathway. Student interns investigate drone command-and-control link security alongside GWU researchers.
   focus: [Student research, MAVLink security, UTM monitoring]
   useCases: [control-link]
+  # Overview source: Y1 report §5.8; Y2 report §5.8 and STEM outreach section (GWU paragraph); GWU Year 2 PI slides (slide 6).
+  overview: "Northern Virginia Community College brings community-college students into the project’s research. Each summer, four NVCC students join GWU as research interns, working side by side with graduate students on cyberattacks and defenses for the drone software stack, from MAVLink command-and-control link security to a UAS Traffic Management monitoring dashboard. The interns present their work at the project’s annual review meeting. NVCC’s site PI is Kwabena Konadu."
   thrusts:
     - title: Summer research internships
-      body: Each summer, four NVCC students join GWU for a research internship, working side by side with graduate students and presenting at the project's annual meeting.
+      body: Each summer, four NVCC students join GWU for a research internship, working side by side with graduate students and presenting at the project’s annual meeting.
       partners: [gwu]
     - title: Control-link security testbeds
       body: Software-in-the-loop testbeds that evaluate the MAVLink link between ground stations and drones and the protection offered by message signing and secure tunnels.

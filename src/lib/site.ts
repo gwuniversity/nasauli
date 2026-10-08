@@ -4,11 +4,13 @@ export const site = {
   program: 'NASA University Leadership Initiative',
   description:
     'A NASA University Leadership Initiative project uniting eight institutions to identify, defend against, and design out cyberattacks on drones and air taxis in dense urban airspace.',
-  award: '80NSSC24M0070',
   period: 'September 2024 – August 2027',
-  contactEmail: 'i.sharifi@gwu.edu',
+  /** Project inquiries: partnership, stakeholders, media, research questions. */
+  contactEmail: 'pwei@gwu.edu',
+  /** Questions or corrections about the website itself. */
+  websiteEmail: 'i.sharifi@gwu.edu',
   acknowledgment:
-    'This project is supported by the NASA Aeronautics Research Mission Directorate (ARMD) University Leadership Initiative (ULI) under award 80NSSC24M0070.',
+    'This project is supported by the NASA Aeronautics Research Mission Directorate (ARMD) through the University Leadership Initiative (ULI).',
   disclaimer:
     'Any opinions, findings, conclusions, or recommendations expressed on this site are those of the authors and do not necessarily reflect the views of NASA.',
 };
@@ -40,6 +42,13 @@ export const roleGroupLabels = {
   intern: 'Research interns',
 } as const;
 
+/**
+ * Homepage hero animation. '3d' = WebGL city (src/scripts/airspace3d.ts), falling back to 2D when
+ * WebGL is unavailable. '2d' = the original canvas animation (src/scripts/airspace.ts; a frozen
+ * copy is in archive/hero-2d-2026-10-08/).
+ */
+export const heroAnimation: '3d' | '2d' = '3d';
+
 export const nav = [
   { label: 'Research', href: '/research' },
   { label: 'Teams', href: '/teams' },
@@ -50,6 +59,9 @@ export const nav = [
   { label: 'Outreach', href: '/outreach' },
   { label: 'About', href: '/about' },
 ];
+
+/** Footer-only links. */
+export const footerExtras = [{ label: 'Glossary', href: '/glossary' }];
 
 
 export const challenges = [

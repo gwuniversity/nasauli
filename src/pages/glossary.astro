@@ -1,0 +1,70 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHeader from '~/components/ui/PageHeader.astro';
+import { glossary } from '~/data/glossary';
+
+const terms = [...glossary].sort((a, b) => a.term.localeCompare(b.term, 'en', { sensitivity: 'base' }));
+---
+
+<BaseLayout title="Glossary" description="Acronyms and terms used on the Securing High-Density Urban Airspaces website." noGlossary>
+  <PageHeader
+    eyebrow="Glossary"
+    title="Terms and acronyms"
+    lede="Aviation and security research has a lot of shorthand. Here is what the terms on this site mean."
+  />
+  <section class="section">
+    <div class="container">
+      <dl class="gloss">
+        {
+          terms.map((t) => (
+            <div id={`term-${t.term.toLowerCase().replace(/\W+/g, '-')}`}>
+              <dt>
+                <span class="gloss__term">{t.term}</span>
+                <span class="gloss__exp">{t.expansion}</span>
+              </dt>
+              <dd>{t.definition}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .gloss {
+    display: grid;
+    border-top: 1px solid var(--ink);
+  }
+  @media (min-width: 900px) {
+    .gloss {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-8);
+    }
+  }
+  .gloss div {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--line);
+    scroll-margin-top: calc(var(--header-h) + var(--space-4));
+  }
+  .gloss dt {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2) var(--space-3);
+  }
+  .gloss__term {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 600;
+  }
+  .gloss__exp {
+    font-weight: 550;
+    color: var(--accent);
+  }
+  .gloss dd {
+    color: var(--ink-2);
+  }
+</style>

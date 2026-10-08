@@ -1,0 +1,155 @@
+---
+/**
+ * Self-hosted demo video in a uniform 16:9 frame (other aspect ratios are letterboxed).
+ * - loop: muted, autoplays only while on screen, with a pause button; never autoplays when the
+ *   visitor prefers reduced motion.
+ * - player: native controls, nothing downloads until the visitor presses play.
+ */
+import { formatDuration, videoInfo } from '~/lib/videos';
+import { url } from '~/lib/url';
+
+interface Props {
+  id: string;
+  title: string;
+  mode: 'loop' | 'player';
+}
+
+const { id, title, mode } = Astro.props;
+const info = videoInfo(id);
+const src = url(`/videos/${id}.mp4`);
+const poster = url(`/videos/${id}.jpg`);
+const portrait = info.height > info.width;
+---
+
+<div class:list={['vp', `vp--${mode}`, { 'vp--portrait': portrait }]} data-vp={mode}>
+  {
+    mode === 'loop' ? (
+      <video muted loop playsinline preload="none" poster={poster} aria-label={title} width={info.width} height={info.height}>
+        <source src={src} type="video/mp4" />
+      </video>
+    ) : (
+      <video controls playsinline preload="none" poster={poster} aria-label={title} width={info.width} height={info.height}>
+        <source src={src} type="video/mp4" />
+      </video>
+    )
+  }
+  <div class="vp__badges mono" aria-hidden="true">
+    {mode === 'loop' && <span>Loop</span>}
+    {info.speed > 1 && <span>{info.speed}× speed</span>}
+    {mode === 'player' && <span>{formatDuration(info.duration)}</span>}
+  </div>
+  {
+    mode === 'loop' && (
+      <button class="vp__toggle" type="button" aria-label={`Pause: ${title}`} data-vp-toggle>
+        <svg class="vp__icon-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 3h2.5v10H4.5zM9 3h2.5v10H9z" fill="currentColor" /></svg>
+        <svg class="vp__icon-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3l8 5-8 5z" fill="currentColor" /></svg>
+      </button>
+    )
+  }
+</div>
+
+<style>
+  .vp {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-2);
+    background: #05080f;
+  }
+  .vp video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #05080f;
+  }
+  .vp__badges {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    display: flex;
+    gap: var(--space-2);
+    pointer-events: none;
+    transition: opacity 0.2s var(--ease);
+  }
+  .vp__badges span {
+    padding: 0.15rem 0.45rem;
+    border-radius: var(--radius-1);
+    background: rgb(5 8 15 / 0.72);
+    color: #e7ecf3;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+  }
+  .vp--player.is-playing .vp__badges {
+    opacity: 0;
+  }
+  .vp__toggle {
+    position: absolute;
+    right: var(--space-3);
+    bottom: var(--space-3);
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 999px;
+    background: rgb(5 8 15 / 0.72);
+    color: #e7ecf3;
+  }
+  .vp__toggle:hover {
+    background: var(--accent-graphic);
+    color: #04201d;
+  }
+  .vp__toggle svg {
+    width: 14px;
+    height: 14px;
+  }
+  .vp__icon-play,
+  .vp.is-paused .vp__icon-pause {
+    display: none;
+  }
+  .vp.is-paused .vp__icon-play {
+    display: block;
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  document.querySelectorAll<HTMLElement>('[data-vp="loop"]').forEach((root) => {
+    const video = root.querySelector('video')!;
+    const toggle = root.querySelector<HTMLButtonElement>('[data-vp-toggle]')!;
+    // Autoplay is on unless the visitor paused this clip or prefers reduced motion.
+    let userPaused = reduce.matches;
+    let visible = false;
+    const sync = () => {
+      const shouldPlay = visible && !userPaused && !document.hidden;
+      if (shouldPlay && video.paused) video.play().catch(() => {});
+      if (!shouldPlay && !video.paused) video.pause();
+      root.classList.toggle('is-paused', userPaused);
+      toggle.setAttribute('aria-label', `${userPaused ? 'Play' : 'Pause'}: ${video.getAttribute('aria-label')}`);
+    };
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      sync();
+    }, { threshold: 0.35 }).observe(root);
+    toggle.addEventListener('click', () => {
+      userPaused = !userPaused;
+      sync();
+    });
+    document.addEventListener('visibilitychange', sync);
+  });
+
+  // Players: only one plays at a time, and badges hide while playing.
+  const players = [...document.querySelectorAll<HTMLElement>('[data-vp="player"]')];
+  players.forEach((root) => {
+    const video = root.querySelector('video')!;
+    video.addEventListener('play', () => {
+      root.classList.add('is-playing');
+      players.forEach((other) => other !== root && other.querySelector('video')!.pause());
+      document.querySelectorAll<HTMLVideoElement>('[data-vp="loop"] video').forEach((v) => v.pause());
+    });
+    video.addEventListener('pause', () => root.classList.remove('is-playing'));
+  });
+</script>

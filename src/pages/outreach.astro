@@ -10,10 +10,14 @@ const programs = (await getCollection('outreach')).sort((a, b) => a.data.order -
 const teamNames = Object.fromEntries((await getTeams()).map((t) => [t.id, t.data.short]));
 const audienceLabel = {
   'community-college': 'Community college',
+  graduate: 'Graduate',
   undergraduate: 'Undergraduate',
   'high-school': 'High school',
   'k-12': 'K–12',
 };
+// Blurred, unconsented photos appear only in local and review builds, never on the public site.
+const showPhotos = import.meta.env.DEV || import.meta.env.PUBLIC_SHOW_PENDING === 'true';
+const photosOf = (p: (typeof programs)[number]) => (showPhotos ? p.data.photos : []);
 const audiences = Object.keys(audienceLabel) as (keyof typeof audienceLabel)[];
 const counts = audiences.map((a) => ({ a, n: programs.filter((p) => p.data.audience === a).length }));
 ---
@@ -43,7 +47,7 @@ const counts = audiences.map((a) => ({ a, n: programs.filter((p) => p.data.audie
       <ol class="programs" role="list">
         {
           programs.map((p, i) => (
-            <li class:list={['program', { 'program--photos': p.data.photos.length > 0 }]} data-reveal>
+            <li class:list={['program', { 'program--photos': photosOf(p).length > 0 }]} data-reveal>
               <div class="program__text">
                 <p class="program__meta mono">
                   <span>{String(i + 1).padStart(2, '0')}</span>
@@ -60,14 +64,14 @@ const counts = audiences.map((a) => ({ a, n: programs.filter((p) => p.data.audie
                   ))}
                 </p>
               </div>
-              {p.data.photos.length > 0 && (
-                <div class:list={['program__photos', `n${Math.min(p.data.photos.length, 2)}`]}>
-                  {p.data.photos.slice(0, 2).map((ph) => (
+              {photosOf(p).length > 0 && (
+                <div class:list={['program__photos', `n${Math.min(photosOf(p).length, 2)}`]}>
+                  {photosOf(p).slice(0, 2).map((ph) => (
                     <figure>
                       <Image src={ph.src} alt={ph.alt} widths={[400, 800]} sizes="(min-width: 1000px) 360px, 90vw" />
                     </figure>
                   ))}
-                  <p class="program__note mono">Photos blurred pending consent</p>
+                  <p class="program__note mono">Review build · photos blurred pending consent</p>
                 </div>
               )}
             </li>
@@ -94,13 +98,13 @@ const counts = audiences.map((a) => ({ a, n: programs.filter((p) => p.data.audie
     background: var(--bg-raised);
   }
   .aud dt {
-    font-size: 0.6875rem;
-    letter-spacing: 0.06em;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-3);
   }
   .aud dd {
-    font-family: var(--font-sans);
+    font-family: var(--font-display);
     font-weight: 600;
   }
 
@@ -130,8 +134,8 @@ const counts = audiences.map((a) => ({ a, n: programs.filter((p) => p.data.audie
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2) var(--space-4);
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-3);
   }
@@ -176,8 +180,8 @@ const counts = audiences.map((a) => ({ a, n: programs.filter((p) => p.data.audie
   }
   .program__note {
     grid-column: 1 / -1;
-    font-size: 0.6875rem;
-    letter-spacing: 0.06em;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-3);
   }

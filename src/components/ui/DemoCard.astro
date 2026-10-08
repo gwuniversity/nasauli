@@ -1,24 +1,29 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import VideoEmbed from './VideoEmbed.astro';
+import VideoPlayer from './VideoPlayer.astro';
 import { url } from '~/lib/url';
 
 interface Props {
   demo: CollectionEntry<'demos'>;
   teamNames: Record<string, string>;
   codes: Record<string, string>;
+  /** Give the card an id anchor (#demo-<id>); off for repeated copies such as the spotlight. */
+  anchor?: boolean;
 }
 
-const { demo, teamNames, codes } = Astro.props;
-const { title, summary, youtubeId, teams, useCase } = demo.data;
+const { demo, teamNames, codes, anchor = true } = Astro.props;
+const { title, summary, youtubeId, video, mode, kind, teams, useCase } = demo.data;
+const kindLabel = { simulation: 'Simulation', 'real-world': 'Real world', dashboard: 'Software' };
 ---
 
-<article class="demo" data-demo data-teams={teams.map((t) => t.id).join(' ')} data-uc={useCase?.id ?? ''}>
-  <VideoEmbed youtubeId={youtubeId} title={title} />
+<article class="demo" id={anchor ? `demo-${demo.id}` : undefined} data-demo data-teams={teams.map((t) => t.id).join(' ')} data-uc={useCase?.id ?? ''}>
+  {video ? <VideoPlayer id={video} title={title} mode={mode} /> : <VideoEmbed youtubeId={youtubeId!} title={title} />}
   <div class="demo__body">
     <p class="demo__meta mono">
       {teams.map((t) => teamNames[t.id]).join(' · ')}
       {useCase && <a href={url(`/research/${useCase.id}`)}>{codes[useCase.id]}</a>}
+      {kind && <span class="demo__kind">{kindLabel[kind]}</span>}
     </p>
     <h3>{title}</h3>
     <p>{summary}</p>
@@ -38,8 +43,8 @@ const { title, summary, youtubeId, teams, useCase } = demo.data;
   .demo__meta {
     display: flex;
     gap: var(--space-3);
-    font-size: 0.6875rem;
-    letter-spacing: 0.06em;
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
     text-transform: uppercase;
     color: var(--ink-3);
   }
@@ -51,8 +56,20 @@ const { title, summary, youtubeId, teams, useCase } = demo.data;
     font-size: var(--step-1);
     letter-spacing: -0.015em;
   }
-  .demo p:last-child {
+  .demo__meta {
+    flex-wrap: wrap;
+  }
+  .demo__kind {
+    margin-left: auto;
+  }
+  .demo__shown {
+    font-size: var(--text-label);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .demo__body > p:not(.demo__meta):not(.demo__shown) {
     color: var(--ink-2);
-    font-size: 0.95rem;
+    font-size: var(--text-sm);
   }
 </style>

@@ -4,7 +4,7 @@ This site is the official public website of the NASA ULI project *Securing High-
 Airspaces*. Most of it was drafted from the Year 1 and Year 2 annual reports. A few parts are
 best written by each team, and those are listed below.
 
-**The easiest option: email your updates to Iman Sharifi (i.sharifi@gwu.edu).** You don't need
+**The easiest option: email website updates to Iman Sharifi (i.sharifi@gwu.edu).** You don't need
 to touch any files. If you're comfortable with GitHub, you can also edit the files yourself
 (see [Editing on GitHub](#editing-on-github)).
 
@@ -17,7 +17,7 @@ to touch any files. If you're comfortable with GitHub, you can also edit the fil
 | **Research thrusts** | Team page | Corrections to the summaries we drafted from the reports |
 | **People** | People page, team page | Additions, removals, role changes, and spelling fixes for students, postdocs, and staff |
 | **Publications** | Publications, team, and use-case pages | New papers once **published or accepted** (title, authors, venue, year, DOI or link) |
-| **Demo videos** | Demos page, use-case pages, homepage | A YouTube link, a one-line title, and one or two sentences of description |
+| **Demo videos** | Demos page, use-case pages, team pages, homepage | A video file or YouTube link, a one-line title, and one or two sentences of description |
 | **News** | News page, homepage | Awards, talks, events, and media coverage (date, title, two sentences) |
 | **Photos of people** | Outreach page | Confirmation that consent was obtained. Until then, photos stay blurred |
 

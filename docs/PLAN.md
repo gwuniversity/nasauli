@@ -9,13 +9,13 @@ Year 2 annual reports (kept locally in `reports/`, never committed).
 |---|---|
 | Structure | Modeled on safeaviationautonomy.stanford.edu (Home · Research · Teams · People · Demos · Publications · News · Outreach · About) |
 | Visual direction | "Airspace": aeronautical-chart look in light mode, night-radar look in dark mode; flight-strip style use-case cards; restraint and big numbers à la Zipline/Wing |
-| Theme | Light and dark mode; **light is the default** (not system-driven); choice remembered per visitor |
+| Theme | Light and dark mode; **dark is the default** (not system-driven); choice remembered per visitor |
 | Logos | None required. Institutions are set as typographic wordmarks; NASA support is stated in text |
 | Videos | YouTube, embedded and played inline on our pages (privacy-enhanced, click-to-load) |
 | Photos | PIs with photos; students/postdocs listed by name only; outreach photos blurred before commit until consent is confirmed |
 | Excluded | UEI/EIN, phone numbers, contract/funding admin, in-review or unavailable papers, step-by-step attack details |
 | Named | NASA technical monitors, invited speakers |
-| Contact | i.sharifi@gwu.edu (temporary) |
+| Contact | Project inquiries: pwei@gwu.edu · Website: i.sharifi@gwu.edu |
 | PI-owned content | Sections marked "pending" are left for site PIs to fill; they render as a quiet placeholder in production and a highlighted TODO in development |
 | Stack | Astro (static), YAML/Markdown content collections with schemas, GitHub Pages (custom domain later) |
 

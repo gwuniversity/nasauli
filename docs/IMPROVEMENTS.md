@@ -25,14 +25,15 @@ mode, plus the code. They're grouped by how much they depend on other people.
 
 ## Phase B: Content (needs PIs or the project team)
 
-- Demo videos (inline YouTube) and Demo Day date and details
+- ~~Demo videos~~ 17 self-hosted demos added (October 6, 2026). Still needed: demos from Purdue, Collins, and UT Austin (beyond one animation), and for UC-04, UC-07, and UC-08; decisions on the held-back clips; Demo Day date and details
 - Team overviews in each PI's own words; corrections to the research-thrust summaries
 - Headshot approvals, plus photos for Amundson and Herencia-Zapana; higher-resolution photos for Gupta, Ghasemi, and Shirkhodaie
 - Outreach photo consent, so the photos can be shown unblurred
 - Advisory board members
 - Links to media coverage (FlyTrap at NDSS 2026), invited-talk recordings if any, and the MirageMarker paper link
 - An optional "Opportunities" section (positions, internships) and an optional "Vision" section
-- Long-term contact address and the custom domain
+- Long-term contact address and the custom domain (a student address as the official contact looks informal to visitors)
+- Captions or transcripts for the narrated demo videos (FlyTrap, MirageMarker real-world, GridEye, IRIS tour), needed for accessibility (WCAG 1.2.2)
 
 ## Phase C: Larger features (worth deciding on)
 

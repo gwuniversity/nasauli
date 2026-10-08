@@ -9,22 +9,26 @@
     "preview": "astro preview",
     "check": "astro check",
     "blur-photos": "node scripts/blur-photos.mjs",
-    "check:links": "node scripts/check-links.mjs"
+    "check:links": "node scripts/check-links.mjs",
+    "encode-demos": "node scripts/encode-demos.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
     "@fontsource-variable/instrument-sans": "^5.3.0",
+    "@fontsource-variable/space-grotesk": "^5.3.0",
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "astro": "^7.3.5",
     "d3-geo": "^3.1.1",
     "lite-youtube-embed": "^0.3.4",
+    "three": "^0.186.1",
     "topojson-client": "^3.1.0",
     "us-atlas": "^3.0.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@types/d3-geo": "^3.1.1",
+    "@types/three": "^0.186.0",
     "@types/topojson-client": "^3.1.5",
     "@types/topojson-specification": "^1.0.5",
     "typescript": "^6.0.3"

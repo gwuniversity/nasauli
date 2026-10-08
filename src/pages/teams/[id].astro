@@ -11,6 +11,7 @@ import Pending from '~/components/ui/Pending.astro';
 import IrisGallery from '~/components/research/IrisGallery.astro';
 import PubItem from '~/components/ui/PubItem.astro';
 import ToolList from '~/components/ui/ToolList.astro';
+import DemoCard from '~/components/ui/DemoCard.astro';
 import { getCollection } from 'astro:content';
 import { getFigures, getPeople, getPublications, getTeams, getUseCases, isInvestigator } from '~/lib/content';
 import { url } from '~/lib/url';
@@ -37,6 +38,7 @@ const codes = Object.fromEntries((await getUseCases()).map((u) => [u.id, u.data.
 const figures = await getFigures({ team: entry.id });
 const pubs = await getPublications({ team: entry.id });
 const tools = (await getCollection('tools')).filter((t) => t.data.teams.some((x) => x.id === entry.id));
+const demos = (await getCollection('demos')).filter((d) => d.data.teams.some((t) => t.id === entry.id));
 
 const people = (await getPeople()).filter((p) => p.data.team.id === entry.id);
 const investigators = people.filter((p) => isInvestigator(p.data.role) && !p.data.alumni);
@@ -155,6 +157,31 @@ const shareImage = figures[0]?.data.src ?? investigators.find((p) => p.data.phot
   }
 
   {
+    demos.length > 0 && (
+      <section class="section" aria-labelledby="team-demos">
+        <div class="container">
+          <header class="section-head section-head--split">
+            <div>
+              <p class="eyebrow">Demos</p>
+              <h2 id="team-demos" class="h2 mt-4">
+                See {short}'s work in action
+              </h2>
+            </div>
+            <p class="team-demos__all">
+              <a class="link-arrow" href={url('/demos')}>All demos</a>
+            </p>
+          </header>
+          <div class="team-demos">
+            {demos.map((d) => (
+              <DemoCard demo={d} teamNames={teamNames} codes={codes} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
     useCases.length > 0 && (
       <section class="section" aria-labelledby="team-cases">
         <div class="container">
@@ -178,17 +205,20 @@ const shareImage = figures[0]?.data.src ?? investigators.find((p) => p.data.phot
     <div class="container people">
       <div>
         <p class="eyebrow">People</p>
-        <h2 id="team-people" class="h2 mt-4">Researchers and students</h2>
+        <h2 id="team-people" class="h2 mt-4">{members.length > 0 ? 'Researchers and students' : 'Former members'}</h2>
       </div>
       <div class="people__lists">
         {members.length > 0 ? <RoleGroups people={members} level={3} /> : <Pending owner={`${short} site PI`} what="Postdocs and students" hidePublic />}
         {
-          alumni.length > 0 && (
-            <div>
-              <p class="eyebrow eyebrow--bare" style="margin-bottom: var(--space-3)">Former members</p>
+          alumni.length > 0 &&
+            (members.length > 0 ? (
+              <div>
+                <p class="eyebrow eyebrow--bare people__sub">Former members</p>
+                <MemberList people={alumni} />
+              </div>
+            ) : (
               <MemberList people={alumni} />
-            </div>
-          )
+            ))
         }
       </div>
     </div>
@@ -201,8 +231,11 @@ const shareImage = figures[0]?.data.src ?? investigators.find((p) => p.data.phot
           <div>
             <p class="eyebrow">Publications</p>
             <h2 id="team-pubs" class="h2 mt-4">
-              {pubs.length} {pubs.length === 1 ? 'paper' : 'papers'}
+              Publications
             </h2>
+            <p class="muted mt-3">
+              {pubs.length} published or accepted {pubs.length === 1 ? 'paper' : 'papers'}
+            </p>
           </div>
           <ol role="list" class="team-pubs">
             {pubs.map((p) => (
@@ -264,7 +297,7 @@ const shareImage = figures[0]?.data.src ?? investigators.find((p) => p.data.phot
     border-bottom: 1px solid var(--line);
   }
   .thrust__n {
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
     color: var(--accent);
     padding-top: 0.3rem;
   }
@@ -308,7 +341,7 @@ const shareImage = figures[0]?.data.src ?? investigators.find((p) => p.data.phot
     margin-top: var(--space-3);
     padding: 0;
     list-style: none;
-    font-size: 0.925rem;
+    font-size: var(--text-sm);
   }
   .team__partners a:hover {
     color: var(--accent);
@@ -339,6 +372,9 @@ const shareImage = figures[0]?.data.src ?? investigators.find((p) => p.data.phot
       grid-template-columns: 1fr 1.6fr;
     }
   }
+  .people__sub {
+    margin-bottom: var(--space-3);
+  }
   .people__lists {
     display: grid;
     gap: var(--space-6);
@@ -346,6 +382,23 @@ const shareImage = figures[0]?.data.src ?? investigators.find((p) => p.data.phot
 
   .team-footer {
     padding-block: var(--space-7);
+  }
+  .team-demos__all {
+    justify-self: end;
+  }
+  .team-demos {
+    display: grid;
+    gap: var(--space-7) var(--space-5);
+  }
+  @media (min-width: 700px) {
+    .team-demos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1100px) {
+    .team-demos {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
   .team-pubs {
     padding: 0;

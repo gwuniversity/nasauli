@@ -82,7 +82,7 @@ const pathname = Astro.url.pathname;
     position: relative;
     display: block;
     padding: 0.45rem 0.7rem;
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     font-weight: 500;
     color: var(--ink-2);
     text-decoration: none;
@@ -181,7 +181,7 @@ const pathname = Astro.url.pathname;
     text-decoration: none;
   }
   .mobile-nav .mono {
-    font-size: 0.75rem;
+    font-size: var(--text-label-lg);
     color: var(--ink-3);
   }
   .mobile-nav a[aria-current='page'] {

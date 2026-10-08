@@ -88,12 +88,12 @@ const roleLine = [roleLabels[role], title].filter(Boolean).join(' · ');
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-2);
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     color: var(--ink-2);
     line-height: 1.4;
   }
   .person__team {
-    font-size: 0.75rem;
+    font-size: var(--text-label-lg);
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
@@ -103,6 +103,6 @@ const roleLine = [roleLabels[role], title].filter(Boolean).join(' · ');
   }
   .person__link {
     margin-top: var(--space-1);
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
   }
 </style>

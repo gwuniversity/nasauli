@@ -1,2 +1,186 @@
-# YouTube demos, played inline on the site. Populated in Phase 3.
-[]
+# Demo videos. Two kinds of source:
+#   video: <id>      self-hosted clip in public/videos/<id>.mp4, produced by `npm run encode-demos`
+#                    from the originals in demos/ (see scripts/demo-sources.json)
+#   youtubeId: <id>  YouTube video, played inline on our page (privacy-enhanced embed)
+# mode: loop (short, silent, autoplays while visible) | player (full video with controls)
+# kind: simulation | real-world | dashboard     shown: year-1-review | year-2-review
+# Order in this file is display order within each use case. `featured: true` → homepage.
+
+# --- UC-01 Vision-based delivery and landing ---
+- id: uci-flytrap
+  title: 'FlyTrap: attacking autonomous target tracking'
+  summary: UC Irvine’s demonstration of FlyTrap, the first security analysis of camera-based autonomous target tracking in drones. A specially patterned umbrella draws a tracking drone dangerously close. Evaluated on commercial drones and presented at NDSS 2026.
+  video: uci-flytrap
+  mode: player
+  kind: real-world
+  teams: [uc-irvine]
+  useCase: vision-landing
+  shown: year-2-review
+  featured: true
+
+- id: uci-miragemarker-sim
+  title: 'MirageMarker: misleading precision landing in simulation'
+  summary: Subtle geometric changes to a fiducial landing-marker board shift a PX4 drone’s precision landing 8–12 m off the pad in NVIDIA Isaac Sim, while clean boards land within centimeters. Presented at IROS 2026.
+  video: uci-miragemarker-sim
+  mode: player
+  kind: simulation
+  teams: [uc-irvine]
+  useCase: vision-landing
+  shown: year-2-review
+
+- id: uci-miragemarker-real
+  title: 'MirageMarker on real hardware'
+  summary: A real-world capture of marker-based pose estimation, comparing the estimate from a clean marker with one under the MirageMarker perturbation.
+  video: uci-miragemarker-real
+  mode: player
+  kind: real-world
+  teams: [uc-irvine]
+  useCase: vision-landing
+  shown: year-2-review
+
+- id: gwu-dropzone-forecast
+  title: Will the drop zone stay clear?
+  summary: Overhead drone video of a delivery pad. GWU’s model tracks the people and objects around it, forecasts how long the zone will stay clear, and decides whether to lower the package, wait, or treat the zone as occupied.
+  video: gwu-dropzone-forecast
+  mode: loop
+  kind: real-world
+  teams: [gwu]
+  useCase: vision-landing
+  shown: year-2-review
+  featured: true
+
+- id: tsu-iris-delivery
+  title: Simulated package delivery
+  summary: A drone descends to a residential drop-off in TSU’s IRIS simulator, one of the scenarios behind the IRIS D³ drone-delivery dataset.
+  video: tsu-iris-delivery
+  mode: loop
+  kind: simulation
+  teams: [tsu]
+  useCase: vision-landing
+  shown: year-2-review
+
+# --- UC-02 Separation assurance ---
+- id: gwu-heterogeneous-fleets
+  title: Two delivery fleets sharing the sky
+  summary: BlueSky simulation of drones from two delivery companies over Frisco, Texas, each fleet flying its own attention-based multi-agent reinforcement-learning deconfliction policy.
+  video: gwu-heterogeneous-fleets
+  mode: player
+  kind: simulation
+  teams: [gwu, purdue]
+  useCase: separation-assurance
+  shown: year-2-review
+
+- id: gwu-llm-deconfliction
+  title: A language model as a deconfliction policy
+  summary: A fine-tuned large language model issues tactical deconfliction actions to drones in closed-loop BlueSky simulation.
+  video: gwu-llm-deconfliction
+  mode: player
+  kind: simulation
+  teams: [gwu]
+  useCase: separation-assurance
+  shown: year-2-review
+
+# --- UC-03 Remote ID ---
+- id: vu-collision-avoidance
+  title: Cooperative collision avoidance
+  summary: Three simulated drones in Gazebo maneuver around one another using their neighbors' broadcast positions. This is the cooperative behavior that Remote ID spoofing targets, and that spoofing-aware planning protects.
+  video: vu-collision-avoidance
+  mode: player
+  kind: simulation
+  teams: [vanderbilt]
+  useCase: remote-id
+  shown: year-2-review
+
+# --- UC-05 Command-and-control link ---
+- id: vu-urban-network-sim
+  title: Networked UAV simulation over a city
+  summary: Vanderbilt’s networked simulator flies many drones from multiple operators over a downtown map, each running its own ArduPilot autopilot. It’s the platform used to generate attack datasets and evaluate detectors.
+  video: vu-urban-network-sim
+  mode: player
+  kind: simulation
+  teams: [vanderbilt]
+  useCase: control-link
+  shown: year-2-review
+  featured: true
+
+- id: vu-multi-operator-gcs
+  title: Multiple operators, separate ground stations
+  summary: Simulated drones, each linked to its own operator’s ground control station, as in the multi-operator setting of the FAA UTM concept of operations.
+  video: vu-multi-operator-gcs
+  mode: player
+  kind: simulation
+  teams: [vanderbilt]
+  useCase: control-link
+  shown: year-2-review
+
+- id: vu-fleet-scale
+  title: Scaling to large fleets
+  summary: Dozens of simulated vehicles launched in a single experiment, showing how the simulator scales for cyberattack studies.
+  video: vu-fleet-scale
+  mode: loop
+  kind: simulation
+  teams: [vanderbilt]
+  useCase: control-link
+  shown: year-1-review
+
+- id: nvcc-grideye
+  title: GridEye UTM monitor
+  summary: A walkthrough of GridEye, the read-only traffic-management dashboard built by NVCC interns. It tracks a 12-drone delivery fleet over simulated Frisco, Texas, and flags flight-boundary, no-fly-zone, and altitude violations.
+  video: nvcc-grideye
+  mode: player
+  kind: dashboard
+  teams: [nvcc, gwu]
+  useCase: control-link
+  shown: year-2-review
+
+# --- UC-06 Emergency landing ---
+- id: tsu-slz-tracking
+  title: Tracking a safe landing zone during descent
+  summary: TSU’s emergency landing system locks onto the selected landing zone and keeps it centered as the aircraft descends, with live tracking plots.
+  video: tsu-slz-tracking
+  mode: loop
+  kind: simulation
+  teams: [tsu]
+  useCase: emergency-landing
+  shown: year-2-review
+  featured: true
+
+- id: tsu-slz-candidates
+  title: Finding landing-zone candidates
+  summary: Candidate safe landing zones are detected in aerial imagery and compared by size and clearance before one is selected.
+  video: tsu-slz-candidates
+  mode: loop
+  kind: simulation
+  teams: [tsu]
+  useCase: emergency-landing
+  shown: year-2-review
+
+- id: tsu-iris-multi-uam
+  title: 'IRIS: multi-UAM flight simulation'
+  summary: A tour of TSU’s IRIS physics-based simulation, with downtown, suburban, and airport scenes and several eVTOL aircraft flying coordinated routes.
+  video: tsu-iris-multi-uam
+  mode: player
+  kind: simulation
+  teams: [tsu]
+  useCase: emergency-landing
+  shown: year-2-review
+
+- id: tsu-iris-sensors
+  title: One simulator, many sensors and conditions
+  summary: IRIS scenes rendered as RGB, thermal-infrared, night-vision, and LiDAR imagery, and under fog and snow. These are the conditions our perception methods are tested in.
+  video: tsu-iris-sensors
+  mode: loop
+  kind: simulation
+  teams: [tsu]
+  useCase: emergency-landing
+  shown: year-2-review
+
+# --- Other research ---
+- id: ut-directional-jamming
+  title: Directional jamming and nulling
+  summary: A UAV adjusts its trajectory and antenna beam pattern to jam an eavesdropper while keeping a communication null toward a friendly client (ACC 2026).
+  video: ut-directional-jamming
+  mode: loop
+  kind: simulation
+  teams: [ut-austin]
+  shown: year-2-review
