@@ -1,6 +1,6 @@
 # Website Plan — NASA ULI: Securing High-Density Urban Airspaces
 
-Official public website for the project (award 80NSSC24M0070). Source material: the Year 1 and
+Official public website for the project. Source material: the Year 1 and
 Year 2 annual reports (kept locally in `reports/`, never committed).
 
 ## Decisions
