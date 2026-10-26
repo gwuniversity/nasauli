@@ -3,7 +3,7 @@ code: UC-03
 order: 3
 title: Trustworthy Remote ID
 summary: Detecting falsified Remote ID broadcasts from the physics of the radio signal, and planning safe paths around suspected spoofers.
-threat: An aircraft broadcasting false position and velocity to hide its intent or manipulate nearby collision avoidance.
+threat: An aircraft broadcasting false position and velocity to hide its intent or manipulate nearby aircraft.
 teams: [vanderbilt, ut-austin]
 challenges: [TC1, TC2]
 tasks: ['1.2', '1.3', '2.3', '3.3']

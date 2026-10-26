@@ -25,6 +25,8 @@ const teams = defineCollection({
     focus: z.array(z.string()),
     useCases: z.array(reference('useCases')).default([]),
     website: z.url().optional(),
+    /** Logo file under public/, e.g. /logos/gwu.svg. */
+    logo: z.string().optional(),
     /** Longer team overview, written by the site PI. */
     overview: z.string().optional(),
     /** Research thrusts, summarized from the annual reports. */

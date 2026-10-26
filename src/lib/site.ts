@@ -1,9 +1,9 @@
 export const site = {
   name: 'Securing High-Density Urban Airspaces',
-  shortName: 'Secure Urban Airspace',
+  shortName: 'SkySec: Secure Urban Airspaces',
   program: 'NASA University Leadership Initiative',
   description:
-    'A NASA University Leadership Initiative project uniting eight institutions to identify, defend against, and design out cyberattacks on drones and air taxis in dense urban airspace.',
+    'A NASA University Leadership Initiative (ULI) project uniting eight institutions to identify, defend against, and design out cyberattacks on drones and air taxis in dense urban airspaces.',
   period: 'September 2024 – August 2027',
   /** Project inquiries: partnership, stakeholders, media, research questions. */
   contactEmail: 'pwei@gwu.edu',
@@ -15,10 +15,22 @@ export const site = {
     'Any opinions, findings, conclusions, or recommendations expressed on this site are those of the authors and do not necessarily reflect the views of NASA.',
 };
 
+// Source: Wikimedia Commons, "NASA logo.svg". Use of the NASA insignia needs NASA approval before launch.
+export const sponsorLogo = { name: 'NASA', logo: '/logos/nasa.svg', website: 'https://www.nasa.gov/' };
+
 // NASA program contacts (named with the PI's approval).
 export const nasaContacts = [
   { name: 'Dennis Iannicca', role: 'NASA Technical Monitor', since: '2026' },
   { name: 'Vincent Varouh', role: 'NASA Technical Monitor, 2024–2025', since: '2024' },
+];
+
+// External advisory board. Source: Peng Wei's website review comments, October 2026.
+export const advisoryBoard = [
+  { name: 'Charlie Leeper', affiliation: 'Johns Hopkins University Applied Physics Laboratory' },
+  { name: 'Wes Ryan', affiliation: 'Northrop Grumman and ASTM' },
+  { name: 'Hao Ren', affiliation: 'Honeywell Aerospace' },
+  { name: 'Tony Boci', affiliation: 'L3Harris' },
+  { name: 'Jordan Cohen', affiliation: 'SkyGrid' },
 ];
 
 export const roleLabels = {
@@ -71,7 +83,7 @@ export const challenges = [
     heading: 'Identify vulnerabilities and model attack impact',
     body: 'Find the weak links in aircraft autonomy and in UTM/AAM architectures, quantify the risk of attacks, and detect them with machine learning.',
     tasks: [
-      'Identify attacks and vulnerabilities in aircraft autonomy and AAM/UTM architecture',
+      'Identify attacks and vulnerabilities in aircraft autonomy and traffic management architectures',
       'Model attack impacts and quantify attack risks',
       'Monitor and detect attacks with machine learning',
     ],
@@ -95,7 +107,7 @@ export const challenges = [
     tasks: [
       'Harden the system architecture with security properties',
       'Assure the security properties of the integrated architecture',
-      'Robustify communication between aircraft and AAM/UTM services',
+      'Robustify communication between aircraft and traffic management services',
     ],
   },
 ] as const;

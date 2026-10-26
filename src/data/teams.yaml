@@ -6,6 +6,8 @@
   order: 1
   name: The George Washington University
   short: GWU
+  # Source: ncys.org GWU partner page (as Peng requested), whitespace trimmed.
+  logo: /logos/gwu.png
   kind: university
   city: Washington
   state: DC
@@ -40,6 +42,8 @@
   order: 2
   name: Vanderbilt University
   short: Vanderbilt
+  # Source: vanderbilt.edu site footer logo.
+  logo: /logos/vanderbilt.svg
   kind: university
   city: Nashville
   state: TN
@@ -75,6 +79,8 @@
   order: 3
   name: Purdue University
   short: Purdue
+  # Source: Wikimedia Commons, "Purdue University system logo.svg".
+  logo: /logos/purdue.svg
   kind: university
   city: West Lafayette
   state: IN
@@ -107,6 +113,8 @@
   order: 4
   name: The University of Texas at Austin
   short: UT Austin
+  # Source: Wikimedia Commons, "University of Texas at Austin logo.svg".
+  logo: /logos/ut-austin.svg
   kind: university
   city: Austin
   state: TX
@@ -134,6 +142,8 @@
   order: 5
   name: University of California, Irvine
   short: UC Irvine
+  # Source: uci.edu site header wordmark, in UCI Blue.
+  logo: /logos/uc-irvine.svg
   kind: university
   city: Irvine
   state: CA
@@ -160,6 +170,8 @@
   order: 6
   name: Tennessee State University
   short: TSU
+  # Source: tnstate.edu site header logo, recolored to the blue of TSU's official logo.
+  logo: /logos/tsu.svg
   kind: university
   city: Nashville
   state: TN
@@ -186,6 +198,8 @@
   order: 7
   name: Collins Aerospace
   short: Collins
+  # Source: Wikimedia Commons, "Collins Aerospace Logo.svg".
+  logo: /logos/collins.svg
   kind: industry
   city: Cedar Rapids
   state: IA
@@ -211,6 +225,8 @@
   order: 8
   name: Northern Virginia Community College
   short: NVCC
+  # Source: Wikimedia Commons, "Northern Virginia Community College logo.svg".
+  logo: /logos/nvcc.svg
   kind: community-college
   city: Annandale
   state: VA

@@ -15,10 +15,10 @@ const terms = glossary.map(({ term, expansion }) => ({ term, expansion }));
     var skip = ['A', 'BUTTON', 'ABBR', 'CODE', 'PRE', 'SCRIPT', 'STYLE', 'H1', 'H2', 'H3', 'H4', 'TITLE', 'SELECT', 'OPTION', 'LABEL', 'TEXTAREA', 'svg', 'DT'];
     var skipClass = /\b(mono|tag|eyebrow|strip__label|vp__badges|crumbs)\b/;
     var esc = function (s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); };
-    // Terms the page already spells out, e.g. "Advanced Air Mobility (AAM)", need no tooltip.
+    // Terms the page already spells out, e.g. "Advanced Air Mobility (AAM)" or "eVTOL (electric ...)", need no tooltip.
     var pageText = main.textContent || '';
     var pending = terms.filter(function (t) {
-      return pageText.indexOf('(' + t.term + ')') < 0 && pageText.indexOf('(' + t.term + 's)') < 0;
+      return pageText.indexOf('(' + t.term + ')') < 0 && pageText.indexOf('(' + t.term + 's)') < 0 && pageText.indexOf(t.term + ' (') < 0;
     });
     var walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, {
       acceptNode: function (n) {

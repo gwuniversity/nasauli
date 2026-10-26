@@ -21,11 +21,11 @@ const facts = [
 const timeline = [
   { when: 'Sep 2024', what: 'Award', detail: 'NASA selects the project for a University Leadership Initiative award.' },
   { when: 'Oct 2024', what: 'Kick-off', detail: 'Investigators and NASA colleagues meet at GWU in Washington, DC.' },
-  { when: 'Jan 2026', what: 'Survey papers', detail: 'Two team-wide security surveys at AIAA SciTech map the threat landscape for AAM and UTM.' },
   { when: 'Oct 2025', what: 'Year 1 review', detail: 'Annual meeting at Vanderbilt University and Tennessee State University, Nashville.' },
   { when: 'Sep 2026', what: 'Year 2 review', detail: 'Annual meeting at Purdue University.' },
   { when: 'Spring 2027', what: 'Demo Day', detail: 'Project-wide showcase of integrated aviation use-case demonstrations.', upcoming: true },
   { when: 'Aug 2027', what: 'Project completion', detail: 'End of the three-year period of performance.', upcoming: true },
+  { when: 'Sep 2027', what: 'Year 3 review', detail: 'Final annual project review.', upcoming: true },
 ].sort((a, b) => Date.parse(`1 ${a.when.replace('Spring', 'Apr')}`) - Date.parse(`1 ${b.when.replace('Spring', 'Apr')}`));
 
 const priorities = [
@@ -45,9 +45,9 @@ const priorities = [
         <h2>Why this project</h2>
         <p>
           Advanced Air Mobility (AAM) and UAS Traffic Management (UTM) will bring electric air taxis and fleets of small
-          drones into dense urban airspace, coordinated largely by automated services. That autonomy depends on
-          perception, navigation, broadcast surveillance, and wireless links, every one of which an adversary may try
-          to spoof, jam, or manipulate.
+          drones into dense urban airspace, coordinated largely by automated airspace services. Aircraft autonomy
+          depends on the avionics software stack, aircraft sensors, automated airspace management, and communication,
+          navigation, and data links, every one of which an adversary may try to spoof, jam, hack, or manipulate.
         </p>
         <p>
           This project establishes a security framework and algorithmic foundations to safeguard high-density urban

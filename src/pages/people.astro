@@ -3,9 +3,8 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import PageHeader from '~/components/ui/PageHeader.astro';
 import PersonCard from '~/components/ui/PersonCard.astro';
 import RoleGroups from '~/components/ui/RoleGroups.astro';
-import Pending from '~/components/ui/Pending.astro';
 import { getPeople, getTeams, isInvestigator } from '~/lib/content';
-import { nasaContacts, roleLabels } from '~/lib/site';
+import { advisoryBoard, nasaContacts, roleLabels } from '~/lib/site';
 import { url } from '~/lib/url';
 
 const teams = await getTeams();
@@ -95,13 +94,16 @@ const memberCount = byTeam.reduce((n, g) => n + g.members.length, 0);
       <div>
         <p class="eyebrow">Advisory board</p>
         <h2 class="h2 mt-4">External advisors</h2>
-        <div class="mt-5">
-          <Pending
-            owner="Project PI"
-            what="Advisory board members from government and industry (name, affiliation)."
-            publicText="Our external advisory board of government and industry experts is being established."
-          />
-        </div>
+        <ul class="contacts" role="list">
+          {
+            advisoryBoard.map((a) => (
+              <li>
+                <span class="members__name">{a.name}</span>
+                <span class="muted">{a.affiliation}</span>
+              </li>
+            ))
+          }
+        </ul>
       </div>
     </div>
   </section>

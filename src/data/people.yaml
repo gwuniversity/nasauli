@@ -3,7 +3,7 @@
 # Roles: pi | site-pi | co-i | postdoc | phd | ms | undergrad | intern | staff
 
 # --- GWU ---
-- { id: peng-wei, name: Peng Wei, team: gwu, role: pi, title: 'Professor of Mechanical and Aerospace Engineering', website: 'https://mae.engineering.gwu.edu/peng-wei', photo: ../assets/people/peng-wei.jpg }
+- { id: peng-wei, name: Peng Wei, team: gwu, role: pi, title: 'Professor of Mechanical and Aerospace Engineering', website: 'https://web.seas.gwu.edu/pwei/', photo: ../assets/people/peng-wei.jpg }
 - { id: iman-sharifi, name: Iman Sharifi, team: gwu, role: phd, order: 1 }
 - { id: mahyar-ghazanfari, name: Mahyar Ghazanfari, team: gwu, role: phd }
 - { id: dao-vu, name: Dao Vu, team: gwu, role: phd }
