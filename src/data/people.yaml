@@ -63,8 +63,9 @@
 - { id: amer-ibrahim, name: Amer Ibrahim, team: tsu, role: ms, alumni: true }
 
 # --- Collins Aerospace ---
-- { id: isaac-amundson, name: Isaac Amundson, team: collins, role: site-pi, title: 'Senior Principal Trusted Systems Engineer', website: 'https://sites.google.com/site/isaacamundson/home' }
-- { id: heber-herencia-zapana, name: Heber Herencia-Zapana, team: collins, role: co-i }
+# Isaac's title, website, and headshot and Heber's headshot were supplied by Isaac Amundson (2026-11).
+- { id: isaac-amundson, name: Isaac Amundson, team: collins, role: site-pi, title: 'Technical Fellow', website: 'https://loonwerks.com/people/isaac-amundson.html', photo: ../assets/people/isaac-amundson.jpg }
+- { id: heber-herencia-zapana, name: Heber Herencia-Zapana, team: collins, role: co-i, photo: ../assets/people/heber-herencia-zapana.jpg }
 - { id: saqib-hasan, name: Saqib Hasan, team: collins, role: co-i, alumni: true }
 
 # --- NVCC ---

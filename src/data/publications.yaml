@@ -382,7 +382,8 @@
   authors: [F. Fotiadis, A. Kanellopoulos, K. G. Vamvoudakis, U. Topcu]
   venue: IEEE Transactions on Automatic Control
   year: 2026
-  status: conditionally-accepted
+  # Full acceptance confirmed by Filippos Fotiadis (2026-11).
+  status: accepted
   kind: journal
   teams: [ut-austin]
   url: https://arxiv.org/abs/2506.11373

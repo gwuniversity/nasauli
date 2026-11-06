@@ -31,7 +31,7 @@ Twitter preview image (`public/og-image.png`), and an Apple touch icon.
   - [ ] Alfred Chen: the university photo is marked "© UC Regents". Get permission or a replacement.
   - [ ] Kwabena Konadu: the photo comes from a GMU news article.
   - [ ] Vijay Gupta, Mahsa Ghasemi, Amir Shirkhodaie: the official photos are low resolution (about 180 px).
-  - [ ] Isaac Amundson, Heber Herencia-Zapana: no photo yet; they show as initials.
+  - [x] Isaac Amundson, Heber Herencia-Zapana: headshots supplied by Isaac (2026-11). Heber's source is small (266 px).
 - [ ] Photo consent for the outreach photos. Until then they stay blurred, and only the blurred copies are in the repo.
 - [ ] Final sign-off from the project PI, Peng Wei.
 

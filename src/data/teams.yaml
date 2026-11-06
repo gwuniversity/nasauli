@@ -197,9 +197,10 @@
 - id: collins
   order: 7
   name: Collins Aerospace
-  short: Collins
-  # Source: Wikimedia Commons, "Collins Aerospace Logo.svg".
-  logo: /logos/collins.svg
+  # Full name as the short name too, at Isaac Amundson's request (2026-11).
+  short: Collins Aerospace
+  # Source: supplied by Isaac Amundson (2026-11), required by Collins branding policy; white margin trimmed.
+  logo: /logos/collins.png
   kind: industry
   city: Cedar Rapids
   state: IA

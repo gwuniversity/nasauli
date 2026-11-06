@@ -41,7 +41,8 @@ const { code, title, summary, threat, teams, challenges } = useCase.data;
     --edge: var(--accent-graphic);
     position: relative;
     display: grid;
-    grid-template-columns: 96px minmax(0, 1.6fr) minmax(0, 1fr) 150px 64px;
+    /* The teams column fits the longest short name ("Collins Aerospace") on one line. */
+    grid-template-columns: 96px minmax(0, 1.6fr) minmax(0, 1fr) 180px 64px;
     border: 1px solid var(--line-strong);
     border-left: 0;
     border-radius: var(--radius-1);
@@ -118,6 +119,9 @@ const { code, title, summary, threat, teams, challenges } = useCase.data;
     font-size: var(--text-label-lg);
     letter-spacing: 0.02em;
     color: var(--ink);
+  }
+  .strip__teams li {
+    white-space: nowrap;
   }
 
   @media (max-width: 960px) {
