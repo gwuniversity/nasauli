@@ -10,7 +10,7 @@ import DemoCard from '~/components/ui/DemoCard.astro';
 import ToolList from '~/components/ui/ToolList.astro';
 import { getCollection } from 'astro:content';
 import { getFigures, getPublications, getTeams, getUseCases } from '~/lib/content';
-import { challenges } from '~/lib/site';
+import { challenges, teamsWithoutDemos } from '~/lib/site';
 import { url } from '~/lib/url';
 import { breadcrumbLd } from '~/lib/seo';
 
@@ -43,7 +43,7 @@ const taskText = Object.fromEntries(
   challenges.flatMap((tc, i) => tc.tasks.map((task, j) => [`${i + 1}.${j + 1}`, task])),
 );
 const highlights = entry.data.highlights.map((h) => ({ ...h, team: teamNames[h.team.id] }));
-const teamList = involved.map((t) => t.data.short).join(', ');
+const demoOwners = involved.filter((t) => !teamsWithoutDemos.includes(t.id)).map((t) => t.data.short).join(', ');
 const crumbs = [
   { label: 'Research', href: '/research' },
   { label: entry.data.code, href: `/research/${entry.id}` },
@@ -148,7 +148,7 @@ const ld = breadcrumbLd(crumbs, Astro.site, import.meta.env.BASE_URL);
             ))}
           </div>
         ) : (
-          <Pending owner={teamList} what="Demo video for this use case (demos.yaml entry with this useCase)." hidePublic />
+          <Pending owner={demoOwners} what="Demo video for this use case (demos.yaml entry with this useCase)." hidePublic />
         )
       }
       <ToolList tools={tools} teamNames={teamNames} />

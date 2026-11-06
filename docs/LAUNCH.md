@@ -27,7 +27,7 @@ Twitter preview image (`public/og-image.png`), and an Apple touch icon.
 
 **Approvals**
 - [ ] Each site PI reviews their team page, use cases, people, and publications (see "PI review round" below).
-- [ ] PIs approve their headshots or send replacements. Notes:
+- [x] PIs approve their headshots or send replacements (accepted as-is, 2026-11). Notes:
   - [ ] Alfred Chen: the university photo is marked "© UC Regents". Get permission or a replacement.
   - [ ] Kwabena Konadu: the photo comes from a GMU news article.
   - [ ] Vijay Gupta, Mahsa Ghasemi, Amir Shirkhodaie: the official photos are low resolution (about 180 px).
@@ -36,9 +36,9 @@ Twitter preview image (`public/og-image.png`), and an Apple touch icon.
 - [ ] Final sign-off from the project PI, Peng Wei.
 
 **Content still pending.** These sections are hidden on the live site; in a review build they're highlighted.
-- [ ] Team overviews (all 8 teams)
-- [ ] Advisory board members
-- [ ] Demo videos (`src/data/demos.yaml`), including featured ones for the homepage
+- [x] Team overviews (all 8 teams)
+- [x] Advisory board members
+- [ ] Demo videos (`src/data/demos.yaml`): UC-04, UC-07, and UC-08 still have none. Purdue and Collins have no demos planned.
 - [ ] Demo Day date and details
 - [ ] A link for MirageMarker (IROS 2026) once one is public
 - [ ] Spelling to confirm: "Stanley Zheng" and "Maheed Hatem Most Ahmed" (see `src/data/people.yaml`)

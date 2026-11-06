@@ -59,6 +59,9 @@ export const roleGroupLabels = {
  * WebGL is unavailable. '2d' = the original canvas animation (src/scripts/airspace.ts; a frozen
  * copy is in archive/hero-2d-2026-10-08/).
  */
+/** Teams that will not produce demo videos (confirmed by the user, 2026-11), so pending-demo notes don't name them. */
+export const teamsWithoutDemos = ['purdue', 'collins'];
+
 export const heroAnimation: '3d' | '2d' = '3d';
 
 export const nav = [
