@@ -32,12 +32,14 @@
 # --- Purdue ---
 - { id: vijay-gupta, name: Vijay Gupta, team: purdue, role: site-pi, title: 'Elmore Professor of Electrical and Computer Engineering', website: 'https://engineering.purdue.edu/ECE/People/ptProfile?resource_id=267567', photo: ../assets/people/vijay-gupta.jpg }
 - { id: mahsa-ghasemi, name: Mahsa Ghasemi, team: purdue, role: co-i, title: 'Assistant Professor of Electrical and Computer Engineering', website: 'https://engineering.purdue.edu/ECE/People/ptProfile?resource_id=256126', photo: ../assets/people/mahsa-ghasemi.jpg }
-- { id: shivam-bajaj, name: Shivam Bajaj, team: purdue, role: postdoc }
 - { id: ashwin-verma, name: Ashwin Verma, team: purdue, role: postdoc }
 # Display names for Hyeong Tae Kim and Maheed H. Ahmed as requested by Mahsa Ghasemi (2026-11).
-- { id: hyeong-tae-kim, name: Hyeong Tae Kim, team: purdue, role: phd }
-- { id: maheed-ahmed, name: Maheed H. Ahmed, team: purdue, role: phd }
+# Both work with Mahsa Ghasemi, so they are listed together: Maheed, then Hyeong Tae (user request, 2026-11).
+- { id: maheed-ahmed, name: Maheed H. Ahmed, team: purdue, role: phd, order: 1 }
+- { id: hyeong-tae-kim, name: Hyeong Tae Kim, team: purdue, role: phd, order: 2 }
 - { id: pranoy-das, name: Pranoy Das, team: purdue, role: phd }
+# Former postdoc (user, 2026-11).
+- { id: shivam-bajaj, name: Shivam Bajaj, team: purdue, role: postdoc, alumni: true }
 
 # --- UT Austin ---
 - { id: ufuk-topcu, name: Ufuk Topcu, team: ut-austin, role: site-pi, title: 'Professor of Aerospace Engineering and Engineering Mechanics', website: 'https://ae.utexas.edu/person/ufuk-topcu/', photo: ../assets/people/ufuk-topcu.jpg }
