@@ -34,9 +34,9 @@
 - { id: mahsa-ghasemi, name: Mahsa Ghasemi, team: purdue, role: co-i, title: 'Assistant Professor of Electrical and Computer Engineering', website: 'https://engineering.purdue.edu/ECE/People/ptProfile?resource_id=256126', photo: ../assets/people/mahsa-ghasemi.jpg }
 - { id: shivam-bajaj, name: Shivam Bajaj, team: purdue, role: postdoc }
 - { id: ashwin-verma, name: Ashwin Verma, team: purdue, role: postdoc }
-- { id: hyeong-tae-kim, name: Hyeong-Tae Kim, team: purdue, role: phd }
-# TODO(confirm): name as listed in the reports.
-- { id: maheed-ahmed, name: Maheed Hatem Most Ahmed, team: purdue, role: phd }
+# Display names for Hyeong Tae Kim and Maheed H. Ahmed as requested by Mahsa Ghasemi (2026-11).
+- { id: hyeong-tae-kim, name: Hyeong Tae Kim, team: purdue, role: phd }
+- { id: maheed-ahmed, name: Maheed H. Ahmed, team: purdue, role: phd }
 - { id: pranoy-das, name: Pranoy Das, team: purdue, role: phd }
 
 # --- UT Austin ---

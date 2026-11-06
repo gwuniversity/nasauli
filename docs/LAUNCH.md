@@ -41,7 +41,7 @@ Twitter preview image (`public/og-image.png`), and an Apple touch icon.
 - [ ] Demo videos (`src/data/demos.yaml`): UC-04, UC-07, and UC-08 still have none. Purdue and Collins have no demos planned.
 - [ ] Demo Day date and details
 - [ ] A link for MirageMarker (IROS 2026) once one is public
-- [ ] Spelling to confirm: "Stanley Zheng" and "Maheed Hatem Most Ahmed" (see `src/data/people.yaml`)
+- [ ] Spelling to confirm: "Stanley Zheng" (see `src/data/people.yaml`). Maheed H. Ahmed and Hyeong Tae Kim were confirmed by Mahsa Ghasemi (2026-11).
 
 **Settings**
 - [x] Contact addresses set in `src/lib/site.ts`: project inquiries go to pwei@gwu.edu, website questions to i.sharifi@gwu.edu.

@@ -290,6 +290,17 @@
   useCases: [airspace-coordination]
   url: https://openreview.net/forum?id=131jUEYdMT
 
+# Source: Mahsa Ghasemi (2026-11), accepted at NeurIPS 2026. No public link yet.
+- id: ahmed-2026-borda-dueling-bandits
+  title: Borda-Based Fair Multi-User Dueling Bandit in Tabular and Generalized Linear Settings
+  authors: [M. H. Ahmed, M. Ghasemi]
+  venue: Conference on Neural Information Processing Systems (NeurIPS)
+  year: 2026
+  status: accepted
+  kind: conference
+  teams: [purdue]
+  useCases: [airspace-coordination]
+
 - id: bhargav-2026-set-utility
   title: Learning Structured Set Utility Functions with Contrastive Element Representations
   authors: [J. Bhargav, Y. Chang, M. Ghasemi, S. Sundaram]
