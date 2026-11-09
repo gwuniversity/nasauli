@@ -169,7 +169,7 @@ const news = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
-    kind: z.enum(['milestone', 'event', 'publication', 'talk', 'outreach']),
+    kind: z.enum(['milestone', 'event', 'publication', 'talk', 'outreach', 'media']),
     summary: z.string(),
     teams: z.array(reference('teams')).default([]),
     /** Optional "Read more" target: a site path (/research/remote-id) or a full URL. */

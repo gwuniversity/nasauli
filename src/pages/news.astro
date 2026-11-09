@@ -12,6 +12,7 @@ const kinds = [
   { id: 'publication', label: 'Publications' },
   { id: 'talk', label: 'Invited talks' },
   { id: 'outreach', label: 'Outreach' },
+  { id: 'media', label: 'In the media' },
 ] as const;
 const kindLabel = Object.fromEntries(kinds.map((k) => [k.id, k.label.replace(/s$/, '')]));
 const years = [...new Set(items.map((i) => i.data.date.getUTCFullYear()))].sort((a, b) => b - a);
@@ -22,7 +23,7 @@ const month = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', timeZ
   <PageHeader
     eyebrow="News & events"
     title="News & events"
-    lede="Milestones, annual meetings, publications, invited talks from industry and government, and outreach."
+    lede="Milestones, annual meetings, publications, invited talks from industry and government, outreach, and media coverage."
   />
 
   <section class="section">
@@ -129,6 +130,9 @@ const month = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', timeZ
   }
   .dot--outreach {
     background: #c04ba3;
+  }
+  .dot--media {
+    background: #e0645c;
   }
   .kinds button[aria-pressed='true'] .dot--milestone {
     background: var(--bg);
