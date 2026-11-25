@@ -39,6 +39,30 @@
     "speed": 2,
     "bytes": 3098463
   },
+  "gwu-3d-overview": {
+    "width": 1280,
+    "height": 720,
+    "duration": 74,
+    "audio": false,
+    "speed": 1,
+    "bytes": 27222469
+  },
+  "gwu-3d-follow": {
+    "width": 1280,
+    "height": 720,
+    "duration": 77,
+    "audio": false,
+    "speed": 1,
+    "bytes": 23385275
+  },
+  "gwu-3d-intersection": {
+    "width": 1280,
+    "height": 720,
+    "duration": 48,
+    "audio": false,
+    "speed": 1,
+    "bytes": 12161048
+  },
   "gwu-llm-deconfliction": {
     "width": 1280,
     "height": 712,

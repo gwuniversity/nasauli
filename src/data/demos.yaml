@@ -16,7 +16,6 @@
   teams: [uc-irvine]
   useCase: vision-landing
   shown: year-2-review
-  featured: true
 
 - id: uci-miragemarker-sim
   title: 'MirageMarker: misleading precision landing in simulation'
@@ -47,7 +46,6 @@
   teams: [gwu]
   useCase: vision-landing
   shown: year-2-review
-  featured: true
 
 - id: tsu-iris-delivery
   title: Simulated package delivery
@@ -58,6 +56,7 @@
   teams: [tsu]
   useCase: vision-landing
   shown: year-2-review
+  featured: true
 
 # --- UC-02 Separation assurance ---
 - id: gwu-heterogeneous-fleets
@@ -69,6 +68,34 @@
   teams: [gwu, purdue]
   useCase: separation-assurance
   shown: year-2-review
+
+- id: gwu-3d-overview
+  title: Two delivery fleets in 3D
+  summary: A 3D replay of a BlueSky simulation over Frisco, Texas, in which 20 drones from two delivery companies, each fleet flying its own attention-based multi-agent reinforcement-learning deconfliction policy, all reach their destinations without a collision.
+  video: gwu-3d-overview
+  mode: player
+  kind: simulation
+  teams: [gwu, purdue]
+  useCase: separation-assurance
+  featured: true
+
+- id: gwu-3d-follow
+  title: Following one drone through shared airspace
+  summary: A chase view of a single delivery drone from takeoff to landing, with an on-screen panel showing its policy’s action probabilities and the attention it assigns to nearby aircraft.
+  video: gwu-3d-follow
+  mode: player
+  kind: simulation
+  teams: [gwu, purdue]
+  useCase: separation-assurance
+
+- id: gwu-3d-intersection
+  title: Deconfliction at a busy crossing
+  summary: The busiest four minutes at a waypoint where routes from both delivery fleets cross, with lines showing which nearby drones each aircraft attends to as it resolves conflicts.
+  video: gwu-3d-intersection
+  mode: player
+  kind: simulation
+  teams: [gwu, purdue]
+  useCase: separation-assurance
 
 - id: gwu-llm-deconfliction
   title: A language model as a deconfliction policy
@@ -143,7 +170,6 @@
   teams: [tsu]
   useCase: emergency-landing
   shown: year-2-review
-  featured: true
 
 - id: tsu-slz-candidates
   title: Finding landing-zone candidates
@@ -164,6 +190,7 @@
   teams: [tsu]
   useCase: emergency-landing
   shown: year-2-review
+  featured: true
 
 - id: tsu-iris-sensors
   title: One simulator, many sensors and conditions
